@@ -1,0 +1,12 @@
+.reorder {
+    display: inline;
+    list-style-type: none;
+}
+
+.reorder li {
+    padding: 10px;
+    border: black solid 1px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    background-color: rgb(209, 234, 255);
+}

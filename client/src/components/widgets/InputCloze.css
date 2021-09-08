@@ -1,0 +1,15 @@
+.input-cloze {
+    border: rgb(95, 95, 95) 1px solid;
+    cursor: text;
+    flex-wrap: wrap;
+}
+
+.blanks {
+    display: flex;
+    max-height: 40px;
+}
+
+.input-cloze #input-tags-field {
+    flex-grow: 1;
+    min-width: 100px;
+}

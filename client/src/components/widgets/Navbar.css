@@ -1,0 +1,57 @@
+#navbar {
+    background-color: white;
+}
+
+.nav-button {
+    background-color: white;
+    border-radius: 5px;
+    margin: 5px;
+    padding: 10px;
+    color: black;
+    text-decoration: none;
+    box-sizing: border-box;
+    transition: 200ms;
+    border: 0;
+    font-family: 'Montserrat', serif;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.nav-button:visited {
+    color: black;
+}
+
+.nav-button:hover {
+    background-color: #80acdf;
+    color: white;
+}
+
+.nav-button:active {
+    background-color: #5392db;
+}
+
+#navbar-options {
+    display: none;
+}
+
+#mobile-navbar-options {
+    display: flex;
+    flex-direction: column;
+}
+
+/*
+Responsive
+*/
+@media only screen and (min-width: 1024px) {
+    #navbar-options {
+        display: flex;
+    }
+
+    #navbar-menu {
+        display: none;
+    }
+
+    #mobile-navbar-options {
+        display: none;
+    }
+}

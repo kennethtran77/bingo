@@ -1,0 +1,19 @@
+#practice-sessions-displayer th, #practice-sessions-displayer tr {
+    border-bottom: 1px solid black;
+    padding: 15px;
+}
+
+#practice-sessions-displayer tr {
+    text-align: left;
+}
+
+#practice-sessions-displayer table {
+    border-collapse: collapse;
+}
+
+#practice-sessions-displayer #title {
+    width: 100%;
+}
+#practice-sessions-displayer #time-completed {
+    width: 25%;
+}

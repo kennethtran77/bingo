@@ -1,0 +1,16 @@
+.editor form {
+    width: 100%;
+}
+
+
+.editor .input {
+    margin-bottom: 10px;
+}
+
+.editor input[type=text], .editor select {
+    width: 100%;
+}
+
+.editor input[type=button] {
+    display: block;
+}

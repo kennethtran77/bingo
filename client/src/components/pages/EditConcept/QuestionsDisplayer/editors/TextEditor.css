@@ -1,0 +1,15 @@
+.wrapper-class {
+    padding-bottom: 5px;
+}
+
+.editor-class {
+    padding-left: 5px;
+    padding-right: 5px;
+    border: 1px solid #ccc;
+    cursor: auto;
+    background-color: white;
+}
+
+.toolbar-class {
+    border: 1px solid #ccc;
+}

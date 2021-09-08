@@ -1,0 +1,22 @@
+#auth {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    width: 100%;
+    height: 100%;
+}
+
+#auth form {
+    padding: 50px;
+}
+
+#auth label {
+    display: block;
+}
+
+#auth input {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+}

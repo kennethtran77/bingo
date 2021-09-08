@@ -1,0 +1,9 @@
+#settings input {
+    width: 50%;
+    display: block;
+    margin-bottom: 10px;
+}
+
+#settings label {
+    display: block;
+}

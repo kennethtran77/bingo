@@ -1,0 +1,236 @@
+body {
+    font-family: 'Montserrat', serif;
+    background-color: white;
+    margin: 15px 15% 15px 15%;
+}
+
+.margin {
+    margin: 5px;
+}
+
+input[type=text], input[type=password], input[type=email], input[type=number], select {
+    height: 35px;
+    font-size: 16px;
+    box-sizing: border-box;
+    font-family: 'Montserrat', serif;
+}
+
+.container {
+    border-radius: 5px;
+    border: 1px solid rgb(204, 204, 204);
+    margin: 5px;
+    padding: 15px;
+    background-color: rgb(248, 252, 255);
+}
+
+.secondary {
+    background-color: rgb(228, 243, 255);
+}
+
+.flex {
+    display: flex;
+}
+
+.plus {
+    border: none;
+    color: white;
+    background-color: darkslateblue;
+    border-radius: 50%;
+    text-decoration: none;
+    padding: 1px 5px 1px 5px;
+}
+
+.plus:hover {
+    background-color: rgb(55, 47, 107);
+    cursor: pointer;
+}
+
+.plus::after {
+    content: '+';
+}
+
+.x {
+    display: inline-block;
+    border: none;
+    color: white;
+    background-color: rgb(209, 0, 0);
+    border-radius: 50%;
+    text-decoration: none;
+    padding: 0 5px 0 5px;
+    height: 19px;
+}
+
+.x::after {
+    content: '×';
+}
+
+.x:hover {
+    background-color: rgb(149, 0, 0);
+    cursor: pointer;
+}
+
+.more {
+    display: inline-block;
+    border: none;
+    color: white;
+    background-color: rgb(51, 51, 51);
+    border-radius: 5px;
+    text-decoration: none;
+    height: 15px;
+    padding: 1px 5px 5px 5px;
+}
+
+.more::after {
+    content: '≡';
+}
+
+.more:hover {
+    background-color: rgb(32, 32, 32);
+    cursor: pointer;
+}
+
+.edit {
+    display: inline-block;
+    border: none;
+    color: white;
+    background-color: rgb(82, 82, 82);
+    border-radius: 50%;
+    text-decoration: none;
+    padding: 0 5px 0 5px;
+    height: 18px;
+}
+
+.edit::after {
+    content: '≡';
+}
+
+.edit:hover {
+    background-color: rgb(51, 51, 51);
+}
+
+.h-margin {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.small-button {
+    background-color: white;
+    border: 2px solid #0057ba;
+    border-radius: 5px;
+    padding: 10px;
+    color: black;
+    text-decoration: none;
+    transition: 200ms;
+    font-family: 'Montserrat', serif;
+    font-size: 16px;
+}
+
+.small-button:visited {
+    color: black;
+}
+
+.small-button:hover {
+    background-color: #80acdf;
+    border: 2px solid #004594;
+    color: white;
+}
+
+.small-button:active {
+    background-color: #5392db;
+    border: 2px solid #004594;
+    color: white;
+}
+
+.center-flex {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.left-flex {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.right-flex {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.space-between {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.remove-bullet {
+    list-style-type: none;
+    padding: 0;
+}
+
+/*
+Pagination
+*/
+.previous-button {
+    color: black;
+}
+
+.pagination-button {
+    width: 80%;
+    height: 40px;
+    list-style: none;
+    display: flex;
+    justify-content: center;
+}
+  
+.pagination-button a {
+    padding: 10px;
+    margin: 8px;
+    border: 2px solid #0057ba;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 250ms;
+}
+  
+.pagination-button a:hover {
+    background-color: #80acdf;
+    border: 2px solid #004594;
+    color: white;
+}
+  
+.pagination-active a {
+    color: black;
+    background-color: white;
+}
+  
+.pagination-disabled a {
+    background-color: #80acdf;
+    color: black;
+    cursor: not-allowed;
+}
+
+.pagination-disabled a:hover {
+    background-color: #80acdf;
+    color: black;
+}
+
+/*
+Responsive
+*/
+@media only screen and (min-width: 1024px) {
+    .row {
+        display: flex;
+    }
+    
+    .maj {
+        flex-grow: 3;
+        flex-basis: 75%;
+    }
+    
+    .min {
+        flex-grow: 1;
+        flex-basis: 25%;
+    }
+}
