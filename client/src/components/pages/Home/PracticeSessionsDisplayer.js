@@ -30,12 +30,12 @@ const PracticeSessionsDisplayer = ({ userId }) => {
                     </tr>
                 </thead>
                 <tbody>
-                { slicedPracticeSessions.length && slicedPracticeSessions.map((practiceSession, id) => {
+                { slicedPracticeSessions.map((practiceSession, id) => {
                     let date = new Date(practiceSession.date);
                     date = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
                     return (
                         <tr key={id}>
-                            <td>{practiceSession.score} / {practiceSession.practiceQuestions.length}</td>
+                        <   td>{practiceSession.score} / {practiceSession.practiceQuestions.length}</td>
                             <td>{ date }</td>
                             <td>{ practiceSession.title }</td>
                             <Link className="center-flex small-button" to={"/practice/results/" + practiceSession._id}>View</Link>
