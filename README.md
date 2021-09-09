@@ -38,4 +38,4 @@ npm start
 ## Todo
 
 * Better styling
-* Fix visual glitch with reorder practice
+* Implement "Collections" of concepts
