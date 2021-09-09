@@ -26,6 +26,7 @@ input[type=text], input[type=password], input[type=email], input[type=number], s
 
 .secondary {
     background-color: rgb(228, 243, 255);
+    border: 1px solid rgb(183, 222, 255);
 }
 
 .flex {
