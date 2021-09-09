@@ -5,13 +5,14 @@ Create and practice concepts
 ## Features
 
 * Create concepts and corresponding practice questions
+* View and practice others' concepts
 * Four types of practice questions:
     1. Fill-In-The-Blank (Cloze)
     2. Multiple Answers
     3. Single Answer
     4. Reorder
-* View and practice others' concepts
-
+* Support for Mathjax
+	
 ## Screenshots
 
 TODO
