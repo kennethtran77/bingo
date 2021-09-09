@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { correctColour, incorrectColour } from '../../util';
@@ -8,6 +8,9 @@ import Math from './Math';
 import './Reorder.css';
 
 const Reorder = ({ title, componentType, order, setOrder, mathjaxEnabled, question }) => {
+    // local input state to prevent visual glitch... until alternative found
+    const [localState, setLocalState] = useState(order);
+
     const handleOnDragEnd = result => {
         if (!result.destination)
             return;
@@ -17,7 +20,16 @@ const Reorder = ({ title, componentType, order, setOrder, mathjaxEnabled, questi
         const [reorderedItem] = newOrder.splice(result.source.index, 1);
         newOrder.splice(result.destination.index, 0, reorderedItem);
 
+        // update the parent
         setOrder(newOrder);
+
+        // update local state
+        setLocalState(prevState => {
+            let newLocalState = [...prevState];
+            const [reorderedItem] = newLocalState.splice(result.source.index, 1);
+            newLocalState.splice(result.destination.index, 0, reorderedItem);
+            return newLocalState;
+        });
     }
 
     const disabled = componentType !== 'practice' && componentType !== 'edit';
@@ -49,7 +61,7 @@ const Reorder = ({ title, componentType, order, setOrder, mathjaxEnabled, questi
             <Droppable droppableId={title}>
                 {(provided) => (
                     <ul className="reorder" { ...provided.droppableProps} ref={provided.innerRef} >
-                        { order.map((item, index) => (
+                        { localState.map((item, index) => (
                             <Draggable key={item} draggableId={item} index={index}>
                                 {(provided) => (
                                     <li ref={provided.innerRef} { ...provided.draggableProps } { ...provided.dragHandleProps }>

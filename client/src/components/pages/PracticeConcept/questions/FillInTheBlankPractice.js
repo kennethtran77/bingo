@@ -38,7 +38,7 @@ const FillInTheBlankPractice = ({ question, index, componentType, input, setInpu
                         />
                     ) : (
                     // Display the text
-                        <span key={answerIndex}> { answer } </span>
+                        <span key={answerIndex}>{ answer }</span>
                     )
                 )
             } )}

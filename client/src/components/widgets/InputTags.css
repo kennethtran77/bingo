@@ -21,6 +21,7 @@
     border: rgb(59, 59, 59) 1px solid;
     border-radius: 3px;
     background-color: rgb(209, 234, 255);
+    cursor: pointer;
 }
 
 #input-tags-field {
@@ -37,4 +38,8 @@
 
 .input-tags:hover, .hover {
     border: rgb(36, 36, 36) 1px solid;
+}
+
+.full-width {
+    max-width: 100%;
 }

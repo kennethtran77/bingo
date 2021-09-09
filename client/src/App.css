@@ -2,6 +2,7 @@ body {
     font-family: 'Montserrat', serif;
     background-color: white;
     margin: 15px 15% 15px 15%;
+    min-width: 300px;
 }
 
 .margin {

@@ -91,18 +91,23 @@ const InputCloze = ({ input, setInput }) => {
     }
 
     return (
-        <div className={styling}>
+        <div className={styling} >
             { input.answer && input.answer.map((ans, index) => (
                 typeof ans === 'string' ? (
                     <AutosizeInput
                         value={input.answer[index] || ''}
                         key={index}
                         ref={fieldRefs[index]}
+                        className={'full-width'}
                         inputStyle={{
                             minHeight: 30,
                             border: 'none',
                             outline: 'none',
+                            maxWidth: '98%',
+                            background: 'rgba(255, 255, 255, 0)',
                             wordWrap: 'break-word',
+                            marginTop: 10,
+                            marginBottom: 10
                         }}
                         onKeyDown={(e) => handleKeyDown(index, e)}
                         onMouseEnter={() => { if (fieldState !== 'focused') setFieldState('hover') }}
@@ -118,6 +123,7 @@ const InputCloze = ({ input, setInput }) => {
                 ) : (
                     <div key={index} className="blanks">
                         <InputTags
+                            className='margin'
                             tags={input.answer[index]}
                             addTag={blank => setInput(prevState => {
                                 let newAnswer = [ ...prevState.answer ]

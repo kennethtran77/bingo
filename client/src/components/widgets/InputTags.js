@@ -42,10 +42,7 @@ const InputTags = ({ className = '', tags, addTag, removeTag, placeholder, maxLe
             { tags && tags.map((tag, index) => (
                 <span className="input-tag" key={index}>
                     <Math text={tag} enabled={mathjaxEnabled} setError={setMathjaxError} />
-                    <span className="x h-margin" onClick={(e) => {
-                        e.preventDefault();
-                        removeTag(tag);
-                    }}></span>
+                    <span className="x h-margin" onClick={() => removeTag(tag)}></span>
                 </span>
             )) }
             <input
