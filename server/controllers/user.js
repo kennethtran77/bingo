@@ -9,14 +9,28 @@ dotenv.config();
 
 const secret = process.env.SECRET;
 
-const validateUsername = (username) => {
+
+const validateUsername = username => {
     // test for length
     if (username.length < 3)
-        return { success: false, message: 'Username must be at least 3 characters.' };
+        return { success: false, message: 'Username must contain at least 3 characters.' };
 
     // test for whitespace
     if (/\s/.test(username))
         return { success: false, message: 'Username cannot contain whitespace.' };
+    
+    return { success: true };
+}
+
+const validatePassword = password => {
+    if (password.length < 6)
+        return { success: false, message: 'Password must contain at least 6 characters.' };
+    
+    if (password.search(/[a-z]/i) < 0)
+        return { success: false, message: 'Password must contain at least one letter.' };
+    
+    if (password.search(/[0-9]/) < 0)
+        return { success: false, message: 'Password must contain at least one digit.' };
     
     return { success: true };
 }
@@ -60,9 +74,16 @@ export const signUp = async (req, res) => {
         if (!email || !password || !confirmPassword || !username)
             return res.status(400).json({ message: 'Please fill in all inputs.' });
 
+        // validate password
+        const validPassword = validatePassword(password);
+
+        if (!validPassword.success)
+            return res.status(400).json({ message: validPassword.message });
+
         if (password !== confirmPassword)
             return res.status(400).json({ message: 'The two passwords do not match.' });
 
+        // validate username
         const validUsername = validateUsername(username);
 
         if (!validUsername.success)
@@ -89,6 +110,39 @@ export const signUp = async (req, res) => {
         const token = jwt.sign({ id: newUser._id }, secret, { expiresIn: '6h' });
 
         res.status(201).json({ token });
+    } catch (error) {
+        res.status(500).json({ message: 'Something went wrong...' });
+    }
+}
+
+export const resetPassword = async (req, res) => {
+    const { password, newPassword, confirmNewPassword } = req.body;
+
+    try {
+        if (!password || !newPassword || !confirmNewPassword)
+            return res.status(400).json({ message: 'Please fill in all inputs.' });
+        
+        const user = await UserModel.findById(req.user.id);
+    
+        // check if password is correct
+        if (!await bcrypt.compare(password, user.password))
+            return res.status(400).json({ message: 'Incorrect password.' });
+
+        if (newPassword !== confirmNewPassword)
+            return res.status(400).json({ message: 'The two passwords do not match.' });
+
+        // validate password
+        const validPassword = validatePassword(newPassword);
+
+        if (!validPassword.success)
+            return res.status(400).json({ message: validPassword.message });
+
+        const hashedPassword = await bcrypt.hash(newPassword, 12);
+
+        user.password = hashedPassword;
+
+        await user.save();
+        res.status(201).json({ message: 'Password successfully changed. '});
     } catch (error) {
         res.status(500).json({ message: 'Something went wrong...' });
     }
@@ -161,7 +215,7 @@ export const updateSettings = async (req, res) => {
         user.settings.questionsPerSession = newSettings.questionsPerSession;
 
         await user.save();
-        res.status(200).json({ message: 'Settings updated successfully.' });
+        res.status(201).json({ message: 'Settings updated successfully.' });
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -185,7 +239,7 @@ export const updateUsername = async (req, res) => {
         user.username = newUsername;
 
         await user.save();
-        res.status(200).json({ message: 'Username updated successfully.' });
+        res.status(201).json({ message: 'Username updated successfully.' });
     } catch (error) {
         res.status(400).json({ message: error.message });
     }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateSettings, updateUsername } from '../../../actions/user';
+import { updateSettings, updateUsername, updatePassword } from '../../../actions/user';
 
 import './Settings.css';
 
@@ -26,6 +26,12 @@ const Settings = () => {
         e.preventDefault();
         dispatch(updateUsername(input.username));
         setInput({ ...input, username: '' });
+    }
+
+    const handleSavePassword = e => {
+        e.preventDefault();
+        dispatch(updatePassword(input.currentPassword, input.newPassword, input.confirmNewPassword));
+        setInput({ ...input, currentPassword: '', newPassword: '', confirmNewPassword: '' });
     }
 
     const handleChange = e => setInput({ ...input, [e.target.name]: e.target.value });
@@ -94,7 +100,7 @@ const Settings = () => {
                         onChange={handleChange}
                     />
                 </label>
-                <button className="small-button">Save</button>
+                <button className="small-button" onClick={handleSavePassword}>Save</button>
             </div>
         </div>
     );

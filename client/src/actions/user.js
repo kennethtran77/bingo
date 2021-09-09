@@ -68,3 +68,15 @@ export const updateSettings = (newSettings) => async (dispatch) => {
         dispatch({ type: 'settings/stopLoading' });
     }
 }
+
+export const updatePassword = (password, newPassword, confirmNewPassword) => async (dispatch) => {
+    try {
+        dispatch({ type: 'settings/startLoading' });
+        const { data } = await api.updatePassword(password, newPassword, confirmNewPassword);
+        dispatch(setTimedMessage(data.message, 'green', 2500));
+        dispatch({ type: 'settings/stopLoading' });
+    } catch (error) {
+        dispatch(setTimedMessage(error.response.data.message, 'red', 2500));
+        dispatch({ type: 'settings/stopLoading' });
+    }
+}

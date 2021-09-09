@@ -32,6 +32,7 @@ export const fetchPracticeSessions = () => api.get(`/practice/sessions`);
 // auth
 export const login = (loginInput) => api.post(`/users/login`, loginInput);
 export const signUp = (signUpInput) => api.post(`/users/signup`, signUpInput);
+export const updatePassword = (password, newPassword, confirmNewPassword) => api.post(`/users/password`, { password, newPassword, confirmNewPassword });
 
 // user
 export const getUser = (userId) => api.get(`/users/user/${userId}`);

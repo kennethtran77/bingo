@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { login, signUp, getSettings, updateSettings, getUser, getUsername, updateUsername } from '../controllers/user.js';
+import { login, signUp, getSettings, updateSettings, getUser, getUsername, updateUsername, resetPassword } from '../controllers/user.js';
 
 import auth from '../middleware/auth.js';
 
@@ -17,5 +17,6 @@ router.get('/username/:userId', getUsername);
 router.get('/settings', auth, getSettings);
 router.post('/settings', auth, updateSettings);
 router.post('/username', auth, updateUsername);
+router.post('/password', auth, resetPassword);
 
 export default router;
