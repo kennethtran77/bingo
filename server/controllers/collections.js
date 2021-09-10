@@ -30,8 +30,39 @@ export const createCollection = async (req, res) => {
     }
 };
 
+export const updateCollection = async (req, res) => {
+    const { collectionId } = req.params;
+    const { title, tags } = req.body;
+
+    try {
+        // Check to see if the collection with given id exists
+        if (!mongoose.Types.ObjectId.isValid(collectionId))
+            return res.status(404).send(`No collection found with id ${collectionId}`);
+
+        const collection = await CollectionModel.findById(collectionId);
+
+        if (req.user.id !== collection.creator.toString())
+            return res.status(403).json({ message: 'Unauthorized action' });
+        
+        const updatedCollection = {
+            creator: collection.creator,
+            concepts: collection.concepts,
+            title,
+            tags,
+            _id: collection._id
+        };
+
+        await CollectionModel.findByIdAndUpdate(collectionId, updatedCollection, { new: true });
+
+        res.status(200).json(updatedCollection);
+    } catch (error) {
+        res.status(409).json({ message: error.message });
+    };
+}
+
 export const addToCollection = async (req, res) => {
-    const { collectionId, conceptId } = req.body;
+    const { collectionId } = req.params;
+    const { conceptId } = req.body;
 
     try {
         // Check to see if the collection with given id exists
@@ -57,7 +88,8 @@ export const addToCollection = async (req, res) => {
 };
 
 export const removeFromCollection = async (req, res) => {
-    const { collectionId, conceptId } = req.body;
+    const { collectionId } = req.params;
+    const { conceptId } = req.body;
 
     try {
         // Check to see if the collection with given id exists
@@ -76,7 +108,7 @@ export const removeFromCollection = async (req, res) => {
         if (!collection.concepts.includes(conceptId))
             return res.status(404).send(`This collection does not contain the given concept`);
         
-        collection.concepts = collection.concepts.filter(c => c !== conceptId);
+        collection.concepts = collection.concepts.filter(c => c.toString() !== conceptId);
 
         await collection.save();
         res.status(200).json({ message: 'Successfully removed concept.' });

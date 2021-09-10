@@ -16,7 +16,10 @@ export const addToCollection = (collection, conceptId) => async (dispatch) => {
     try {
         dispatch({ type: 'collections/startLoading' });
         await api.addToCollection(collection._id, conceptId);
-        dispatch({ type: 'collections/addTo', payload: conceptId });
+        dispatch({ type: 'collections/addTo', payload: {
+            collection,
+            conceptId
+        } });
         dispatch({ type: 'collections/stopLoading' });
     } catch (error) {
         console.log(error);
@@ -28,7 +31,10 @@ export const removeFromCollection = (collection, conceptId) => async (dispatch) 
     try {
         dispatch({ type: 'collections/startLoading' });
         await api.removeFromCollection(collection._id, conceptId);
-        dispatch({ type: 'collections/removeFrom', payload: conceptId });
+        dispatch({ type: 'collections/removeFrom', payload: {
+            collection,
+            conceptId
+        } });
         dispatch({ type: 'collections/stopLoading' });
     } catch (error) {
         console.log(error);
@@ -49,6 +55,18 @@ export const createCollection = (collectionName) => async (dispatch) => {
         dispatch({ type: 'collections/stopLoading' });
     }
 };
+
+export const updateCollection = (collectionId, updatedCollection) => async (dispatch) => {
+    try {
+        dispatch({ type: 'collections/startLoading' });
+        const { data } = await api.updateCollection(collectionId, updatedCollection);
+        dispatch({ type: 'collections/update', payload: data });
+        dispatch({ type: 'collections/stopLoading' });
+    } catch (error) {
+        console.log(error);
+        dispatch({ type: 'collections/stopLoading' });
+    }
+}
 
 export const deleteCollection = (collectionId) => async (dispatch) => {
     try {

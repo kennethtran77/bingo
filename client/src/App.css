@@ -221,18 +221,16 @@ Pagination
 /*
 Responsive
 */
-@media only screen and (min-width: 1024px) {
+@media only screen and (min-width: 1200px) {
     .row {
         display: flex;
     }
     
     .maj {
-        flex-grow: 3;
-        flex-basis: 75%;
+        flex-grow: 2;
     }
     
     .min {
         flex-grow: 1;
-        flex-basis: 25%;
     }
 }

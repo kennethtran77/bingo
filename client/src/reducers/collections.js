@@ -8,6 +8,8 @@ const collectionsReducer = (state = { isLoading: false, collections: [] }, actio
             return { ...state, collections: action.payload };
         case 'collections/create':
             return { ...state, collections: [...state.collections, action.payload ]};
+        case 'collections/update':
+            return { ...state, collections: state.collections.map(c => c._id === action.payload._id ? action.payload : c)};
         case 'collections/delete':
             return { ...state, collections: state.collections.filter(collection => collection._id !== action.payload) };
         case 'collections/addTo': {

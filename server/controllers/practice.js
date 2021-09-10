@@ -61,13 +61,15 @@ export const generateCollectionQuestions = async (req, res) => {
 
     try {
         const collection = await CollectionModel.findById(collectionId);
-        const concepts = collection.concepts;
+        const concepts = await ConceptModel.find({ "_id": { "$in": collection.concepts } });
+        const questions = await QuestionModel.find({ "_id": { "$in": concepts.reduce((currentQuestions, currentConcept) => currentQuestions.concat(currentConcept.questions), [])}});
 
-        // start with all the questions from each concept, then filter out incomplete questions, then slice
-        let generatedQuestions = concepts
-            .reduce((currentQuestions, currentConcept) => currentQuestions.concat(currentConcept.questions), [])
+        // shuffle
+        shuffle(questions);
+
+        let generatedQuestions = questions
             .filter(question => verifyQuestion(question))
-            .slice(0, Math.min(questionsPerSession, generatedQuestions.length));
+            .slice(0, Math.min(questionsPerSession, questions.length));
 
         // shuffle the order in any reorder questions
         shuffleReorderQuestions(generatedQuestions);

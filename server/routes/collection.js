@@ -12,6 +12,7 @@ router.use(express.json());
 router.get('/', auth, controller.getCollections);
 router.patch('/add/:collectionId', auth, controller.addToCollection);
 router.patch('/remove/:collectionId', auth, controller.removeFromCollection);
+router.patch('/:collectionId', auth, controller.updateCollection)
 router.post('/', auth, controller.createCollection);
 router.delete('/:collectionId', auth, controller.deleteCollection);
 

@@ -29,8 +29,9 @@ export const verifyQuestion = (conceptId, questionId) => api.get(`/concepts/${co
 export const fetchCollections = () => api.get(`/collections`);
 export const createCollection = (collection) => api.post(`/collections`, { collection });
 export const deleteCollection = (collectionId) => api.delete(`/collections/${collectionId}`);
-export const addToCollection = (collectionId, conceptId) => api.patch(`/collections/add/${collectionId}`, conceptId);
-export const removeFromCollection = (collectionId, conceptId) => api.patch(`/collections/remove/${collectionId}`, conceptId);
+export const updateCollection = (collectionId, updatedCollection) => api.patch(`/collections/${collectionId}`, updatedCollection);
+export const addToCollection = (collectionId, conceptId) => api.patch(`/collections/add/${collectionId}`, { conceptId });
+export const removeFromCollection = (collectionId, conceptId) => api.patch(`/collections/remove/${collectionId}`, { conceptId });
 
 // practice
 export const generateConceptQuestions = (conceptId, questionsPerSession) => api.get(`/practice/generateConcept/${conceptId}?questionsPerSession=${questionsPerSession}`);

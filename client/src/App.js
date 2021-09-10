@@ -77,7 +77,7 @@ const App = () => {
                 <Route exact path="/concept/view/:conceptId">{ wrap(ViewConcept) }</Route>
                 <Route exact path='/concept/edit/:conceptId' >{ wrap(EditConcept) }</Route>
                 <Route exact path='/practice/concept/:conceptId' >{ wrap(PracticeConcept) }</Route>
-                <Route exact path='/collection/edit/:conceptId' >{ wrap(EditCollection) }</Route>
+                <Route exact path='/collection/edit/:collectionId' >{ wrap(EditCollection) }</Route>
                 <Route exact path='/practice/collection/:collectionId' >{ wrap(PracticeCollection) }</Route>
                 <Route exact path="/login" ><Redirect to="/" /></Route>
                 <Route exact path="/signup" ><Redirect to="/" /></Route>
