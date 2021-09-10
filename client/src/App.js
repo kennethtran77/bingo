@@ -5,24 +5,29 @@ import { Route, Switch, Redirect } from 'react-router';
 import decode from 'jwt-decode';
 
 import { fetchConcepts } from './actions/concepts.js';
+import { fetchCollections } from './actions/collections.js';
 import { fetchPracticeSessions } from './actions/practice.js';
 import { fetchSettings, fetchUsername } from './actions/user.js';
 
 import './App.css';
+
 // Import components
 import Navbar from './components/widgets/Navbar';
 import EditConcept from './components/pages/EditConcept/EditConcept';
-import PracticeConcept from './components/pages/PracticeConcept/PracticeConcept';
+import PracticeConcept from './components/pages/Practice/PracticeConcept';
 import Home from './components/pages/Home/Home';
 import Error from './components/pages/Error';
 import Login from './components/pages/Auth/Login';
 import Signup from './components/pages/Auth/Signup';
 import Settings from './components/pages/Settings/Settings';
 import PracticeResults from './components/pages/PracticeResults';
-import BrowseConcepts from './components/pages/BrowseConcepts.js';
-import ViewConcept from './components/pages/ViewConcept.js';
+import BrowseConcepts from './components/pages/BrowseConcepts';
+import ViewConcept from './components/pages/ViewConcept';
+import Collections from './components/pages/Collections/Collections';
+import EditCollection from './components/pages/Collections/EditCollection';
 
 import 'reactjs-popup/dist/index.css';
+import PracticeCollection from './components/pages/Practice/PracticeCollection.js';
 
 const App = () => {
     const session = JSON.parse(localStorage.getItem('profile'));
@@ -44,7 +49,8 @@ const App = () => {
     useEffect(() => {
         if (decodedToken) {
             dispatch({ type: 'questions/clear' });
-            dispatch(fetchConcepts());
+            dispatch(fetchConcepts(decodedToken.id));
+            dispatch(fetchCollections());
             dispatch(fetchPracticeSessions());
             dispatch(fetchSettings());
             dispatch(fetchUsername(decodedToken.id));
@@ -68,14 +74,17 @@ const App = () => {
             <Switch>
                 <Route exact path="/">{ wrap(Home) }</Route>
                 <Route path="/create" >{ wrap(EditConcept) }</Route>
-                <Route exact path='/edit/:conceptId' >{ wrap(EditConcept) }</Route>
-                <Route exact path='/practice/:conceptId' >{ wrap(PracticeConcept) }</Route>
+                <Route exact path="/concept/view/:conceptId">{ wrap(ViewConcept) }</Route>
+                <Route exact path='/concept/edit/:conceptId' >{ wrap(EditConcept) }</Route>
+                <Route exact path='/practice/concept/:conceptId' >{ wrap(PracticeConcept) }</Route>
+                <Route exact path='/collection/edit/:conceptId' >{ wrap(EditCollection) }</Route>
+                <Route exact path='/practice/collection/:collectionId' >{ wrap(PracticeCollection) }</Route>
                 <Route exact path="/login" ><Redirect to="/" /></Route>
                 <Route exact path="/signup" ><Redirect to="/" /></Route>
                 <Route exact path="/settings">{ wrap(Settings) }</Route>
                 <Route exact path="/browse" >{ wrap(BrowseConcepts) }</Route>
+                <Route exact path="/collections" >{ wrap(Collections) }</Route>
                 <Route exact path="/practice/results/:sessionId">{ wrap(PracticeResults) }</Route>
-                <Route exact path="/concept/:conceptId">{ wrap(ViewConcept) }</Route>
                 <Route component={Error} />
             </Switch>
         </>

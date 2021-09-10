@@ -10,7 +10,8 @@ const userSchema = mongoose.Schema({
     password: String,
     username: String,
     settings: settingsSchema,
-    sessionsCompleted: [{ type: mongoose.Types.ObjectId, ref: 'PracticeSession' }]
+    sessionsCompleted: [{ type: mongoose.Types.ObjectId, ref: 'PracticeSession' }],
+    collections: [{ type: mongoose.Types.ObjectId, ref: 'Collection' }]
 }, { versionKey: false });
 
 const UserModel = mongoose.model('User', userSchema);

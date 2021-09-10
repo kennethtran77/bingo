@@ -7,7 +7,7 @@ import selectStyles from '../../../selectStyles';
 
 import { correctColour, incorrectColour } from '../../../../util';
 
-const SingleAnswerPractice = ({ question, index, componentType, input, setInput }) => {
+const SingleAnswerPractice = ({ question, componentType, input, setInput }) => {
     // const handleChange = e => {
     //     let newInput = [...input];
     //     newInput = [e.target[e.target.selectedIndex].getAttribute('name') === 'empty' ? null : e.target.value];

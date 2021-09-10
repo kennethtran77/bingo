@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getUsername } from '../../api';
 
-const ConceptsVisualizer = ({ concept, remove, userId, displayAll }) => {
+const ConceptVisualizer = ({ concept, remove, userId, displayAll }) => {
     const [creator, setCreator] = useState('');
 
     useEffect(() => {
@@ -21,9 +21,9 @@ const ConceptsVisualizer = ({ concept, remove, userId, displayAll }) => {
                     <strong>{concept.title}</strong> { displayAll && <><div className="h-margin"></div> <p>by {creator}</p></> }
                 </div>
                 <div className="center-flex">
-                    <Link className="small-button margin" to={`/concept/${concept._id}`}>View</Link>
-                    { userId === concept.creator && <Link className="small-button margin" to={`/edit/${concept._id}`}>Edit</Link> }
-                    <Link className="small-button margin" to={`/practice/${concept._id}`}>Practice</Link>
+                    <Link className="small-button margin" to={`/concept/view/${concept._id}`}>View</Link>
+                    { userId === concept.creator && <Link className="small-button margin" to={`/concept/edit/${concept._id}`}>Edit</Link> }
+                    <Link className="small-button margin" to={`/practice/concept/${concept._id}`}>Practice</Link>
                     { userId === concept.creator && <span onClick={handleRemove} className="x"></span> }
                 </div>
             </div>
@@ -39,4 +39,4 @@ const ConceptsVisualizer = ({ concept, remove, userId, displayAll }) => {
     )
 };
 
-export default ConceptsVisualizer;
+export default ConceptVisualizer;

@@ -7,6 +7,7 @@ import conceptsRouter from './routes/concept.js';
 import questionsRouter from './routes/question.js';
 import practiceRouter from './routes/practice.js';
 import userRouter from './routes/user.js';
+import collectionsRouter from './routes/collection.js';
 
 const app = express();
 
@@ -26,6 +27,7 @@ conceptsRouter.use('/:conceptId/questions', questionsRouter);
 app.use('/concepts', conceptsRouter);
 app.use('/practice', practiceRouter);
 app.use('/users', userRouter);
+app.use('/collections', collectionsRouter);
 
 app.get('/', (req, res) => {
     res.send("Connected to API");

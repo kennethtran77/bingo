@@ -42,6 +42,7 @@ const Navbar = ({ decodedToken }) => {
             <div id="navbar-options">
                 <Link className="nav-button" to="/">Home</Link>
                 <Link className="nav-button" to="/settings">Settings</Link>
+                <Link className="nav-button" to="/collections">Collections</Link>
                 <Link className="nav-button" to="/browse">Browse Concepts</Link>
                 <div className="center-flex">
                     <div className="h-margin">Logged in as</div>
@@ -56,6 +57,7 @@ const Navbar = ({ decodedToken }) => {
                 <div id="mobile-navbar-options">
                     <Link className="nav-button" to="/">Home</Link>
                     <Link className="nav-button" to="/settings">Settings</Link>
+                    <Link className="nav-button" to="/collections">Collections</Link>
                     <Link className="nav-button" to="/browse">Browse Concepts</Link>
                     <div className="container">
                         <div className="h-margin">Logged in as</div>

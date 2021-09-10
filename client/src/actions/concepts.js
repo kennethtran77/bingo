@@ -4,7 +4,7 @@ import { fetchQuestions } from '../actions/questions';
 
 // Action handlers
 
-export const fetchConcepts = () => async (dispatch) => {
+export const fetchConcepts = (userId) => async (dispatch) => {
     try {
         dispatch({ type: 'concepts/startLoading' });
         const { data } = await api.fetchConcepts();
@@ -12,7 +12,11 @@ export const fetchConcepts = () => async (dispatch) => {
         dispatch({ type: 'concepts/stopLoading' });
 
         // fetch questions after the concepts have been fetched
-        data.forEach(concept => dispatch(fetchQuestions(concept)));
+        data.forEach(concept => {
+            if (concept.creator.toString() === userId) {
+                dispatch(fetchQuestions(concept));
+            }
+        });
     } catch (error) {
         console.log(error.message);
     }

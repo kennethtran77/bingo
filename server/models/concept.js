@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const conceptSchema = mongoose.Schema({
     title: String,
-    creator: String,
+    creator: { type: mongoose.Types.ObjectId, ref: 'User' },
     text: String,
     tags: [String],
     public: Boolean,

@@ -4,8 +4,19 @@ import UserModel from '../models/user.js';
 import ConceptModel from '../models/concept.js';
 import QuestionModel from '../models/question.js';
 import PracticeSessionModel from '../models/practiceSession.js';
+import CollectionModel from '../models/collection.js';
 
 import { shuffle, verifyQuestion, verifyAnswer } from '../utils.js';
+
+
+const shuffleReorderQuestions = questions => {
+    questions.forEach((question, index) => {
+        if (question.type === 'Reorder') {
+            shuffle(question.options);
+            questions[index] = question;
+        }
+    });
+};
 
 export const getSessions = async (req, res) => {
     const userId = req.user.id;
@@ -19,31 +30,47 @@ export const getSessions = async (req, res) => {
     }
 }
 
-export const generateQuestions = async (req, res) => {
+export const generateConceptQuestions = async (req, res) => {
     const { conceptId } = req.params;
     const questionsPerSession = req.query.questionsPerSession;
 
     try {
         const concept = await ConceptModel.findById(conceptId);
+        const questions = await QuestionModel.find({ "_id": { "$in": concept.questions } });
 
-        const ids = concept.questions;
-        const questions = await QuestionModel.find({ "_id": { "$in": ids } });
+        // shuffle
+        shuffle(questions);
 
-        // generate the questions
+        // filter
         let generatedQuestions = questions
             .filter(question => verifyQuestion(question))
             .slice(0, Math.min(questionsPerSession, questions.length));
 
         // shuffle the order in any reorder questions
-        generatedQuestions.forEach((question, index) => {
-            if (question.type === 'Reorder') {
-                shuffle(question.options);
-                generatedQuestions[index] = question;
-            }
-        });
-        
-        // shuffle the questions
-        shuffle(generatedQuestions);
+        shuffleReorderQuestions(generatedQuestions);
+
+        res.json(generatedQuestions);
+    } catch (error) {
+        res.status(404).send({ message: error.message });
+    }
+}
+
+export const generateCollectionQuestions = async (req, res) => {
+    const { collectionId } = req.params;
+    const questionsPerSession = req.query.questionsPerSession;
+
+    try {
+        const collection = await CollectionModel.findById(collectionId);
+        const concepts = collection.concepts;
+
+        // start with all the questions from each concept, then filter out incomplete questions, then slice
+        let generatedQuestions = concepts
+            .reduce((currentQuestions, currentConcept) => currentQuestions.concat(currentConcept.questions), [])
+            .filter(question => verifyQuestion(question))
+            .slice(0, Math.min(questionsPerSession, generatedQuestions.length));
+
+        // shuffle the order in any reorder questions
+        shuffleReorderQuestions(generatedQuestions);
 
         res.json(generatedQuestions);
     } catch (error) {

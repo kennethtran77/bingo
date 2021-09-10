@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import ReactPaginate from 'react-paginate';
 
 import { createConcept, deleteConcept } from '../../actions/concepts';
-import ConceptsVisualizer from './ConceptsVisualizer';
+import ConceptVisualizer from './ConceptVisualizer';
 
 import SearchBox from './SearchBox';
 
@@ -67,7 +67,7 @@ const ConceptsDisplayer = ({ displayAll, userId }) => {
                 <ul className="remove-bullet">
                     { slicedConceptsToDisplay.length ? slicedConceptsToDisplay.map((concept, id) => (
                         <li key={id}>
-                            <ConceptsVisualizer
+                            <ConceptVisualizer
                                 concept={concept}
                                 remove={() => remove(concept)}
                                 displayAll={displayAll}
@@ -95,7 +95,7 @@ const ConceptsDisplayer = ({ displayAll, userId }) => {
             <div className="container min search-box">
                 <h2>Search</h2>
                 <SearchBox
-                    concepts={concepts}
+                    searchables={concepts}
                     setResults={results => {
                         setConceptsToDisplay(results);
                         setSearched(true);

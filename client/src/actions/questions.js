@@ -31,7 +31,6 @@ export const createQuestion = (concept, newQuestion) => async (dispatch) => {
     try {
         dispatch({ type: 'questions/startLoading' });
         const { data } = await api.createQuestion(concept._id, newQuestion);
-        console.log(data);
         dispatch({
             type: 'questions/create',
             payload: data

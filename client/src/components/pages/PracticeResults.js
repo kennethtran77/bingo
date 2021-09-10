@@ -3,7 +3,7 @@ import { Link, Redirect, useParams } from 'react-router-dom';
 
 import { useSelector } from 'react-redux';
 
-import PracticeVisualizer from './PracticeConcept/PracticeVisualizer';
+import PracticeQuestionVisualizer from './Practice/PracticeQuestionVisualizer';
 
 import { verifyAnswer } from '../../util.js';
 
@@ -58,7 +58,7 @@ const PracticeResults = ({ userId }) => {
                             <tbody key={index}>
                                 <tr>
                                     <td>
-                                        <PracticeVisualizer
+                                        <PracticeQuestionVisualizer
                                             question={question}
                                             index={index}
                                             componentType={'resultsUserInput'}
@@ -66,7 +66,7 @@ const PracticeResults = ({ userId }) => {
                                         />
                                     </td>
                                     <td>
-                                        <PracticeVisualizer
+                                        <PracticeQuestionVisualizer
                                             question={question}
                                             index={index}
                                             componentType={'resultsCorrectAnswer'}

@@ -4,29 +4,30 @@ import InputTags from './InputTags';
 
 import './SearchBox.css';
 
-const SearchBox = ({ concepts, setResults, reset }) => {
+// searchables needs a title and tags field
+const SearchBox = ({ searchables, setResults, reset }) => {
     const [query, setQuery] = useState('');
     const [tags, setTags] = useState([]);
 
     const handleSubmit = e => {
         e.preventDefault();
 
-        const checkQuery = concept => concept.title.toLowerCase().includes(query.toLowerCase().trim());
+        const checkQuery = searchable => searchable.title.toLowerCase().includes(query.toLowerCase().trim());
         const lowercaseTags = tags.map(tag => tag.toLowerCase());
-        const checkTags = concept => concept.tags.some(tag => lowercaseTags.includes(tag.toLowerCase()));
+        const checkTags = searchable => searchable.tags.some(tag => lowercaseTags.includes(tag.toLowerCase()));
 
         // query and tags both empty
         if (!query.trim() && !tags.length) {
             reset();
         // query empty, tags not empty
         } else if (!query.trim() && tags.length) {
-            setResults(concepts.filter(concept => checkTags(concept)));
+            setResults(searchables.filter(searchable => checkTags(searchable)));
         // query not empty, tags empty
         } else if (query.trim() && !tags.length) {
-            setResults(concepts.filter(concept => checkQuery(concept)));
+            setResults(searchables.filter(searchable => checkQuery(searchable)));
         // query and tags both NOT empty
         } else {
-            setResults(concepts.filter(concept => checkQuery(concept) || checkTags(concept)));
+            setResults(searchables.filter(searchable => checkQuery(searchable) || checkTags(searchable)));
         }
     };
     

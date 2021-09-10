@@ -3,7 +3,7 @@ import { correctColour, incorrectColour } from '../../../../util';
 
 import './FillInTheBlankPractice.css';
 
-const FillInTheBlankPractice = ({ question, index, componentType, input, setInput }) => {
+const FillInTheBlankPractice = ({ question, componentType, input, setInput }) => {
     return (
         <>
             { question.answer.map((answer, answerIndex) => {

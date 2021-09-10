@@ -2,6 +2,7 @@ import axios from 'axios';
 
 const api = axios.create({ baseURL: 'http://localhost:5000' });
 
+// attach the JWT token to each request
 api.interceptors.request.use(req => {
     if (localStorage.getItem('profile')) {
         req.headers.authorization = `Bearer ${JSON.parse(localStorage.getItem('profile')).token}`;
@@ -24,8 +25,16 @@ export const updateQuestion = (conceptId, questionId, updatedQuestion) => api.pa
 export const deleteQuestion = (conceptId, questionId) => api.delete(`/concepts/${conceptId}/questions/${questionId}`);
 export const verifyQuestion = (conceptId, questionId) => api.get(`/concepts/${conceptId}/questions/verify/${questionId}`);
 
+// collections
+export const fetchCollections = () => api.get(`/collections`);
+export const createCollection = (collection) => api.post(`/collections`, { collection });
+export const deleteCollection = (collectionId) => api.delete(`/collections/${collectionId}`);
+export const addToCollection = (collectionId, conceptId) => api.patch(`/collections/add/${collectionId}`, conceptId);
+export const removeFromCollection = (collectionId, conceptId) => api.patch(`/collections/remove/${collectionId}`, conceptId);
+
 // practice
-export const generateQuestions = (conceptId, questionsPerSession) => api.get(`/practice/generate/${conceptId}?questionsPerSession=${questionsPerSession}`);
+export const generateConceptQuestions = (conceptId, questionsPerSession) => api.get(`/practice/generateConcept/${conceptId}?questionsPerSession=${questionsPerSession}`);
+export const generateCollectionQuestions = (collectionId, questionsPerSession) => api.get(`/practice/generateCollection/${collectionId}?questionsPerSession=${questionsPerSession}`)
 export const processSession = (title, inputs) => api.post(`/practice/process`, { title, inputs });
 export const fetchPracticeSessions = () => api.get(`/practice/sessions`);
 

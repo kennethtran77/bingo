@@ -2,7 +2,7 @@ import React from 'react';
 
 import Reorder from '../../../widgets/Reorder';
 
-const ReorderPractice = ({ question, index, componentType, input, setInput }) => {
+const ReorderPractice = ({ question, componentType, input, setInput }) => {
 
     return (
         <Reorder

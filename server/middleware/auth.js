@@ -9,14 +9,15 @@ const auth = async (req, res, next) => {
     try {
         const authHeader = req.headers.authorization;
 
-        if (!authHeader)
-            return res.sendStatus(403);
+        if (!authHeader){
+            return res.status(403).send(`You are not authenticated`);
+        }
 
         const token = req.headers.authorization.split(" ")[1];
 
         jwt.verify(token, process.env.SECRET, (err, user) => {
             if (err) {
-                return res.sendStatus(403);
+                return res.status(403).send(`This token is invalid`);
             }
 
             req.user = user;

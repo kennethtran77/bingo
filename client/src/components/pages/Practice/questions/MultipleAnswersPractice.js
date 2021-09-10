@@ -3,7 +3,7 @@ import { correctColour, incorrectColour } from '../../../../util';
 
 import Math from '../../../widgets/Math';
 
-const MultipleAnswersPractice = ({ question, index, componentType, input, setInput }) => {
+const MultipleAnswersPractice = ({ question, componentType, input, setInput }) => {
 
     const handleTick = option => {
         if (input.includes(option)) {

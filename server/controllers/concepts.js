@@ -46,7 +46,7 @@ export const updateConcept = async (req, res) => {
 
     const concept = await ConceptModel.findById(conceptId);
 
-    if (req.user.id !== concept.creator)
+    if (req.user.id !== concept.creator.toString())
         return res.status(403).json({ message: 'Unauthorized action' });
 
     concept.title = title;
@@ -67,11 +67,11 @@ export const deleteConcept = async (req, res) => {
 
     const concept = await ConceptModel.findById(conceptId);
 
-    if (req.user.id !== concept.creator)
-        return res.status(403).json({ message: 'Unauthorized action' });
-    
     if (!mongoose.Types.ObjectId.isValid(conceptId))
         return res.status(404).send(`No concept found with id ${conceptId}`);
+    
+    if (req.user.id !== concept.creator.toString())
+        return res.status(403).json({ message: 'Unauthorized action' });
     
     // Delete all of this concept's questions
     for (let i = 0; i < concept.questions.length; i++) {

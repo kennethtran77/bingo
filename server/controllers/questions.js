@@ -15,7 +15,7 @@ export const getQuestions = async (req, res) => {
 
         const concept = await ConceptModel.findById(conceptId);
 
-        if (req.user.id !== concept.creator)
+        if (req.user.id !== concept.creator.toString())
             return res.status(403).json({ message: 'Unauthorized action' });
         
         const ids = concept.questions;
@@ -38,7 +38,7 @@ export const getQuestion = async (req, res) => {
 
         const concept = await ConceptModel.findById(conceptId);
 
-        if (req.user.id !== concept.creator)
+        if (req.user.id !== concept.creator.toString())
             return res.status(403).json({ message: 'Unauthorized action' });
         
         // fetch the question
@@ -62,7 +62,7 @@ export const createQuestion = async (req, res) => {
         // fetch the concept document
         const concept = await ConceptModel.findById(conceptId);
 
-        if (req.user.id !== concept.creator)
+        if (req.user.id !== concept.creator.toString())
             return res.status(403).json({ message: 'Unauthorized action' });
 
         // create the new question document
@@ -92,7 +92,7 @@ export const updateQuestion = async (req, res) => {
 
     const concept = await ConceptModel.findById(conceptId);
 
-    if (req.user.id !== concept.creator)
+    if (req.user.id !== concept.creator.toString())
         return res.status(403).json({ message: 'Unauthorized action' });
     
     const updatedQuestion = {
@@ -121,7 +121,7 @@ export const deleteQuestion = async (req, res) => {
 
     const concept = await ConceptModel.findById(conceptId);
 
-    if (req.user.id !== concept.creator)
+    if (req.user.id !== concept.creator.toString())
         return res.status(403).json({ message: 'Unauthorized action' });
     
     await QuestionModel.findByIdAndRemove(questionId);
