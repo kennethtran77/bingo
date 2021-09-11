@@ -38,4 +38,4 @@ npm start
 ## Todo
 
 * Better styling
-* Implement "Collections" of concepts
+* Comments/reviews on concepts
