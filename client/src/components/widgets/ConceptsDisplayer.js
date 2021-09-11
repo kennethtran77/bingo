@@ -47,11 +47,7 @@ const ConceptsDisplayer = ({ title, concepts, isLoading, userId, showCreator, co
         dispatch(createConcept(newConcept));
     }
     
-    const remove = concept => {
-        if (window.confirm('Are you sure you want to delete this concept?')) {
-            dispatch(deleteConcept(concept._id));
-        };
-    }
+    const remove = concept => dispatch(deleteConcept(concept._id));
 
     return !userId ? (<h2>Please log in to view concepts.</h2>) : (
         <div className="row">

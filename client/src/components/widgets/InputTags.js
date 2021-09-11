@@ -4,7 +4,7 @@ import './InputTags.css';
 
 import Math from './Math';
 
-const InputTags = ({ className = '', tags, addTag, removeTag, placeholder, maxLength, mathjaxEnabled, setMathjaxError }) => {
+const InputTags = ({ className = '', id = '', tags, addTag, removeTag, placeholder, maxLength, mathjaxEnabled, setMathjaxError }) => {
     const [input, setInput] = useState('');
     const [fieldState, setFieldState] = useState('');
     
@@ -38,7 +38,7 @@ const InputTags = ({ className = '', tags, addTag, removeTag, placeholder, maxLe
     }
 
     return (
-        <div className={styling}>
+        <div className={styling} id={id}>
             { tags && tags.map((tag, index) => (
                 <span className="input-tag" key={index}>
                     <Math text={tag} enabled={mathjaxEnabled} setError={setMathjaxError} />

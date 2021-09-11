@@ -43,11 +43,7 @@ const CollectionsDisplayer = ({ userId }) => {
         dispatch(createCollection('New Collection'));
     }
     
-    const remove = collection => {
-        if (window.confirm('Are you sure you want to delete this collection?')) {
-            dispatch(deleteCollection(collection._id));
-        };
-    }
+    const remove = collection => dispatch(deleteCollection(collection._id));
 
     return !userId ? (<h2>Please log in to view collections.</h2>) : (
         <div className="row">

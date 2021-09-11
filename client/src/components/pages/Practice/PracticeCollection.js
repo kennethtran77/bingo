@@ -40,6 +40,7 @@ const PracticeCollection = () => {
                     <Link to="/" className="small-button">Go Home</Link>
                 </>
             );
+            return;
         }
 
         // Fetch questions

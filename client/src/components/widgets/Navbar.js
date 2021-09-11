@@ -45,9 +45,8 @@ const Navbar = ({ decodedToken }) => {
                 <Link className="nav-button" to="/collections">Collections</Link>
                 <Link className="nav-button" to="/browse">Browse Concepts</Link>
                 <div className="center-flex">
-                    <div className="h-margin">Logged in as</div>
-                    <div className="h-margin"><strong>{username}</strong></div>
-                    <div className="h-margin"><button className="nav-button" onClick={logout}>Log Out</button></div>
+                    <strong className="h-margin">{username}</strong>
+                    <button className="nav-button h-margin" onClick={logout}>Log Out</button>
                 </div>
             </div>
             <Popup

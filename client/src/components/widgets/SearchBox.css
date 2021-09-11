@@ -1,6 +1,11 @@
 #search-title {
     height: 37px;
     width: 100%;
+    margin-bottom: 5px;
+}
+
+#search-tags {
+    margin-bottom: 5px;
 }
 
 #search-box {

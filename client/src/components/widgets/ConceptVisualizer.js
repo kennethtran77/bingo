@@ -5,13 +5,24 @@ import { useDispatch } from 'react-redux';
 import { getUsername } from '../../api';
 import { addToCollection, removeFromCollection } from '../../actions/collections';
 
+import ConfirmDelete from './ConfirmDelete';
+
 const ConceptVisualizer = ({ concept, remove, userId, showCreator, collection }) => {
     const [creator, setCreator] = useState('');
+    const [toDelete, setToDelete] = useState(false);
 
     const dispatch = useDispatch();
 
     useEffect(() => {
-        getUsername(concept.creator).then(res => setCreator(res.data));
+        let mounted = true;
+
+        getUsername(concept.creator).then(res => {
+            if (mounted) {
+                setCreator(res.data);
+            }
+        });
+
+        return () => mounted = false;
     }, [concept.creator]);
 
     const handleRemove = e => {
@@ -31,7 +42,7 @@ const ConceptVisualizer = ({ concept, remove, userId, showCreator, collection })
         }
     }
 
-    return (
+    return toDelete ? <ConfirmDelete title={concept.title} undo={() => setToDelete(false)} confirm={handleRemove} /> : (
         <div className="container secondary">
             <div className="flex space-between">
                 <div className="center-flex">
@@ -45,7 +56,7 @@ const ConceptVisualizer = ({ concept, remove, userId, showCreator, collection })
                             <Link className="small-button margin" to={`/concept/view/${concept._id}`}>View</Link>
                             { userId === concept.creator && <Link className="small-button margin" to={`/concept/edit/${concept._id}`}>Edit</Link> }
                             <Link className="small-button margin" to={`/practice/concept/${concept._id}`}>Practice</Link>
-                            { userId === concept.creator && <span onClick={handleRemove} className="x"></span> }
+                            { userId === concept.creator && <span onClick={() => setToDelete(true)} className="x"></span> }
                         </>
                     ) }
                 </div>

@@ -125,6 +125,7 @@ input[type=text], input[type=password], input[type=email], input[type=number], s
     transition: 200ms;
     font-family: 'Montserrat', serif;
     font-size: 16px;
+    cursor: default;
 }
 
 .small-button:visited {

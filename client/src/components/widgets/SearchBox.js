@@ -52,6 +52,7 @@ const SearchBox = ({ searchables, setResults, reset }) => {
                 <label>
                     Tags
                     <InputTags
+                        id="search-tags"
                         tags={tags}
                         addTag={addTag}
                         removeTag={removeTag}

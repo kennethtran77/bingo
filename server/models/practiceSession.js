@@ -5,7 +5,7 @@ export const practiceQuestionSchema = mongoose.Schema({
     concept: { type: mongoose.Types.ObjectId, ref: 'Concept' },
     question: { type: mongoose.Types.ObjectId, ref: 'Question' },
     type: { type: String, required: true },
-    title: { type: String, required: true },
+    title: { type: String },
     text: { type: String },
     options: { type: [String] },
     textMathjaxEnabled: { type: Boolean },
