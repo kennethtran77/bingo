@@ -61,14 +61,15 @@ const ConceptVisualizer = ({ concept, remove, userId, showCreator, collection })
                     ) }
                 </div>
             </div>
-            <ul id="tags" className="remove-bullet left-flex ">
-                Tags:
-                { concept.tags.map((tag, index) => (
-                    <li key={index}>
-                        <div className="tag">{ tag }</div>
-                    </li>
-                )) }
-            </ul>
+            <div>
+                <ul id="tags" className="remove-bullet left-flex ">
+                    { concept.tags.map((tag, index) => (
+                        <li key={index}>
+                            <div className="tag">{ tag }</div>
+                        </li>
+                    )) }
+                </ul>
+            </div>
         </div>
     )
 };
