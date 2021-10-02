@@ -38,4 +38,5 @@ npm start
 ## Todo
 
 * Better styling
+* Allow for audio/images in questions
 * Comments/reviews on concepts
