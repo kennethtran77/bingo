@@ -44,11 +44,18 @@ const ConceptVisualizer = ({ concept, remove, userId, showCreator, collection })
 
     return toDelete ? <ConfirmDelete title={concept.title} undo={() => setToDelete(false)} confirm={handleRemove} /> : (
         <div className="container secondary">
-            <div className="flex space-between">
-                <div className="center-flex">
-                    <strong>{concept.title}</strong> { showCreator && <><div className="h-margin"></div> <p>by {creator}</p></> }
+            <div className="max-width">
+                <div className="v-margin">
+                    <strong>{concept.title}</strong> { showCreator && <span className="h-margin">by {creator}</span> }
                 </div>
-                <div className="center-flex">
+                <ul id="tags" className="remove-bullet left-flex ">
+                    { concept.tags.map((tag, index) => (
+                        <li key={index}>
+                            <div className="tag">{ tag }</div>
+                        </li>
+                    )) }
+                </ul>
+                <div className="right-flex">
                     { collection ? (
                         <button onClick={handleAddRemoveToCollection} className="small-button margin">{ collection.concepts.includes(concept._id) ? 'Remove' : 'Add' }</button>
                     ) : (
@@ -60,15 +67,6 @@ const ConceptVisualizer = ({ concept, remove, userId, showCreator, collection })
                         </>
                     ) }
                 </div>
-            </div>
-            <div>
-                <ul id="tags" className="remove-bullet left-flex ">
-                    { concept.tags.map((tag, index) => (
-                        <li key={index}>
-                            <div className="tag">{ tag }</div>
-                        </li>
-                    )) }
-                </ul>
             </div>
         </div>
     )

@@ -7,34 +7,38 @@ import SingleAnswerPractice from './questions/SingleAnswerPractice';
 
 import Math from '../../widgets/Math';
 
-const PracticeQuestionVisualizer = ({ question, index, componentType, input, setInput }) => {
+const PracticeQuestionVisualizer = ({ question, disabled, styles, input, setInput }) => {
     const fetchQuestion = type => {
         switch (type) {
             case 'FillInTheBlank':
                 return <FillInTheBlankPractice
                     question={question}
-                    componentType={componentType}
+                    disabled={disabled}
+                    styles={styles}
                     input={input}
                     setInput={setInput}
                 />;
             case 'MultipleAnswers':
                 return <MultipleAnswersPractice
                     question={question}
-                    componentType={componentType}
+                    disabled={disabled}
+                    styles={styles}
                     input={input}
                     setInput={setInput}
                 />;
             case 'Reorder':
                 return <ReorderPractice
                     question={question}
-                    componentType={componentType}
+                    disabled={disabled}
+                    styles={styles}
                     input={input}
                     setInput={setInput}
                 />;
             case 'SingleAnswer':
                 return <SingleAnswerPractice
                     question={question}
-                    componentType={componentType}
+                    disabled={disabled}
+                    styles={styles}
                     input={input}
                     setInput={setInput}
                 />;

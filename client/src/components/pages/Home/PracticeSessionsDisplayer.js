@@ -38,7 +38,7 @@ const PracticeSessionsDisplayer = ({ userId }) => {
                         <   td>{practiceSession.score} / {practiceSession.practiceQuestions.length}</td>
                             <td>{ date }</td>
                             <td>{ practiceSession.title }</td>
-                            <Link className="center-flex small-button" to={"/practice/results/" + practiceSession._id}>View</Link>
+                            <Link className="center-flex small-button v-margin" to={"/practice/results/" + practiceSession._id}>View</Link>
                         </tr>
                     );
                 }) }

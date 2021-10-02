@@ -15,6 +15,8 @@ const ViewConcept = ({ userId }) => {
     if (!concept && !isLoading)
         return <Redirect to="/"/>;
 
+    console.log(concept.text);
+
     return (
         <div className="container">
             <h1>{ concept.title }</h1>

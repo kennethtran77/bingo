@@ -53,7 +53,7 @@ const Practice = ({ questions, title }) => {
                     <li key={index}>
                         <PracticeQuestionVisualizer
                             question={question}
-                            componentType='practice'
+                            disabled={false}
                             input={input[index]}
                             setInput={newField => {
                                 setInput(prevInput => {

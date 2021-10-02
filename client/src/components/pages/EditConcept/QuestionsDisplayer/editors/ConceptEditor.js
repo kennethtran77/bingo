@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { EditorState } from 'draft-js';
+import { EditorState, convertToRaw, ContentState } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
-import { convertFromHTML, convertToHTML } from 'draft-convert';
+
+import draftToHtml from 'draftjs-to-html';
+import htmlToDraft from 'html-to-draftjs';
 
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './TextEditor.css';
@@ -23,7 +25,14 @@ const ConceptEditor = ({ concept, isLoading }) => {
     useEffect(() => {
         if (concept) {
             setInput(concept);
-            setEditorState(EditorState.createWithContent(convertFromHTML(concept.text ? concept.text : '')));
+
+            const contentBlock = htmlToDraft(concept.text);
+
+            if (contentBlock) {
+                const contentState = ContentState.createFromBlockArray(contentBlock.contentBlocks);
+                const editorState = EditorState.createWithContent(contentState);
+                setEditorState(editorState);
+            }
         }
     }, [concept]);
 
@@ -55,16 +64,10 @@ const ConceptEditor = ({ concept, isLoading }) => {
                         editorState={editorState}
                         onEditorStateChange={newState => {
                             setEditorState(newState);
-                            setInput({ ...input, text: convertToHTML(newState.getCurrentContent())});
+                            setInput({ ...input, text: draftToHtml(convertToRaw(newState.getCurrentContent()))});
                         }}
                         toolbar={{
-                            options: ['inline', 'blockType', 'list', 'emoji', 'remove', 'history'],
-                            inline: {
-                                options: ['bold', 'italic', 'underline', 'monospace']
-                            },
-                            blockType: {
-                                options: ['Normal', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'Blockquote'],
-                            }
+                            options: ['inline', 'blockType', 'fontSize', 'fontFamily', 'list', 'textAlign', 'colorPicker', 'link', 'emoji', 'image', 'remove', 'history']
                         }}
                     />
                 </label>

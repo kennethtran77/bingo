@@ -1,22 +1,19 @@
 import React from 'react';
-import { correctColour, incorrectColour } from '../../../../util';
 
 import './FillInTheBlankPractice.css';
 
-const FillInTheBlankPractice = ({ question, componentType, input, setInput }) => {
+const FillInTheBlankPractice = ({ question, disabled, styles, input, setInput }) => {
     return (
         <>
             { question.answer.map((answer, answerIndex) => {
-                let styles = {};
+                let itemStyles = {};
 
-                if (componentType === 'resultsUserInput') {
-                    if (question.answer[answerIndex].includes(input[answerIndex])) {
-                        // correct
-                        styles.color = correctColour;
-                    } else {
-                        // incorrect
-                        styles.color = incorrectColour;
-                    }
+                if (question.answer[answerIndex].includes(input[answerIndex])) {
+                    // correct
+                    itemStyles = !styles ? {} : styles.correctAnswer;
+                } else {
+                    // incorrect
+                    itemStyles = !styles ? {} : styles.incorrectAnswer;
                 }
 
                 return (
@@ -25,9 +22,9 @@ const FillInTheBlankPractice = ({ question, componentType, input, setInput }) =>
                         <input
                             type="text"
                             className="blank"
-                            style={styles}
+                            style={itemStyles}
                             key={answerIndex}
-                            disabled={componentType !== 'practice'}
+                            disabled={disabled}
                             value={input[answerIndex] || ''}
                             onChange={e => {
                                 // update the parent component state

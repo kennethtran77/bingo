@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import PracticeQuestionVisualizer from './Practice/PracticeQuestionVisualizer';
 
 import { verifyAnswer } from '../../util.js';
+import { correctColour, incorrectColour } from '../../util';
 
 const PracticeResults = ({ userId }) => {
     const [toRender, setToRender] = useState('Loading...');
@@ -61,7 +62,15 @@ const PracticeResults = ({ userId }) => {
                                         <PracticeQuestionVisualizer
                                             question={question}
                                             index={index}
-                                            componentType={'resultsUserInput'}
+                                            disabled={true}
+                                            styles={{
+                                                correctAnswer: {
+                                                    backgroundColor: correctColour
+                                                },
+                                                incorrectAnswer: {
+                                                    backgroundColor: incorrectColour
+                                                }
+                                            }}
                                             input={question.input}
                                         />
                                     </td>
@@ -69,7 +78,7 @@ const PracticeResults = ({ userId }) => {
                                         <PracticeQuestionVisualizer
                                             question={question}
                                             index={index}
-                                            componentType={'resultsCorrectAnswer'}
+                                            disabled={true}
                                             input={question.answer}
                                         />
                                     </td>

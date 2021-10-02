@@ -60,7 +60,9 @@ const App = () => {
     const wrap = (Component) => (
         <>
             <Navbar decodedToken={decodedToken} />
-            { <Component userId={decodedToken.id} /> }
+            <div className="main">
+                { <Component userId={decodedToken.id} /> }
+            </div>
         </>
     );
 

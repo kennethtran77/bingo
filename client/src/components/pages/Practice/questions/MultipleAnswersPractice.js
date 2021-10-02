@@ -1,9 +1,8 @@
 import React from 'react';
-import { correctColour, incorrectColour } from '../../../../util';
 
 import Math from '../../../widgets/Math';
 
-const MultipleAnswersPractice = ({ question, componentType, input, setInput }) => {
+const MultipleAnswersPractice = ({ question, disabled, styles, input, setInput }) => {
 
     const handleTick = option => {
         if (input.includes(option)) {
@@ -18,24 +17,22 @@ const MultipleAnswersPractice = ({ question, componentType, input, setInput }) =
     return (
         <ul className="container remove-bullet">
             { question.options.map((option, optionIndex) => {
-                let styles = {};
+                let itemStyles = {};
 
-                if (componentType === 'resultsUserInput') {
-                    if (input.includes(option) && question.answer.includes(option)) {
-                        // correct
-                        styles.backgroundColor = correctColour;
-                    } else {
-                        // incorrect
-                        styles.backgroundColor = incorrectColour;
-                    }
+                if (input.includes(option) && question.answer.includes(option)) {
+                    // correct
+                    itemStyles = !styles ? {} : styles.correctAnswer;
+                } else {
+                    // incorrect
+                    itemStyles = !styles ? {} : styles.incorrectAnswer;
                 }
 
                 return (
-                    <li key={optionIndex} className="container" style={styles}>
+                    <li key={optionIndex} className="container" style={itemStyles}>
                         <input
                             type="checkbox"
                             value={option}
-                            disabled={componentType !== 'practice'}
+                            disabled={disabled}
                             checked={input.includes(option)}
                             onChange={() => handleTick(option)}
                         />

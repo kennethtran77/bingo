@@ -15,6 +15,9 @@ const validateUsername = username => {
     if (username.length < 3)
         return { success: false, message: 'Username must contain at least 3 characters.' };
 
+    if (username.length > 23)
+        return { success: false, message: 'Username must contain less than 23 characters.' };
+
     // test for whitespace
     if (/\s/.test(username))
         return { success: false, message: 'Username cannot contain whitespace.' };

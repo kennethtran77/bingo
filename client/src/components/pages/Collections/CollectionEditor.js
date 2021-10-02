@@ -32,6 +32,7 @@ const CollectionEditor = ({ collection, isLoading }) => {
                         className="input"
                         type="text"
                         name="text"
+                        autoComplete="off"
                         value={input.title || ''}
                         onChange={e => setInput({ ...input, title: e.target.value })}
                     />

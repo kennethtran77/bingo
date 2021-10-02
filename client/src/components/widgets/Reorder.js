@@ -1,14 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { correctColour, incorrectColour } from '../../util';
 
 import Math from './Math';
 
 import './Reorder.css';
 
-const Reorder = ({ title, componentType, order, setOrder, mathjaxEnabled, question }) => {
-    // local input state to prevent visual glitch... until alternative found
+const Reorder = ({ title, disabled, styles, order, setOrder, mathjaxEnabled }) => {
+    // local input state to prevent visual glitch...
     const [localState, setLocalState] = useState(order);
 
     const handleOnDragEnd = result => {
@@ -32,29 +31,19 @@ const Reorder = ({ title, componentType, order, setOrder, mathjaxEnabled, questi
         });
     }
 
-    const disabled = componentType !== 'practice' && componentType !== 'edit';
+    useEffect(() => {
+        if (order) {
+            setLocalState(order);
+        }
+    }, [order]);
 
     return disabled ? (
         <ul className="reorder" >
-            { order.map((item, index) => {
-                let styles = {};
-
-                if (componentType === 'resultsUserInput') {
-                    if (item === question.answer[index]) {
-                        // correct
-                        styles.backgroundColor = correctColour;
-                    } else {
-                        // incorrect
-                        styles.backgroundColor = incorrectColour;
-                    }
-                }
-
-                return (
-                    <li key={index} style={styles}>
-                        <Math text={item} enabled={mathjaxEnabled} />
-                    </li>
-                )
-            }) }
+            { order.map((item, index) =>
+                <li key={index} style={!styles ? {} : styles.itemStyles(index)}>
+                    <Math text={item} enabled={mathjaxEnabled} />
+                </li>
+            )}
         </ul>
     ) : (
         <DragDropContext onDragEnd={handleOnDragEnd}>
@@ -64,7 +53,7 @@ const Reorder = ({ title, componentType, order, setOrder, mathjaxEnabled, questi
                         { localState.map((item, index) => (
                             <Draggable key={item} draggableId={item} index={index}>
                                 {(provided) => (
-                                    <li ref={provided.innerRef} { ...provided.draggableProps } { ...provided.dragHandleProps }>
+                                    <li style={!styles ? {} : styles.itemStyles(index)} ref={provided.innerRef} { ...provided.draggableProps } { ...provided.dragHandleProps }>
                                         <Math text={item} enabled={mathjaxEnabled} />
                                     </li>
                                 )}

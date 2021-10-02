@@ -37,34 +37,37 @@ const Navbar = ({ decodedToken }) => {
     }, [location, logout, decodedToken]);
 
     return (
-        <div className="container space-between" id="navbar">
-            <h1>bingo</h1>
-            <div id="navbar-options">
-                <Link className="nav-button" to="/">Home</Link>
-                <Link className="nav-button" to="/settings">Settings</Link>
-                <Link className="nav-button" to="/collections">Collections</Link>
-                <Link className="nav-button" to="/browse">Browse Concepts</Link>
-                <div className="center-flex">
-                    <strong className="h-margin">{username}</strong>
-                    <button className="nav-button h-margin" onClick={logout}>Log Out</button>
-                </div>
-            </div>
-            <Popup
-                trigger={<span className="more" id="navbar-menu"></span>}
-                closeOnDocumentClick
-            >
-                <div id="mobile-navbar-options">
+        <div id="navbar">
+            <div id="navbar-wrapper" className="space-between">
+                <h1>bingo</h1>
+                <div id="navbar-options">
                     <Link className="nav-button" to="/">Home</Link>
                     <Link className="nav-button" to="/settings">Settings</Link>
                     <Link className="nav-button" to="/collections">Collections</Link>
                     <Link className="nav-button" to="/browse">Browse Concepts</Link>
-                    <div className="container">
-                        <div className="h-margin">Logged in as</div>
-                        <div className="h-margin"><strong>{username}</strong></div>
+                    <div className="center-flex">
+                        <strong className="h-margin">{username}</strong>
+                        <button className="nav-button h-margin" onClick={logout}>Log Out</button>
                     </div>
-                    <span className="nav-button" onClick={logout}>Log Out</span>
                 </div>
-            </Popup>
+                <Popup
+                    trigger={<span className="more" id="navbar-menu"></span>}
+                    closeOnDocumentClick
+                    position="left top"
+                >
+                    <div id="mobile-navbar-options">
+                        <Link className="nav-button" to="/">Home</Link>
+                        <Link className="nav-button" to="/settings">Settings</Link>
+                        <Link className="nav-button" to="/collections">Collections</Link>
+                        <Link className="nav-button" to="/browse">Browse Concepts</Link>
+                        <div className="container">
+                            <div className="h-margin">Logged in as</div>
+                            <div className="h-margin"><strong>{username}</strong></div>
+                        </div>
+                        <span className="nav-button" onClick={logout}>Log Out</span>
+                    </div>
+                </Popup>
+            </div>
         </div>
     );
 };

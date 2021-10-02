@@ -1,8 +1,12 @@
 body {
+    background-color: rgb(250, 250, 250);
+    min-width: 320px;
     font-family: 'Montserrat', serif;
-    background-color: white;
-    margin: 15px 15% 15px 15%;
-    min-width: 300px;
+    margin: 0;
+}
+
+.main {
+    margin-top: 100px;
 }
 
 .margin {
@@ -19,12 +23,17 @@ input[type=text], input[type=password], input[type=email], input[type=number], s
 .container {
     border-radius: 5px;
     border: 1px solid rgb(204, 204, 204);
-    margin: 5px;
+    margin: 10px;
     padding: 15px;
-    background-color: rgb(248, 252, 255);
+    background-color: white;
+    -webkit-box-shadow: 0px 0px 6px -3px rgba(0,0,0,0.64); 
+    box-shadow: 0px 0px 6px -3px rgba(0,0,0,0.64);
+    /* background-color: rgb(248, 252, 255); */
 }
 
 .secondary {
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
     background-color: rgb(228, 243, 255);
     border: 1px solid rgb(183, 222, 255);
 }
@@ -115,6 +124,11 @@ input[type=text], input[type=password], input[type=email], input[type=number], s
     margin-right: 5px;
 }
 
+.v-margin {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
 .small-button {
     background-color: white;
     border: 2px solid #0057ba;
@@ -142,6 +156,10 @@ input[type=text], input[type=password], input[type=email], input[type=number], s
     background-color: #5392db;
     border: 2px solid #004594;
     color: white;
+}
+
+.flex-wrap {
+    flex-wrap: wrap;
 }
 
 .center-flex {
@@ -226,12 +244,20 @@ Responsive
     .row {
         display: flex;
     }
-    
+
     .maj {
         flex-grow: 2;
     }
     
     .min {
         flex-grow: 1;
+    }
+}
+
+@media only screen and (min-width: 620px) {
+    .main {
+        margin-left: 15%;
+        margin-right: 15%;
+        margin-bottom: 15px;
     }
 }
