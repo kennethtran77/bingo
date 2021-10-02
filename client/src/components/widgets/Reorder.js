@@ -6,7 +6,7 @@ import Math from './Math';
 
 import './Reorder.css';
 
-const Reorder = ({ title, disabled, styles, order, setOrder, mathjaxEnabled }) => {
+const Reorder = ({ title, disabled, styles, order, setOrder, mathjaxEnabled, setMathjaxError }) => {
     // local input state to prevent visual glitch...
     const [localState, setLocalState] = useState(order);
 
@@ -41,7 +41,7 @@ const Reorder = ({ title, disabled, styles, order, setOrder, mathjaxEnabled }) =
         <ul className="reorder" >
             { order.map((item, index) =>
                 <li key={index} style={!styles ? {} : styles.itemStyles(index)}>
-                    <Math text={item} enabled={mathjaxEnabled} />
+                    <Math text={item} enabled={mathjaxEnabled} setError={setMathjaxError} />
                 </li>
             )}
         </ul>
@@ -54,7 +54,7 @@ const Reorder = ({ title, disabled, styles, order, setOrder, mathjaxEnabled }) =
                             <Draggable key={item} draggableId={item} index={index}>
                                 {(provided) => (
                                     <li style={!styles ? {} : styles.itemStyles(index)} ref={provided.innerRef} { ...provided.draggableProps } { ...provided.dragHandleProps }>
-                                        <Math text={item} enabled={mathjaxEnabled} />
+                                        <Math text={item} enabled={mathjaxEnabled} setError={setMathjaxError} />
                                     </li>
                                 )}
                             </Draggable>

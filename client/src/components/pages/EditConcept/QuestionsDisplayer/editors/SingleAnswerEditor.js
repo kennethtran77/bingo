@@ -3,11 +3,13 @@ import InputTags from '../../../../widgets/InputTags';
 import Math from '../../../../widgets/Math';
 import MathjaxOption from '../../../../widgets/MathjaxOption';
 
+import InputOptions from '../../../../widgets/InputOptions';
+
 import Select from 'react-select';
 
 import selectStyles from '../../../../selectStyles.js';
 
-const SingleAnswerEditor = ({ input, setInput }) => {
+const SingleAnswerEditor = ({ input, setInput, handleEditOption }) => {
     const [mathjaxError, setMathjaxError] = useState('');
 
     useEffect(() => {
@@ -59,14 +61,21 @@ const SingleAnswerEditor = ({ input, setInput }) => {
                     enabled={input.optionsMathjaxEnabled}
                     setEnabled={enabled => setInput({ ...input, optionsMathjaxEnabled: enabled})}
                 />
-                <InputTags
+                <InputOptions
+                    options={input.options}
+                    addOption={handleAddOption}
+                    removeOption={handleRemoveOption}
+                    editOption={handleEditOption}
+                    placeholder={"Enter a unique option"}
+                />
+                {/* <InputTags
                     tags={input.options}
                     addTag={handleAddOption}
                     removeTag={handleRemoveOption}
                     placeholder={"Press enter to add an option"}
                     mathjaxEnabled={input.optionsMathjaxEnabled}
                     setMathjaxError={setMathjaxError}
-                />
+                /> */}
                 { input.optionsMathjaxEnabled && mathjaxError &&
                     <p style={{color: 'red'}}>Error: {mathjaxError}</p>
                 }

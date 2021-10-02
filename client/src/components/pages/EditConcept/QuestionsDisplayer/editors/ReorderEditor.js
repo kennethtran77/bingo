@@ -4,8 +4,9 @@ import Reorder from '../../../../widgets/Reorder';
 import InputTags from '../../../../widgets/InputTags';
 
 import MathjaxOption from '../../../../widgets/MathjaxOption';
+import InputOptions from '../../../../widgets/InputOptions';
 
-const ReorderEditor = ({ title, input, setInput }) => {
+const ReorderEditor = ({ title, input, setInput, handleEditOption }) => {
     const [mathjaxError, setMathjaxError] = useState('');
 
     const answerHasSameElementsAsOrder = input.answer.length === input.options.length && input.answer.every(item => input.options.includes(item));
@@ -24,8 +25,8 @@ const ReorderEditor = ({ title, input, setInput }) => {
 
     const handleRemoveOption = option => setInput(prevState => ({
         ...prevState,
-        options: prevState.options.filter(t => t !== option),
-        answer: prevState.answer.filter(t => t !== option)
+        options: prevState.options.filter(o => o !== option),
+        answer: prevState.answer.filter(o => o !== option)
     }))
 
     return (
@@ -36,7 +37,14 @@ const ReorderEditor = ({ title, input, setInput }) => {
                     enabled={input.optionsMathjaxEnabled}
                     setEnabled={enabled => setInput({ ...input, optionsMathjaxEnabled: enabled})}
                 />
-                <InputTags
+                <InputOptions
+                    options={input.options}
+                    addOption={handleAddOption}
+                    removeOption={handleRemoveOption}
+                    editOption={handleEditOption}
+                    placeholder={"Enter a unique option"}
+                />
+                {/* <InputTags
                     className="input"
                     tags={input.options}
                     addTag={handleAddOption}
@@ -44,7 +52,7 @@ const ReorderEditor = ({ title, input, setInput }) => {
                     placeholder={"Press enter to add an option"}
                     mathjaxEnabled={input.optionsMathjaxEnabled}
                     setMathjaxError={setMathjaxError}
-                />
+                /> */}
                 { input.optionsMathjaxEnabled && mathjaxError &&
                     <p style={{color: 'red'}}>Error: {mathjaxError}</p>
                 }
@@ -56,8 +64,8 @@ const ReorderEditor = ({ title, input, setInput }) => {
                         title={title}
                         order={input.answer}
                         setOrder={newOrder => setInput(prevState => ({ ...prevState, answer: newOrder }))}
-                        componentType="edit"
                         mathjaxEnabled={input.optionsMathjaxEnabled}
+                        setMathjaxError={setMathjaxError}
                     />
                 </div>
             </label>

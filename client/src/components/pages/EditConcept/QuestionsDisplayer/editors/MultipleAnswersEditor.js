@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import InputTags from '../../../../widgets/InputTags';
 import MathjaxOption from '../../../../widgets/MathjaxOption';
 
+import InputOptions from '../../../../widgets/InputOptions';
+
 import Math from '../../../../widgets/Math';
 
-const MultipleAnswersEditor = ({ input, setInput }) => {
+const MultipleAnswersEditor = ({ input, setInput, handleEditOption }) => {
     const [mathjaxError, setMathjaxError] = useState('');
 
     useEffect(() => {
@@ -30,8 +32,8 @@ const MultipleAnswersEditor = ({ input, setInput }) => {
 
     const handleRemoveOption = option => setInput(prevState => ({
         ...prevState,
-        options: prevState.options.filter(t => t !== option),
-        answer: prevState.answer.filter(t => t !== option)
+        options: prevState.options.filter(o => o !== option),
+        answer: prevState.answer.filter(o => o !== option)
     }))
 
     return (
@@ -42,14 +44,22 @@ const MultipleAnswersEditor = ({ input, setInput }) => {
                     enabled={input.optionsMathjaxEnabled}
                     setEnabled={enabled => setInput({ ...input, optionsMathjaxEnabled: enabled})}
                 />
-                <InputTags
+                <InputOptions
+                    options={input.options}
+                    addOption={handleAddOption}
+                    removeOption={handleRemoveOption}
+                    editOption={handleEditOption}
+                    placeholder={"Enter a unique option"}
+                />
+                {/* <InputTags
                     tags={input.options}
                     addTag={handleAddOption}
                     removeTag={handleRemoveOption}
                     placeholder={"Press enter to add an option"}
                     mathjaxEnabled={input.optionsMathjaxEnabled}
                     setMathjaxError={setMathjaxError}
-                />
+                    mathjaxError={mathjaxError}
+                /> */}
                 { input.optionsMathjaxEnabled && mathjaxError &&
                     <p style={{color: 'red'}}>Error: {mathjaxError}</p>
                 }
@@ -58,7 +68,7 @@ const MultipleAnswersEditor = ({ input, setInput }) => {
                 Answers
                     <ul className="container remove-bullet">
                         { input.options.length ? input.options.map((option, index) => (
-                            <li key={index} className="container">
+                            <li key={index} className="secondary container">
                                 <label><Math text={option} enabled={input.optionsMathjaxEnabled} setError={setMathjaxError} /></label>
                                 <input
                                     type="checkbox"

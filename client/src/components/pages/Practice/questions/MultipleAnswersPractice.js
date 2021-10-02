@@ -15,7 +15,7 @@ const MultipleAnswersPractice = ({ question, disabled, styles, input, setInput }
     }
 
     return (
-        <ul className="container remove-bullet">
+        <ul className="remove-bullet">
             { question.options.map((option, optionIndex) => {
                 let itemStyles = {};
 
@@ -28,7 +28,7 @@ const MultipleAnswersPractice = ({ question, disabled, styles, input, setInput }
                 }
 
                 return (
-                    <li key={optionIndex} className="container" style={itemStyles}>
+                    <li key={optionIndex} className="container secondary" style={itemStyles}>
                         <input
                             type="checkbox"
                             value={option}

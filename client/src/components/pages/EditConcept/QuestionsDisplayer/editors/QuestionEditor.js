@@ -29,16 +29,28 @@ const QuestionEditor = ({ concept, question }) => {
         }
     }, [question]);
 
+    const handleEditOption = (index, newOption) => setInput(prevState => {
+        let oldOption = prevState.options[index];
+        let newOptions = [...prevState.options];
+        newOptions[index] = newOption;
+        
+        return {
+            ...prevState,
+            options: newOptions,
+            answer: prevState.answer.map(o => o === oldOption ? newOption : o)
+        }
+    });
+
     const fetchEditor = type => {
         switch(type) {
             case 'FillInTheBlank':
                 return <FillInTheBlankEditor input={input} setInput={setInput} />;
             case 'MultipleAnswers':
-                return <MultipleAnswersEditor input={input} setInput={setInput} />;
+                return <MultipleAnswersEditor input={input} setInput={setInput} handleEditOption={handleEditOption} />;
             case 'Reorder':
-                return <ReorderEditor title={question.title} input={input} setInput={setInput} />;
+                return <ReorderEditor title={question.title} input={input} setInput={setInput} handleEditOption={handleEditOption} />;
             case 'SingleAnswer':
-                return <SingleAnswerEditor input={input} setInput={setInput} />;
+                return <SingleAnswerEditor input={input} setInput={setInput} handleEditOption={handleEditOption} />;
             default:
                 return 'Error';
         }
