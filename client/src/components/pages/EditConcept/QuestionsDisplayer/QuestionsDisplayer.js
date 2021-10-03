@@ -21,19 +21,13 @@ const QuestionsDisplayer = ({ concept }) => {
             text: "It's so quiet here...",
             answer: [],
             options: [],
-            textMathjaxEnabled: false,
-            optionsMathjaxEnabled: false,
         };
 
         // dispatch the action to invoke the API
         dispatch(createQuestion(concept, newQuestion));
     }
 
-    const remove = question => {
-        if (window.confirm('Are you sure you want to delete this question?')) {
-            dispatch(deleteQuestion(concept, question._id));
-        };
-    }
+    const remove = question => dispatch(deleteQuestion(concept, question._id));
 
     return (
         <div>
@@ -42,6 +36,7 @@ const QuestionsDisplayer = ({ concept }) => {
                 <ul className="remove-bullet">
                     { conceptQuestions && conceptQuestions.map((question, index) => (
                         <li key={index}>
+                            {}
                             <QuestionVisualizer
                                 concept={concept}
                                 question={question}

@@ -2,6 +2,9 @@ import React, { useEffect } from 'react';
 import InputOptions from '../../../../widgets/InputOptions';
 import OptionsMenu from '../../../../widgets/OptionsMenu';
 
+import 'katex/dist/katex.min.css';
+import Latex from 'react-latex-next';
+
 const MultipleAnswersEditor = ({ input, setInput, handleEditOption }) => {
     useEffect(() => {
         // Force answer to be a subset of options

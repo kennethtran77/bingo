@@ -1,12 +1,23 @@
-import React, { useState, useRef, useEffect, createRef } from 'react';
+import React, { useState, useRef, createRef } from 'react';
 
 import Popup from 'reactjs-popup';
 
 const InputOptions = ({ options, addOption, editOption, removeOption, placeholder }) => {
     const [inputs, setInputs] = useState(options);
-    const [message, setMessage] = useState('');
+    const [messages, setMessages] = useState(options.map(_ => ''));
 
     const refs = useRef([]);
+
+    const showSavePopup = (index, message) => {
+        setMessages(prevMessages => {
+            let newMessages = [...prevMessages];
+            newMessages[index] = message;
+            return newMessages;
+        });
+        refs.current[index].current.open();
+    }
+
+    const hideSavePopup = index => refs.current[index].current.close();
 
     // Initiate refs
     if (refs.current.length !== options.length) {
@@ -37,11 +48,12 @@ const InputOptions = ({ options, addOption, editOption, removeOption, placeholde
         }
 
         if (options[index] !== newOption && options.find(option => option === newOption)) {
-            setMessage('Options must be unique.');
+            showSavePopup(index, 'Save failed: Options must be unique');
             return;
         }
 
         editOption(index, newOption);
+        showSavePopup(index, 'Saved!');
     }
 
     const handleKeyDown = (e, index) => {
@@ -50,7 +62,6 @@ const InputOptions = ({ options, addOption, editOption, removeOption, placeholde
         if (e.key === 'Enter' && value) {
             e.preventDefault();
             saveOption(index, value);
-            refs.current[index].current.open();
         }
     }
 
@@ -64,7 +75,7 @@ const InputOptions = ({ options, addOption, editOption, removeOption, placeholde
                                 type="text"
                                 value={inputs[index]}
                                 onChange={e => setInputs(prevInputs => {
-                                    setMessage('');
+                                    hideSavePopup(index);
                                     let newInputs = [...prevInputs];
                                     newInputs[index] = e.target.value;
                                     return newInputs;
@@ -80,13 +91,15 @@ const InputOptions = ({ options, addOption, editOption, removeOption, placeholde
                                 position="right center"
                                 closeOnDocumentClick
                             >
-                                <span>Saved!</span>
+                                <span>{messages[index]}</span>
                             </Popup>
-                            <span onClick={() => handleRemoveOption(index)} className="x h-margin"></span>
+                            <span onClick={(e) => {
+                                e.preventDefault();
+                                handleRemoveOption(index);
+                            }} className="x h-margin"></span>
                         </li>
                     );
                 })}
-                <p>{ message }</p>
                 { <span onClick={handleAddOption} className="plus"></span> }
             </ul>
         </div>

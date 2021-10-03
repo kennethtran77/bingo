@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
+import { Prompt } from 'react-router'
+
 import 'katex/dist/katex.min.css';
 import Latex from 'react-latex-next';
 
@@ -29,6 +31,8 @@ const QuestionEditor = ({ concept, question }) => {
             setInput(question);
         }
     }, [question]);
+
+    const madeChanges = input.type !== question.type || input.title !== question.title || input.text !== question.text || input.answer !== question.answer || input.options !== question.options;
 
     const handleEditOption = (index, newOption) => setInput(prevState => {
         let oldOption = prevState.options[index];
@@ -72,6 +76,10 @@ const QuestionEditor = ({ concept, question }) => {
 
     return (
         <div className="editor">
+            <Prompt
+                when={madeChanges}
+                message='You have unsaved changes. Are you sure you want to leave?'
+            />
             <Alert
                 message='Warning: this question is not complete. It will not be shown during practice.'
                 open={alertOpen}
