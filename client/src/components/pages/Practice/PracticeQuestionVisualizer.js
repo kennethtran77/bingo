@@ -1,11 +1,12 @@
 import React from 'react';
 
+import 'katex/dist/katex.min.css';
+import Latex from 'react-latex-next';
+
 import FillInTheBlankPractice from './questions/FillInTheBlankPractice';
 import MultipleAnswersPractice from './questions/MultipleAnswersPractice';
 import ReorderPractice from './questions/ReorderPractice';
 import SingleAnswerPractice from './questions/SingleAnswerPractice';
-
-import Math from '../../widgets/Math';
 
 const PracticeQuestionVisualizer = ({ question, disabled, styles, input, setInput }) => {
     const fetchQuestion = type => {
@@ -50,7 +51,7 @@ const PracticeQuestionVisualizer = ({ question, disabled, styles, input, setInpu
     return (
         <div className="container">
             <h2>{question.title}</h2>
-            <p><Math text={question.text} enabled={question.textMathjaxEnabled} /></p>
+            <p><Latex>{question.text}</Latex></p>
             { fetchQuestion(question.type) }
         </div>
     );

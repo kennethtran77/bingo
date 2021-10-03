@@ -84,7 +84,7 @@ export const createQuestion = async (req, res) => {
 
 export const updateQuestion = async (req, res) => {
     const { conceptId, questionId } = req.params;
-    const { title, type, text, answer, options, optionsMathjaxEnabled, textMathjaxEnabled } = req.body;
+    const { title, type, text, answer, options } = req.body;
 
     // Check to see if the concept with given id exists
     if (!mongoose.Types.ObjectId.isValid(conceptId))
@@ -102,8 +102,6 @@ export const updateQuestion = async (req, res) => {
         text,
         answer,
         options,
-        optionsMathjaxEnabled,
-        textMathjaxEnabled,
         _id: questionId
     };
 

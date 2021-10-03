@@ -11,6 +11,8 @@ const ConceptVisualizer = ({ concept, remove, userId, showCreator, collection })
     const [creator, setCreator] = useState('');
     const [toDelete, setToDelete] = useState(false);
 
+    const [showAllTags, setShowAllTags] = useState(false);
+
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -24,6 +26,10 @@ const ConceptVisualizer = ({ concept, remove, userId, showCreator, collection })
 
         return () => mounted = false;
     }, [concept.creator]);
+
+    const getRenderedTags = () => {
+        return showAllTags ? concept.tags : concept.tags.slice(0, 10);
+    }
 
     const handleRemove = e => {
         e.preventDefault();
@@ -49,11 +55,14 @@ const ConceptVisualizer = ({ concept, remove, userId, showCreator, collection })
                     <strong>{concept.title}</strong> { showCreator && <span className="h-margin">by {creator}</span> }
                 </div>
                 <ul id="tags" className="remove-bullet left-flex ">
-                    { concept.tags.map((tag, index) => (
+                    { getRenderedTags().map((tag, index) => (
                         <li key={index}>
                             <div className="tag">{ tag }</div>
                         </li>
                     )) }
+                    { concept.tags.length > 10 && (
+                        <span className="link" onClick={() => setShowAllTags(curr => !curr)}>{showAllTags ? '...Show Less Tags' : 'Show More Tags...'}</span>
+                    )}
                 </ul>
                 <div className="right-flex">
                     { collection ? (

@@ -4,7 +4,7 @@ import Popup from 'reactjs-popup';
 
 import './Options.css'
 
-const MathjaxOption = ({ enabled, setEnabled }) => {
+const OptionsMenu = ({ options, displayLatexPreview, toggleLatexPreview }) => {
     return (
         <Popup
             trigger={<span className="more"></span>}
@@ -14,16 +14,16 @@ const MathjaxOption = ({ enabled, setEnabled }) => {
             mouseEnterDelay={0}
             arrow={false}
         >
-            <div className="options-menu">
+            { options && options.includes('latexDisplay') && <div className="options-menu">
                 <div
                     className="option"
-                    onClick={() => setEnabled(!enabled)}
+                    onClick={toggleLatexPreview}
                 >
-                    { enabled ? 'Disable' : 'Enable'} MathJax
+                    { displayLatexPreview ? 'Hide ' : 'Show '} Latex Preview
                 </div>
-            </div>
+            </div> }
         </Popup>
     );
 };
 
-export default MathjaxOption;
+export default OptionsMenu;

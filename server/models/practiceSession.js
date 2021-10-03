@@ -8,8 +8,6 @@ export const practiceQuestionSchema = mongoose.Schema({
     title: { type: String },
     text: { type: String },
     options: { type: [String] },
-    textMathjaxEnabled: { type: Boolean },
-    optionsMathjaxEnabled: { type: Boolean },
     input: { type: [] },
     answer: { type: [] }
 }, { versionKey: false });

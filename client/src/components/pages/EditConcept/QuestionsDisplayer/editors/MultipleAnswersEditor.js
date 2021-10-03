@@ -1,14 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import InputTags from '../../../../widgets/InputTags';
-import MathjaxOption from '../../../../widgets/MathjaxOption';
-
+import React, { useEffect } from 'react';
 import InputOptions from '../../../../widgets/InputOptions';
-
-import Math from '../../../../widgets/Math';
+import OptionsMenu from '../../../../widgets/OptionsMenu';
 
 const MultipleAnswersEditor = ({ input, setInput, handleEditOption }) => {
-    const [mathjaxError, setMathjaxError] = useState('');
-
     useEffect(() => {
         // Force answer to be a subset of options
         if (!input.answer.every(item => input.options.includes(item))) {
@@ -40,7 +34,7 @@ const MultipleAnswersEditor = ({ input, setInput, handleEditOption }) => {
         <>
             <label>
                 Options
-                <MathjaxOption
+                <OptionsMenu
                     enabled={input.optionsMathjaxEnabled}
                     setEnabled={enabled => setInput({ ...input, optionsMathjaxEnabled: enabled})}
                 />
@@ -51,25 +45,13 @@ const MultipleAnswersEditor = ({ input, setInput, handleEditOption }) => {
                     editOption={handleEditOption}
                     placeholder={"Enter a unique option"}
                 />
-                {/* <InputTags
-                    tags={input.options}
-                    addTag={handleAddOption}
-                    removeTag={handleRemoveOption}
-                    placeholder={"Press enter to add an option"}
-                    mathjaxEnabled={input.optionsMathjaxEnabled}
-                    setMathjaxError={setMathjaxError}
-                    mathjaxError={mathjaxError}
-                /> */}
-                { input.optionsMathjaxEnabled && mathjaxError &&
-                    <p style={{color: 'red'}}>Error: {mathjaxError}</p>
-                }
             </label>
             <label>
                 Answers
                     <ul className="container remove-bullet">
                         { input.options.length ? input.options.map((option, index) => (
                             <li key={index} className="secondary container">
-                                <label><Math text={option} enabled={input.optionsMathjaxEnabled} setError={setMathjaxError} /></label>
+                                <label><Latex>{option}</Latex></label>
                                 <input
                                     type="checkbox"
                                     value={option}

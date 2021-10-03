@@ -1,6 +1,7 @@
 import React from 'react';
 
-import Math from '../../../widgets/Math';
+import 'katex/dist/katex.min.css';
+import Latex from 'react-latex-next';
 
 const MultipleAnswersPractice = ({ question, disabled, styles, input, setInput }) => {
 
@@ -36,7 +37,7 @@ const MultipleAnswersPractice = ({ question, disabled, styles, input, setInput }
                             checked={input.includes(option)}
                             onChange={() => handleTick(option)}
                         />
-                        <label><Math text={option} enabled={question.optionsMathjaxEnabled} /></label>
+                        <label><Latex>{option}</Latex></label>
                     </li>
                 )
             }) }

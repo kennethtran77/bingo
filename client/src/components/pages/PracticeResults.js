@@ -5,7 +5,6 @@ import { useSelector } from 'react-redux';
 
 import PracticeQuestionVisualizer from './Practice/PracticeQuestionVisualizer';
 
-import { verifyAnswer } from '../../util.js';
 import { correctColour, incorrectColour } from '../../util';
 
 const PracticeResults = ({ userId }) => {
@@ -47,12 +46,14 @@ const PracticeResults = ({ userId }) => {
                         </div>
                     </div>
                     { questionHasChanged && <h2>Alert: This question has been modified after this practice session occured.</h2>}
-                    <table>
+                    <table style={{
+                        tableLayout: 'fixed',
+                        width: '100%'
+                    }}>
                         <thead>
                             <tr>
                                 <th>Your Answers</th>
                                 <th>Correct Answers</th>
-                                <th>Correctly Answered</th>
                             </tr>
                         </thead>
                         { practiceSession.practiceQuestions.map((question, index) => (
@@ -81,11 +82,6 @@ const PracticeResults = ({ userId }) => {
                                             disabled={true}
                                             input={question.answer}
                                         />
-                                    </td>
-                                    <td>
-                                        <div className="center-flex">
-                                            {verifyAnswer(question, question.input) ? 'Yes' : 'No'}
-                                        </div>
                                     </td>
                                 </tr>
                             </tbody>

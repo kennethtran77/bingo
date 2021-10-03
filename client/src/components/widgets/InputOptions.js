@@ -1,8 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect, createRef } from 'react';
 
-const InputOptions = ({ options, addOption, editOption, removeOption }) => {
+import Popup from 'reactjs-popup';
+
+const InputOptions = ({ options, addOption, editOption, removeOption, placeholder }) => {
     const [inputs, setInputs] = useState(options);
     const [message, setMessage] = useState('');
+
+    const refs = useRef([]);
+
+    // Initiate refs
+    if (refs.current.length !== options.length) {
+        refs.current = Array(options.length).fill().map((_, i) => refs.current[i] || createRef());
+    }
 
     const handleAddOption = () => {
         let counter = options.length + 1;
@@ -11,7 +20,6 @@ const InputOptions = ({ options, addOption, editOption, removeOption }) => {
         while (options.includes(value)) {
             counter += 1;
             value = 'New Option ' + counter;
-            console.log('test');
         }
 
         addOption(value);
@@ -21,7 +29,6 @@ const InputOptions = ({ options, addOption, editOption, removeOption }) => {
     const handleRemoveOption = (index) => {
         removeOption(options[index]);
         setInputs(prevInputs => [...prevInputs.slice(0, index), ...prevInputs.slice(index + 1)]);
-        console.log('Removing index ' + index);
     }
 
     const saveOption = (index, newOption) => {
@@ -43,6 +50,7 @@ const InputOptions = ({ options, addOption, editOption, removeOption }) => {
         if (e.key === 'Enter' && value) {
             e.preventDefault();
             saveOption(index, value);
+            refs.current[index].current.open();
         }
     }
 
@@ -51,7 +59,7 @@ const InputOptions = ({ options, addOption, editOption, removeOption }) => {
             <ul className="remove-bullet">
                 { options && options.map((option, index) => {
                     return (
-                        <div className="padding center-flex">
+                        <li key={index} className="padding center-flex">
                             <input
                                 type="text"
                                 value={inputs[index]}
@@ -61,11 +69,21 @@ const InputOptions = ({ options, addOption, editOption, removeOption }) => {
                                     newInputs[index] = e.target.value;
                                     return newInputs;
                                 })}
+                                placeholder={placeholder}
                                 onKeyDown={(e) => handleKeyDown(e, index)}
                             />
-                            <span onClick={() => saveOption(index, inputs[index])} className="h-margin save"></span>
-                            <span onClick={() => handleRemoveOption(index)} className="x"></span>
-                        </div>
+                            <Popup
+                                ref={refs.current[index]}
+                                trigger={
+                                    <span onClick={() => saveOption(index, inputs[index])} className="h-margin save"></span>
+                                }
+                                position="right center"
+                                closeOnDocumentClick
+                            >
+                                <span>Saved!</span>
+                            </Popup>
+                            <span onClick={() => handleRemoveOption(index)} className="x h-margin"></span>
+                        </li>
                     );
                 })}
                 <p>{ message }</p>

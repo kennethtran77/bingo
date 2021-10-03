@@ -6,9 +6,7 @@ const questionSchema = mongoose.Schema({
     title: { type: String },
     text: { type: String },
     answer: { type: [] },
-    options: { type: [String] },
-    textMathjaxEnabled: { type: Boolean },
-    optionsMathjaxEnabled: { type: Boolean }
+    options: { type: [String] }
 }, { versionKey: false });
 
 const QuestionModel = mongoose.model('Question', questionSchema);

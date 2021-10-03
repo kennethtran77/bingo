@@ -1,17 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import InputTags from '../../../../widgets/InputTags';
-import Math from '../../../../widgets/Math';
-import MathjaxOption from '../../../../widgets/MathjaxOption';
-
+import React, { useEffect } from 'react';
 import InputOptions from '../../../../widgets/InputOptions';
+import OptionsMenu from '../../../../widgets/OptionsMenu';
+
+import 'katex/dist/katex.min.css';
+import Latex from 'react-latex-next';
 
 import Select from 'react-select';
 
 import selectStyles from '../../../../selectStyles.js';
 
 const SingleAnswerEditor = ({ input, setInput, handleEditOption }) => {
-    const [mathjaxError, setMathjaxError] = useState('');
-
     useEffect(() => {
         // Force answer to be a length one array if it isn't already
         if (input.answer.length > 1) {
@@ -50,16 +48,16 @@ const SingleAnswerEditor = ({ input, setInput, handleEditOption }) => {
 
     const options = input.options.map(option => ({
         value: option,
-        label: <Math text={option} enabled={input.optionsMathjaxEnabled} />
+        label: <Latex>{option}</Latex>
     }));
 
     return (
         <>
             <label>
                 Options
-                <MathjaxOption
-                    enabled={input.optionsMathjaxEnabled}
-                    setEnabled={enabled => setInput({ ...input, optionsMathjaxEnabled: enabled})}
+                <OptionsMenu
+                    // enabled={input.optionsMathjaxEnabled}
+                    // setEnabled={enabled => setInput({ ...input, optionsMathjaxEnabled: enabled})}
                 />
                 <InputOptions
                     options={input.options}
@@ -68,17 +66,6 @@ const SingleAnswerEditor = ({ input, setInput, handleEditOption }) => {
                     editOption={handleEditOption}
                     placeholder={"Enter a unique option"}
                 />
-                {/* <InputTags
-                    tags={input.options}
-                    addTag={handleAddOption}
-                    removeTag={handleRemoveOption}
-                    placeholder={"Press enter to add an option"}
-                    mathjaxEnabled={input.optionsMathjaxEnabled}
-                    setMathjaxError={setMathjaxError}
-                /> */}
-                { input.optionsMathjaxEnabled && mathjaxError &&
-                    <p style={{color: 'red'}}>Error: {mathjaxError}</p>
-                }
             </label>
             <label>
                 Answer
@@ -87,7 +74,7 @@ const SingleAnswerEditor = ({ input, setInput, handleEditOption }) => {
                     isSearchable={false}
                     value={{
                         value: input.answer[0],
-                        label: !input.answer.length ? '...' : <Math text={input.answer[0]} enabled={input.optionsMathjaxEnabled} />
+                        label: !input.answer.length ? '...' : <Latex>{input.answer[0]}</Latex>
                     }}
                     onChange={(value, action) => {
                         if (action.action === 'select-option') {
@@ -96,20 +83,6 @@ const SingleAnswerEditor = ({ input, setInput, handleEditOption }) => {
                     }}
                     styles={selectStyles}
                 />
-                {/* Answer
-                <select
-                    value={input.answer[0]}
-                    onChange={e => setInput(prevState => ({ ...prevState, answer: [e.target.value]})) }
-                >
-                    { input.options.map((option, index) =>
-                        <option
-                            key={index}
-                            value={option}
-                        >
-                            <Math text={option} enabled={input.optionsMathjaxEnabled} />
-                        </option>
-                    ) }
-                </select> */}
             </label>
         </>
     );

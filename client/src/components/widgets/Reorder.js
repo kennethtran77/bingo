@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import 'katex/dist/katex.min.css';
+import Latex from 'react-latex-next';
 
-import Math from './Math';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 import './Reorder.css';
 
-const Reorder = ({ title, disabled, styles, order, setOrder, mathjaxEnabled, setMathjaxError }) => {
+const Reorder = ({ title, disabled, styles, order, setOrder, mathjaxEnabled }) => {
     // local input state to prevent visual glitch...
     const [localState, setLocalState] = useState(order);
 
@@ -41,7 +42,7 @@ const Reorder = ({ title, disabled, styles, order, setOrder, mathjaxEnabled, set
         <ul className="reorder" >
             { order.map((item, index) =>
                 <li key={index} style={!styles ? {} : styles.itemStyles(index)}>
-                    <Math text={item} enabled={mathjaxEnabled} setError={setMathjaxError} />
+                    <Latex>{item}</Latex>
                 </li>
             )}
         </ul>
@@ -54,7 +55,7 @@ const Reorder = ({ title, disabled, styles, order, setOrder, mathjaxEnabled, set
                             <Draggable key={item} draggableId={item} index={index}>
                                 {(provided) => (
                                     <li style={!styles ? {} : styles.itemStyles(index)} ref={provided.innerRef} { ...provided.draggableProps } { ...provided.dragHandleProps }>
-                                        <Math text={item} enabled={mathjaxEnabled} setError={setMathjaxError} />
+                                        <Latex>{item}</Latex>
                                     </li>
                                 )}
                             </Draggable>

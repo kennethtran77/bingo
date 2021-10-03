@@ -8,5 +8,5 @@
 }
 
 #tags {
-    overflow-x: hidden;
+    flex-wrap: wrap;
 }

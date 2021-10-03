@@ -60,7 +60,7 @@ const PracticeConcept = () => {
                 setToRender(<Practice questions={questions} title={concept.title} />);
             })
             .catch(err => console.log(err));
-    }, [concept, isLoading]);
+    }, [concept, isLoading, settings.questionsPerSession]);
 
     return toRender;
 }

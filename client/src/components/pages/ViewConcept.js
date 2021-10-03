@@ -2,6 +2,9 @@ import React from 'react';
 import { Redirect, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
+import 'katex/dist/katex.min.css';
+import Latex from 'react-latex-next';
+
 const ViewConcept = ({ userId }) => {
     const { conceptId } = useParams();
     const { concepts, isLoading } = useSelector(state => state.conceptsSlice);
@@ -21,7 +24,7 @@ const ViewConcept = ({ userId }) => {
         <div className="container">
             <h1>{ concept.title }</h1>
             <hr />
-            <p dangerouslySetInnerHTML={ { __html: concept.text }}></p>
+            <Latex>{concept.text}</Latex>
         </div>
     );
 }

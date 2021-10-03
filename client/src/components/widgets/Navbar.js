@@ -53,6 +53,7 @@ const Navbar = ({ decodedToken }) => {
                 <Popup
                     trigger={<span className="more" id="navbar-menu"></span>}
                     closeOnDocumentClick
+                    closeOnEscape
                     position="left top"
                 >
                     <div id="mobile-navbar-options">

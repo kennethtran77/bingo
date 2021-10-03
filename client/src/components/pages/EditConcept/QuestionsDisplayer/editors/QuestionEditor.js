@@ -1,24 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
+import 'katex/dist/katex.min.css';
+import Latex from 'react-latex-next';
+
 import FillInTheBlankEditor from './FillInTheBlankEditor';
 import SingleAnswerEditor from './SingleAnswerEditor';
 import MultipleAnswersEditor from './MultipleAnswersEditor';
 import ReorderEditor from './ReorderEditor';
 
-
 import { updateQuestion } from '../../../../../actions/questions';
 import { verifyQuestion } from '../../../../../util';
 
 import Alert from '../../../../widgets/Alert';
-import Math from '../../../../widgets/Math';
-import MathjaxOption from '../../../../widgets/MathjaxOption';
+import OptionsMenu from '../../../../widgets/OptionsMenu';
 
 const QuestionEditor = ({ concept, question }) => {
     // answer should always be a subset of options
-    const [input, setInput] = useState({ type: 'FillInTheBlank', title: 'New Question', text: "It's quiet here...", answer: [], options: [], optionsMathjaxEnabled: false, textMathjaxEnabled: false });
+    const [input, setInput] = useState({ type: 'FillInTheBlank', title: 'New Question', text: "It's quiet here...", answer: [], options: [] });
+    const [displayLatexPreview, setDisplayLatexPreview] = useState(false);
 
-    const [mathjaxError, setMathjaxError] = useState('');
     const [alertOpen, setAlertOpen] = useState(false);
 
     const dispatch = useDispatch();
@@ -67,6 +68,8 @@ const QuestionEditor = ({ concept, question }) => {
         }
     }
 
+    const menuOptions = ['latexDisplay'];
+
     return (
         <div className="editor">
             <Alert
@@ -99,9 +102,10 @@ const QuestionEditor = ({ concept, question }) => {
                 </label>
                 <label>
                     Text
-                    <MathjaxOption
-                        enabled={input.textMathjaxEnabled}
-                        setEnabled={enabled => setInput({ ...input, textMathjaxEnabled: enabled })}
+                    <OptionsMenu
+                        options={menuOptions}
+                        displayLatexPreview={displayLatexPreview}
+                        toggleLatexPreview={() => setDisplayLatexPreview(curr => !curr)}
                     />
                     <input
                         type='text'
@@ -110,18 +114,15 @@ const QuestionEditor = ({ concept, question }) => {
                         onChange={e => setInput({ ...input, text: e.target.value })}
                         autoComplete="off"
                     />
-                    { input.textMathjaxEnabled &&
-                        <>
-                            Text Preview
-                            <div className="container">
-                                <Math text={input.text} enabled={true} setError={setMathjaxError} />
-                            </div>
-                            { mathjaxError &&
-                                <p style={{color: 'red'}}>Error: {mathjaxError}</p>
-                            }
-                        </>
-                    }
                 </label>
+                { displayLatexPreview &&
+                    <>
+                        Latex Preview
+                        <div className="container">
+                            <Latex>{input.text}</Latex>
+                        </div>
+                    </>
+                }
                 { fetchEditor(input.type) }
                 <input className="small-button" type="button" onClick={handleSubmit} value="Save" />
             </form>

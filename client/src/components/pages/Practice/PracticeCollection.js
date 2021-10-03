@@ -61,7 +61,7 @@ const PracticeCollection = () => {
                 setToRender(<Practice questions={questions} title={collection.title} />);
             })
             .catch(err => console.log(err));
-    }, [collection, isLoading]);
+    }, [collection, isLoading, settings.questionsPerSession]);
 
     return toRender;
 }

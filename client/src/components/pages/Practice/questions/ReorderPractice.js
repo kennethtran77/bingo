@@ -5,7 +5,7 @@ import Reorder from '../../../widgets/Reorder';
 const ReorderPractice = ({ question, disabled, styles, input, setInput }) => {
 
     if (styles) {
-        styles.itemStyles = (index) => input[index] == question.answer[index] ? styles.correctAnswer : styles.incorrectAnswer;
+        styles.itemStyles = (index) => input[index] === question.answer[index] ? styles.correctAnswer : styles.incorrectAnswer;
     }
 
     return (
@@ -15,7 +15,6 @@ const ReorderPractice = ({ question, disabled, styles, input, setInput }) => {
             styles={styles}
             order={input}
             setOrder={setInput}
-            mathjaxEnabled={question.optionsMathjaxEnabled}
         />
     );
 }

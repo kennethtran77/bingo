@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 
 import './InputTags.css';
 
-import Math from './Math';
-
-const InputTags = ({ className = '', id = '', tags, addTag, removeTag, placeholder, maxLength, mathjaxEnabled, setMathjaxError }) => {
+const InputTags = ({ className = '', id = '', tags, addTag, removeTag, placeholder, maxLength }) => {
     const [input, setInput] = useState('');
     const [fieldState, setFieldState] = useState('');
     
@@ -41,7 +39,7 @@ const InputTags = ({ className = '', id = '', tags, addTag, removeTag, placehold
         <div className={styling} id={id}>
             { tags && tags.map((tag, index) => (
                 <span className="input-tag" key={index}>
-                    <Math text={tag} enabled={mathjaxEnabled} setError={setMathjaxError} />
+                    {tag}
                     <span className="x h-margin" onClick={() => removeTag(tag)}></span>
                 </span>
             )) }
