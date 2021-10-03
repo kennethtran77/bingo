@@ -89,9 +89,9 @@ input[type=text], input[type=password], input[type=email], input[type=number], s
     cursor: pointer;
 }
 
-.save::after {
+/* .save::after {
     content: '↓';
-}
+} */
 
 .x {
     display: inline-block;

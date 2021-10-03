@@ -1,4 +1,5 @@
 import React, { useState, useRef, createRef } from 'react';
+import { Prompt } from 'react-router-dom';
 
 import Popup from 'reactjs-popup';
 
@@ -8,21 +9,18 @@ const InputOptions = ({ options, addOption, editOption, removeOption, placeholde
 
     const refs = useRef([]);
 
-    const showSavePopup = (index, message) => {
-        setMessages(prevMessages => {
-            let newMessages = [...prevMessages];
-            newMessages[index] = message;
-            return newMessages;
-        });
-        refs.current[index].current.open();
-    }
-
-    const hideSavePopup = index => refs.current[index].current.close();
+    const setMessage = (index, message) => setMessages(prevMessages => {
+        let newMessages = [...prevMessages];
+        newMessages[index] = message;
+        return newMessages;
+    });
 
     // Initiate refs
     if (refs.current.length !== options.length) {
         refs.current = Array(options.length).fill().map((_, i) => refs.current[i] || createRef());
     }
+
+    const madeChanges = JSON.stringify(inputs) !== JSON.stringify(options);
 
     const handleAddOption = () => {
         let counter = options.length + 1;
@@ -44,31 +42,37 @@ const InputOptions = ({ options, addOption, editOption, removeOption, placeholde
 
     const saveOption = (index, newOption) => {
         if (!newOption) {
+            setMessage(index, 'Save failed: Options cannot be empty.');
             return;
         }
 
         if (options[index] !== newOption && options.find(option => option === newOption)) {
-            showSavePopup(index, 'Save failed: Options must be unique');
+            setMessage(index, 'Save failed: Options must be unique.');
             return;
         }
 
         editOption(index, newOption);
-        showSavePopup(index, 'Saved!');
+        setMessage(index, 'Saved!');
     }
 
     const handleKeyDown = (e, index) => {
         const value = e.target.value.trim();
 
-        if (e.key === 'Enter' && value) {
+        if (e.key === 'Enter') {
             e.preventDefault();
             saveOption(index, value);
+            refs.current[index].current.open();
         } else {
-            hideSavePopup(index);
+            refs.current[index].current.close();
         }
     }
 
     return (
         <div className="container">
+            <Prompt
+                when={madeChanges}
+                message='You have unsaved changes. Are you sure you want to leave?'
+            />
             <ul className="remove-bullet">
                 { options && options.map((option, index) => {
                     return (
@@ -77,7 +81,7 @@ const InputOptions = ({ options, addOption, editOption, removeOption, placeholde
                                 type="text"
                                 value={inputs[index]}
                                 onChange={e => setInputs(prevInputs => {
-                                    hideSavePopup(index);
+                                    refs.current[index].current.close();
                                     let newInputs = [...prevInputs];
                                     newInputs[index] = e.target.value;
                                     return newInputs;
@@ -88,17 +92,16 @@ const InputOptions = ({ options, addOption, editOption, removeOption, placeholde
                             <Popup
                                 ref={refs.current[index]}
                                 trigger={
-                                    <span onClick={() => saveOption(index, inputs[index])} className="h-margin save"></span>
+                                    <span className="h-margin save">
+                                        <span onClick={() => saveOption(index, inputs[index])}>↓</span>
+                                    </span>
                                 }
                                 position="right center"
                                 closeOnDocumentClick
                             >
                                 <span>{messages[index]}</span>
                             </Popup>
-                            <span onClick={(e) => {
-                                e.preventDefault();
-                                handleRemoveOption(index);
-                            }} className="x h-margin"></span>
+                            <span onClick={() => handleRemoveOption(index)} className="x h-margin"></span>
                         </li>
                     );
                 })}
