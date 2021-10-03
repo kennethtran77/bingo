@@ -7,7 +7,7 @@
 
 .blanks {
     display: flex;
-    max-height: 40px;
+    min-height: 40px;
 }
 
 .input-cloze #input-tags-field {

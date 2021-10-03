@@ -91,7 +91,7 @@ const InputCloze = ({ input, setInput }) => {
     }
 
     return (
-        <div className={styling} >
+        <div className={styling}>
             { input.answer && input.answer.map((ans, index) => (
                 typeof ans === 'string' ? (
                     <AutosizeInput
