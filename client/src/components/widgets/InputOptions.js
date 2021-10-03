@@ -62,6 +62,8 @@ const InputOptions = ({ options, addOption, editOption, removeOption, placeholde
         if (e.key === 'Enter' && value) {
             e.preventDefault();
             saveOption(index, value);
+        } else {
+            hideSavePopup(index);
         }
     }
 

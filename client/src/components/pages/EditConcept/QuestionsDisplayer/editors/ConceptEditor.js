@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import { Prompt } from 'react-router';
 
 import { EditorState, convertToRaw, ContentState, Modifier } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
@@ -22,6 +23,8 @@ const ConceptEditor = ({ concept, isLoading }) => {
 
     const dispatch = useDispatch();
 
+    const madeChanges = input.title != concept.title || input.text != concept.text || input.tags != concept.tags || input.public != concept.public;
+
     useEffect(() => {
         if (concept) {
             setInput(concept);
@@ -43,6 +46,10 @@ const ConceptEditor = ({ concept, isLoading }) => {
 
     return (
         <div className="editor">
+            <Prompt
+                when={madeChanges}
+                message='You have unsaved changes. Are you sure you want to leave?'
+            />
             <h2>Edit Concept</h2>
             <form className="form">
                 <label>
