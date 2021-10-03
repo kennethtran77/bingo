@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Prompt } from 'react-router';
 
-import { EditorState, convertToRaw, ContentState, Modifier } from 'draft-js';
+import { EditorState, convertToRaw, ContentState } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 
 import draftToHtml from 'draftjs-to-html';
@@ -23,7 +23,7 @@ const ConceptEditor = ({ concept, isLoading }) => {
 
     const dispatch = useDispatch();
 
-    const madeChanges = input.title != concept.title || input.text != concept.text || input.tags != concept.tags || input.public != concept.public;
+    const madeChanges = input.title !== concept.title || input.text !== concept.text || input.tags !== concept.tags || input.public !== concept.public;
 
     useEffect(() => {
         if (concept) {
