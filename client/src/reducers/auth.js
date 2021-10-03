@@ -7,7 +7,7 @@ const authReducer = (state = { isLoading: false, message: { content: '', colour:
         case 'auth/setMessage':
             // payload is the message
             return { ...state, message: action.payload };
-        case 'settings/setMessageTimer':
+        case 'auth/setMessageTimer':
             // payload is the message timer
             return { ...state, messageTimer: action.payload };
         default:

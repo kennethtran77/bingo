@@ -48,7 +48,7 @@ const Login = () => {
                 <input className="small-button" type="submit" value="Log In" />
                 <p>Don't have an account? <Link to="/signup">Sign Up</Link></p>
                 { isLoading && <p>Loading...</p> }
-                { message.content && <p style={{color: message.colour}}>{message.content}</p> }
+                { message.content && <p style={{color: message.colour}} id="message">{message.content}</p> }
             </form>
         </div>
     );

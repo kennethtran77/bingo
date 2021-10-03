@@ -69,7 +69,7 @@ const Signup = () => {
                 <input className="small-button" type="submit" value="Sign Up" />
                 <p>Already have an account? <Link to="/login">Log In</Link></p>
                 { isLoading && <p>Loading...</p> }
-                { message.content && <p style={{color: message.colour}}>{message.content}</p> }
+                { message.content && <span style={{color: message.colour}} id="message">{message.content}</span> }
             </form>
         </div>
     );

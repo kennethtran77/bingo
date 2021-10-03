@@ -5,14 +5,17 @@ const setTimedMessage = (message, colour, interval) => (dispatch, getState) => {
     dispatch({ type: 'auth/setMessage', payload: { content: message, colour }});
 
     let timer = getState().authSlice.messageTimer;
+
+    // reset the timer if it already exists
+    if (timer) {
+        console.log('clearing timer')
+        clearTimeout(timer);
+    }
+
     const newTimer = setTimeout(() => {
         dispatch({ type: 'auth/setMessage', payload: '' });
         dispatch({ type: 'auth/setMessageTimer', payload: null });
     }, interval);
-
-    // reset the timer if it already exists
-    if (timer)
-        clearTimeout(timer);
 
     dispatch({ type: 'auth/setMessageTimer', payload: newTimer });
 }

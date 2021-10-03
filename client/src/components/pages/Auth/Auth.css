@@ -9,6 +9,7 @@
 
 #auth form {
     padding: 50px;
+    width: 300px;
 }
 
 #auth label {
@@ -19,4 +20,8 @@
     display: block;
     width: 100%;
     margin-bottom: 10px;
+}
+
+#auth #message {
+    flex-wrap: wrap;
 }
