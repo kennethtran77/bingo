@@ -11,6 +11,7 @@ router.use(express.urlencoded({ extended: true }));
 router.use(express.json());
 
 router.get('/sessions', auth, controller.getSessions);
+router.get('/checkChanged', controller.fetchPracticeQuestionChanged);
 router.get('/generateConcept/:conceptId', controller.generateConceptQuestions);
 router.get('/generateCollection/:collectionId', controller.generateCollectionQuestions);
 router.post('/process', auth, controller.processSession);

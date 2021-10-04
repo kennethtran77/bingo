@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link, Redirect, useParams } from 'react-router-dom';
 
 import { useSelector } from 'react-redux';
@@ -7,11 +7,15 @@ import PracticeQuestionVisualizer from './Practice/PracticeQuestionVisualizer';
 
 import { correctColour, incorrectColour } from '../../util';
 
+import { fetchPracticeQuestionChanged } from '../../api';
+
 const PracticeResults = ({ userId }) => {
     const [toRender, setToRender] = useState('Loading...');
 
     const { sessionId } = useParams();
     const { practiceSessions, isLoading } = useSelector(state => state.practiceSlice);
+
+    const [questionsChanged, setQuestionsChanged] = useState(null);
 
     const practiceSession = practiceSessions.find(s => s._id === sessionId);
 
@@ -28,15 +32,26 @@ const PracticeResults = ({ userId }) => {
             setToRender(<Redirect to="/"/>);
             return;
         }
+        
+        fetchQuestionsChanged();
     }, [userId, isLoading, practiceSession]);
 
-    useEffect(() => {
+    // check if any of the questions have changed since this session
+    const fetchQuestionsChanged = useCallback(async () => {
         if (practiceSession) {
-            // const questionHasChanged = practiceSession.practiceQuestions.map(question => {
+            const changed = Array(practiceSession.practiceQuestions.length).fill(false);
 
-            // });
-            const questionHasChanged = false;
+            for (let i = 0; i < practiceSession.practiceQuestions.length; i++) {
+                let response = await fetchPracticeQuestionChanged(practiceSession._id, practiceSession.practiceQuestions[i].question);
+                changed[i] = response.data;
+            }
 
+            setQuestionsChanged(changed);
+        }
+    }, [practiceSession]);
+
+    useEffect(() => {
+        if (practiceSession && questionsChanged) {
             setToRender(
                 <>
                     <div className="container">
@@ -45,7 +60,6 @@ const PracticeResults = ({ userId }) => {
                             <Link className="small-button" to="/">Go Home</Link>
                         </div>
                     </div>
-                    { questionHasChanged && <h2>Alert: This question has been modified after this practice session occured.</h2>}
                     <table style={{
                         tableLayout: 'fixed',
                         width: '100%'
@@ -56,41 +70,50 @@ const PracticeResults = ({ userId }) => {
                                 <th>Correct Answers</th>
                             </tr>
                         </thead>
-                        { practiceSession.practiceQuestions.map((question, index) => (
-                            <tbody key={index}>
-                                <tr>
-                                    <td>
-                                        <PracticeQuestionVisualizer
-                                            question={question}
-                                            index={index}
-                                            disabled={true}
-                                            styles={{
-                                                correctAnswer: {
-                                                    backgroundColor: correctColour
-                                                },
-                                                incorrectAnswer: {
-                                                    backgroundColor: incorrectColour
-                                                }
-                                            }}
-                                            input={question.input}
-                                        />
-                                    </td>
-                                    <td>
-                                        <PracticeQuestionVisualizer
-                                            question={question}
-                                            index={index}
-                                            disabled={true}
-                                            input={question.answer}
-                                        />
-                                    </td>
-                                </tr>
-                            </tbody>
-                        ))}
+                        { practiceSession.practiceQuestions.map((question, index) => {
+                            return (
+                                <tbody key={index}>
+                                    { questionsChanged[index] && (
+                                        <tr>
+                                            <td colspan='2'>
+                                                <div className="container secondary"><strong>Alert</strong>: The following question was modified after this practice session occured. Displaying the original version.</div>
+                                            </td>
+                                        </tr>
+                                    )}
+                                    <tr>
+                                        <td>
+                                            <PracticeQuestionVisualizer
+                                                question={question}
+                                                index={index}
+                                                disabled={true}
+                                                styles={{
+                                                    correctAnswer: {
+                                                        backgroundColor: correctColour
+                                                    },
+                                                    incorrectAnswer: {
+                                                        backgroundColor: incorrectColour
+                                                    }
+                                                }}
+                                                input={question.input}
+                                            />
+                                        </td>
+                                        <td>
+                                            <PracticeQuestionVisualizer
+                                                question={question}
+                                                index={index}
+                                                disabled={true}
+                                                input={question.answer}
+                                            />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            )
+                        })}
                     </table>
                 </>
             );
         }
-    }, [practiceSession]);
+    }, [practiceSession, questionsChanged]);
 
     return toRender;
 };

@@ -38,6 +38,7 @@ export const generateConceptQuestions = (conceptId, questionsPerSession) => api.
 export const generateCollectionQuestions = (collectionId, questionsPerSession) => api.get(`/practice/generateCollection/${collectionId}?questionsPerSession=${questionsPerSession}`)
 export const processSession = (title, inputs) => api.post(`/practice/process`, { title, inputs });
 export const fetchPracticeSessions = () => api.get(`/practice/sessions`);
+export const fetchPracticeQuestionChanged = (sessionId, questionId) => api.get(`/practice/checkChanged?sessionId=${sessionId}&questionId=${questionId}`);
 
 // auth
 export const login = (loginInput) => api.post(`/users/login`, loginInput);

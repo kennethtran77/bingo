@@ -37,9 +37,7 @@ const Practice = ({ questions, title }) => {
             title: questions[index].title,
             text: questions[index].text,
             options: questions[index].options,
-            answer: questions[index].answer,
-            textMathjaxEnabled: questions[index].textMathjaxEnabled,
-            optionsMathjaxEnabled: questions[index].optionsMathjaxEnabled
+            answer: questions[index].answer
         }));
 
         dispatch(processSession(title, inputs, history));

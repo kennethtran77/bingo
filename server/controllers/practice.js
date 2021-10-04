@@ -98,8 +98,6 @@ export const processSession = async (req, res) => {
             type: input.type,
             title: input.title,
             text: input.text,
-            textMathjaxEnabled: input.textMathjaxEnabled,
-            optionsMathjaxEnabled: input.optionsMathjaxEnabled,
             answer: input.answer,
             options: input.options
         }));
@@ -124,3 +122,21 @@ export const processSession = async (req, res) => {
         res.status(404).send({ message: error.message });
     }
 };
+
+export const fetchPracticeQuestionChanged = async (req, res) => {
+    try {
+        const { sessionId, questionId } = req.query;
+
+        if (!mongoose.Types.ObjectId.isValid(sessionId))
+            res.status(200).send(false);
+
+        const practiceSession = await PracticeSessionModel.findById(sessionId);
+        const question = await QuestionModel.findById(questionId);
+
+        const practiceQuestion = practiceSession.practiceQuestions.filter(q => q.question.toString() === questionId)[0];
+
+        res.status(200).send(question.title !== practiceQuestion.title || question.type !== practiceQuestion.type || question.text !== practiceQuestion.text || JSON.stringify(question.type === 'Reorder' ? question.answer : question.answer.sort()) !== JSON.stringify(practiceQuestion.type === 'Reorder' ? practiceQuestion.answer : practiceQuestion.answer.sort()) || JSON.stringify(question.options.sort()) !== JSON.stringify(practiceQuestion.options.sort()))
+    } catch (error) {
+        console.log(error);
+    }
+}
