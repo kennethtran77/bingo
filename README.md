@@ -1,6 +1,6 @@
 # bingo
 
-Create and practice concepts
+Create, practice and share concepts and questions and practice.
 
 ## Features
 
@@ -41,6 +41,8 @@ npm start
 ## Highlights of Features
 
 ### View Concepts
+
+![View My Concepts](https://i.ibb.co/Dbmz3DX/concepts-1.png)
 
 ![View All Concepts](https://i.ibb.co/M2vMSX3/all-concepts-1.png)
 
