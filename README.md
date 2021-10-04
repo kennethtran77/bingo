@@ -1,6 +1,6 @@
 # bingo
 
-Create and practice concepts
+Create, practice and share concepts and questions and practice.
 
 ## Features
 
@@ -11,11 +11,8 @@ Create and practice concepts
     2. Multiple Answers
     3. Single Answer
     4. Reorder
-* Support for Mathjax
-	
-## Screenshots
-
-TODO
+* Support for LaTeX
+* Bookmark your favourite concepts in "Collections"
 
 ## Installation & Running
 
@@ -39,3 +36,30 @@ npm start
 
 * Allow for audio/images in questions
 * Comments/reviews on concepts
+* (Backend) request limit
+
+## Highlights of Features
+
+### View Concepts
+
+![View My Concepts](https://i.ibb.co/Dbmz3DX/concepts-1.png)
+
+![View All Concepts](https://i.ibb.co/M2vMSX3/all-concepts-1.png)
+
+### Edit a Concept
+
+![Edit Concept](https://i.ibb.co/6szTrYf/edit-concept-1.png)
+
+![Concept Display](https://i.ibb.co/BP7SYmz/view-concept-1.png)
+
+### Add Practice Questions
+
+![Add Fill-in-the-Blank Question](https://i.ibb.co/0ZvrPXJ/edit-question-1.png)
+
+![Add Reorder Question](https://i.ibb.co/Vt6qVhR/edit-question-2.png)
+
+### Practice Concepts
+
+![Practice](https://i.ibb.co/qMnTPqh/practice-1.png)
+
+![Results](https://i.ibb.co/Jcq4NKk/practice-2.png)
