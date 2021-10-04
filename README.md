@@ -11,7 +11,8 @@ Create and practice concepts
     2. Multiple Answers
     3. Single Answer
     4. Reorder
-* Support for Mathjax
+* Support for LaTeX
+* Bookmark your favourite concepts in "Collections"
 
 ## Installation & Running
 
