@@ -113,6 +113,29 @@ input[type=text], input[type=password], input[type=email], input[type=number], s
     cursor: pointer;
 }
 
+
+.like, .dislike {
+    display: inline-block;
+    border: none;
+    color: white;
+    text-decoration: none;
+    transition: transform .2s;
+}
+
+.like::after {
+    content: '👍';
+}
+
+.dislike::after {
+    content: '👎';
+}
+
+.like:hover, .dislike:hover {
+    transform: scale(1.25); 
+    cursor: pointer;
+}
+
+
 .more {
     display: inline-block;
     border: none;

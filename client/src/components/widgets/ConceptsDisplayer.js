@@ -41,7 +41,10 @@ const ConceptsDisplayer = ({ title, concepts, isLoading, userId, showCreator, co
             text: '',
             tags: [],
             public: true,
-            questions: []
+            questions: [],
+            likes: [],
+            dislikes: [],
+            comments: []
         };
         
         dispatch(createConcept(newConcept));

@@ -6,7 +6,10 @@ const conceptSchema = mongoose.Schema({
     text: String,
     tags: [String],
     public: Boolean,
-    questions: [{ type: mongoose.Types.ObjectId, ref: 'Question' }]
+    questions: [{ type: mongoose.Types.ObjectId, ref: 'Question' }],
+    likes: [{ type: mongoose.Types.ObjectId, ref: 'User' }],
+    dislikes: [{ type: mongoose.Types.ObjectId, ref: 'User' }],
+    comments: [String]
 }, { versionKey: false });
 
 const ConceptModel = mongoose.model('Concept', conceptSchema);

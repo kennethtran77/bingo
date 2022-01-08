@@ -15,5 +15,7 @@ router.get('/', auth, controller.getConcepts);
 router.post('/', auth, controller.createConcept);
 router.patch('/:conceptId', auth, controller.updateConcept);
 router.delete('/:conceptId', auth, controller.deleteConcept);
+router.post('/like/:conceptId', auth, controller.likeConcept);
+router.post('/dislike/:conceptId', auth, controller.dislikeConcept);
 
 export default router;

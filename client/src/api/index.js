@@ -17,6 +17,9 @@ export const fetchConceptsBySearch = (query) => api.get(`/concepts/search?query=
 export const createConcept = (newConcept) => api.post(`/concepts`, newConcept);
 export const updateConcept = (conceptId, updatedConcept) => api.patch(`/concepts/${conceptId}`, updatedConcept);
 export const deleteConcept = (conceptId) => api.delete(`/concepts/${conceptId}`);
+export const likeConcept = (conceptId) => api.post(`/concepts/like/${conceptId}`);
+export const dislikeConcept = (conceptId) => api.post(`/concepts/dislike/${conceptId}`);
+
 
 // questions
 export const fetchQuestions = (conceptId) => api.get(`/concepts/${conceptId}/questions`);

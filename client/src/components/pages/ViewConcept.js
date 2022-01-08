@@ -4,8 +4,10 @@ import { useSelector } from 'react-redux';
 
 import 'katex/dist/katex.min.css';
 import Latex from 'react-latex-next';
+import LikeButton from '../widgets/LikeButton';
+import DislikeButton from '../widgets/DislikeButton';
 
-const ViewConcept = ({ userId }) => {
+const ViewConcept = () => {
     const { conceptId } = useParams();
     const { concepts, isLoading } = useSelector(state => state.conceptsSlice);
 
@@ -19,11 +21,21 @@ const ViewConcept = ({ userId }) => {
         return <Redirect to="/"/>;
 
     return (
-        <div className="container">
-            <h1>{ concept.title }</h1>
-            <hr />
-            <Latex>{concept.text}</Latex>
-        </div>
+        <>
+            <div className="container">
+                <h1>{ concept.title }</h1>
+                <hr />
+                <Latex>{concept.text}</Latex>
+            </div>
+            <div className="container">
+                <div className="left-flex">
+                    <LikeButton conceptId={concept._id} />
+                    <DislikeButton conceptId={concept._id} />
+                </div>
+                <hr />
+                <h3>Comments</h3>
+            </div>
+        </>
     );
 }
 

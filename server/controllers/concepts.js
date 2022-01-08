@@ -84,3 +84,57 @@ export const deleteConcept = async (req, res) => {
 
     res.json({ message: 'Concept deleted successfully' })
 }
+
+export const likeConcept = async (req, res) => {
+    const { conceptId } = req.params;
+
+    const concept = await ConceptModel.findById(conceptId);
+
+    if (!mongoose.Types.ObjectId.isValid(conceptId))
+        return res.status(404).send(`No concept found with id ${conceptId}`);
+
+    const userId = req.user.id;
+
+    // Like the concept if not already liked
+    if (!concept.likes.includes(userId)) {
+        concept.likes = [...concept.likes, userId];
+
+        // Remove dislike if the user already disliked
+        if (concept.dislikes.includes(userId)) {
+            concept.dislikes = concept.dislikes.filter(u => u.toString() !== userId);
+        }
+    } else { // Unlike the concept if already liked
+        concept.likes = concept.likes.filter(u => u.toString() !== userId);
+    }
+
+    await concept.save();
+
+    res.status(200).json(concept);
+}
+
+export const dislikeConcept = async (req, res) => {
+    const { conceptId } = req.params;
+
+    const concept = await ConceptModel.findById(conceptId);
+
+    if (!mongoose.Types.ObjectId.isValid(conceptId))
+        return res.status(404).send(`No concept found with id ${conceptId}`);
+
+    const userId = req.user.id;
+
+    // Dislike the concept if not already disliked
+    if (!concept.dislikes.includes(userId)) {
+        concept.dislikes = [...concept.dislikes, userId];
+
+        // Remove like if user already liked
+        if (concept.likes.includes(userId)) {
+            concept.likes = concept.likes.filter(u => u.toString() !== userId);
+        }
+    } else { // Un-dislike the concept if already disliked
+        concept.dislikes = concept.dislikes.filter(u => u.toString() !== userId);
+    }
+
+    await concept.save();
+
+    res.status(200).json(concept);
+}
