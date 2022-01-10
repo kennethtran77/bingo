@@ -4,10 +4,11 @@ import { useSelector } from 'react-redux';
 
 import 'katex/dist/katex.min.css';
 import Latex from 'react-latex-next';
-import LikeButton from '../widgets/LikeButton';
-import DislikeButton from '../widgets/DislikeButton';
+import LikeButton from '../../widgets/LikeButton';
+import DislikeButton from '../../widgets/DislikeButton';
+import Comments from './Comments';
 
-const ViewConcept = () => {
+const ViewConcept = ({ userId }) => {
     const { conceptId } = useParams();
     const { concepts, isLoading } = useSelector(state => state.conceptsSlice);
 
@@ -33,7 +34,7 @@ const ViewConcept = () => {
                     <DislikeButton conceptId={concept._id} />
                 </div>
                 <hr />
-                <h3>Comments</h3>
+                <Comments concept={concept} userId={userId} />
             </div>
         </>
     );

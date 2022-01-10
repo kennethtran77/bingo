@@ -6,6 +6,7 @@ import authReducer from './auth';
 import practiceReducer from './practice';
 import settingsReducer from './settings';
 import collectionsReducer from './collections';
+import commentsReducer from './comments';
 
 export default combineReducers({
     conceptsSlice: conceptsReducer,
@@ -13,5 +14,6 @@ export default combineReducers({
     authSlice: authReducer,
     practiceSlice: practiceReducer,
     settingsSlice: settingsReducer,
-    collectionsSlice: collectionsReducer
+    collectionsSlice: collectionsReducer,
+    commentsSlice: commentsReducer
 });

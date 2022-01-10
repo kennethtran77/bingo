@@ -9,7 +9,7 @@ const conceptSchema = mongoose.Schema({
     questions: [{ type: mongoose.Types.ObjectId, ref: 'Question' }],
     likes: [{ type: mongoose.Types.ObjectId, ref: 'User' }],
     dislikes: [{ type: mongoose.Types.ObjectId, ref: 'User' }],
-    comments: [String]
+    comments: [{ type: mongoose.Types.ObjectId, ref: 'Comment' }],
 }, { versionKey: false });
 
 const ConceptModel = mongoose.model('Concept', conceptSchema);

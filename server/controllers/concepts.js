@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import CommentModel from '../models/comment.js';
 
 import ConceptModel from '../models/concept.js';
 import QuestionModel from '../models/question.js';
@@ -77,6 +78,12 @@ export const deleteConcept = async (req, res) => {
     for (let i = 0; i < concept.questions.length; i++) {
         const question = concept.questions[i];
         await QuestionModel.findByIdAndRemove(question);
+    }
+
+    // Delete all of this concept's comments
+    for (let i = 0; i < concept.comments.length; i++) {
+        const comment = concept.comments[i];
+        await CommentModel.findByIdAndRemove(comment);
     }
 
     await concept.delete();

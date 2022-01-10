@@ -20,13 +20,18 @@ export const deleteConcept = (conceptId) => api.delete(`/concepts/${conceptId}`)
 export const likeConcept = (conceptId) => api.post(`/concepts/like/${conceptId}`);
 export const dislikeConcept = (conceptId) => api.post(`/concepts/dislike/${conceptId}`);
 
-
 // questions
 export const fetchQuestions = (conceptId) => api.get(`/concepts/${conceptId}/questions`);
 export const createQuestion = (conceptId, newQuestion) => api.post(`/concepts/${conceptId}/questions`, newQuestion);
 export const updateQuestion = (conceptId, questionId, updatedQuestion) => api.patch(`/concepts/${conceptId}/questions/${questionId}`, updatedQuestion);
 export const deleteQuestion = (conceptId, questionId) => api.delete(`/concepts/${conceptId}/questions/${questionId}`);
 export const verifyQuestion = (conceptId, questionId) => api.get(`/concepts/${conceptId}/questions/verify/${questionId}`);
+
+// comments
+export const fetchComments = (conceptId) => api.get(`/concepts/${conceptId}/comments`);
+export const createComment = (conceptId, newComment) => api.post(`/concepts/${conceptId}/comments`, newComment);
+export const updateComment = (conceptId, commentId, updatedComment) => api.patch(`/concepts/${conceptId}/comments/${commentId}`, updatedComment);
+export const deleteComment = (conceptId, commentId) => api.delete(`/concepts/${conceptId}/comments/${commentId}`);
 
 // collections
 export const fetchCollections = () => api.get(`/collections`);
