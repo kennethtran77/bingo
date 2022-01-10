@@ -35,7 +35,6 @@ npm start
 ## Todo
 
 * Allow for audio/images in questions
-* Comments/reviews on concepts
 * (Backend) request limit
 
 ## Highlights of Features

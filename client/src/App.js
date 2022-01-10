@@ -22,7 +22,7 @@ import Signup from './components/pages/Auth/Signup';
 import Settings from './components/pages/Settings/Settings';
 import PracticeResults from './components/pages/PracticeResults';
 import BrowseConcepts from './components/pages/BrowseConcepts';
-import ViewConcept from './components/pages/ViewConcept';
+import ViewConcept from './components/pages/ViewConcept/ViewConcept';
 import Collections from './components/pages/Collections/Collections';
 import EditCollection from './components/pages/Collections/EditCollection';
 
@@ -57,6 +57,8 @@ const App = () => {
         }
     }, [dispatch, decodedToken]);
 
+    // wrap the component in a fragment containing the navbar with the decoded
+    // token, and passing userId as props into the component
     const wrap = (Component) => (
         <>
             <Navbar decodedToken={decodedToken} />

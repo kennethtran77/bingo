@@ -5,7 +5,9 @@ import { useDispatch } from 'react-redux';
 import { getUsername } from '../../api';
 import { addToCollection, removeFromCollection } from '../../actions/collections';
 
+import LikeButton from './LikeButton';
 import ConfirmDelete from './ConfirmDelete';
+import DislikeButton from './DislikeButton';
 
 const ConceptVisualizer = ({ concept, remove, userId, showCreator, collection }) => {
     const [creator, setCreator] = useState('');
@@ -75,6 +77,10 @@ const ConceptVisualizer = ({ concept, remove, userId, showCreator, collection })
                             { userId === concept.creator && <span onClick={() => setToDelete(true)} className="x"></span> }
                         </>
                     ) }
+                </div>
+                <div className="left-flex">
+                    <LikeButton conceptId={concept._id}/>
+                    <DislikeButton conceptId={concept._id}/>
                 </div>
             </div>
         </div>

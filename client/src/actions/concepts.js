@@ -1,6 +1,7 @@
 import * as api from '../api/index.js';
 
 import { fetchQuestions } from '../actions/questions';
+import { fetchComments } from './comments.js';
 
 // Action handlers
 
@@ -11,11 +12,12 @@ export const fetchConcepts = (userId) => async (dispatch) => {
         dispatch({ type: 'concepts/fetchAll', payload: data });
         dispatch({ type: 'concepts/stopLoading' });
 
-        // fetch questions after the concepts have been fetched
+        // fetch questions and comments after the concepts have been fetched
         data.forEach(concept => {
             if (concept.creator.toString() === userId) {
                 dispatch(fetchQuestions(concept));
             }
+            dispatch(fetchComments(concept));
         });
     } catch (error) {
         console.log(error.message);
@@ -54,3 +56,23 @@ export const deleteConcept = (conceptId) => async (dispatch) => {
         console.log(error.message);
     }
 };
+
+export const likeConcept = (conceptId) => async (dispatch) => {
+    try {
+        // data is the concept object with the updated likes
+        const { data } = await api.likeConcept(conceptId);
+        dispatch({ type: 'concepts/update', payload: data });
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+export const dislikeConcept = (conceptId) => async (dispatch) => {
+    try {
+        // data is the concept object with the updated dislikes
+        const { data } = await api.dislikeConcept(conceptId);
+        dispatch({ type: 'concepts/update', payload: data });
+    } catch (error) {
+        console.log(error.message);
+    }
+}

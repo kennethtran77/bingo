@@ -26,6 +26,17 @@ img {
     cursor: pointer;
 }
 
+textarea {
+    width: 100%;
+    resize: vertical;
+    min-height: 60px;
+    max-height: 200px;
+    font-size: 16px;
+    box-sizing: border-box;
+    font-family: 'Montserrat', serif;
+    padding: 5px;
+}
+
 input[type=text], input[type=password], input[type=email], input[type=number], select {
     height: 35px;
     font-size: 16px;
@@ -113,6 +124,29 @@ input[type=text], input[type=password], input[type=email], input[type=number], s
     cursor: pointer;
 }
 
+
+.like, .dislike {
+    display: inline-block;
+    border: none;
+    color: white;
+    text-decoration: none;
+    transition: transform .2s;
+}
+
+.like::after {
+    content: '👍';
+}
+
+.dislike::after {
+    content: '👎';
+}
+
+.like:hover, .dislike:hover {
+    transform: scale(1.25); 
+    cursor: pointer;
+}
+
+
 .more {
     display: inline-block;
     border: none;
@@ -173,6 +207,10 @@ input[type=text], input[type=password], input[type=email], input[type=number], s
     font-family: 'Montserrat', serif;
     font-size: 16px;
     cursor: default;
+}
+
+.small-button:disabled {
+    background-color: rgb(200, 200, 200);
 }
 
 .small-button:visited {
