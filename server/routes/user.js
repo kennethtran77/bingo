@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { login, signUp, getSettings, updateSettings, getUser, getUsername, updateUsername, resetPassword } from '../controllers/user.js';
+import * as controller from '../controllers/user.js';
 
 import auth from '../middleware/auth.js';
 
@@ -10,13 +10,13 @@ router.use(express.static('public'));
 router.use(express.urlencoded({ extended: true }));
 router.use(express.json());
 
-router.post('/login', login);
-router.post('/signup', signUp);
-router.get('/user/:userId', auth, getUser);
-router.get('/username/:userId', getUsername);
-router.get('/settings', auth, getSettings);
-router.post('/settings', auth, updateSettings);
-router.post('/username', auth, updateUsername);
-router.post('/password', auth, resetPassword);
+router.get('/', controller.getUsernames);
+router.post('/login', controller.login);
+router.post('/signup', controller.signUp);
+router.get('/user/:userId', auth, controller.getUser);
+router.get('/settings', auth, controller.getSettings);
+router.post('/settings', auth, controller.updateSettings);
+router.post('/username', auth, controller.updateUsername);
+router.post('/password', auth, controller.resetPassword);
 
 export default router;

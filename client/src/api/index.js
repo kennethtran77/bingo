@@ -55,7 +55,7 @@ export const updatePassword = (password, newPassword, confirmNewPassword) => api
 
 // user
 export const getUser = (userId) => api.get(`/users/user/${userId}`);
-export const getUsername = (userId) => api.get(`/users/username/${userId}`);
+export const fetchUsernames = () => api.get(`/users`);
 export const fetchSettings = () => api.get(`/users/settings`);
 export const updateSettings = (newSettings) => api.post(`/users/settings`, { newSettings });
 export const updateUsername = (newUsername) => api.post(`/users/username`, { newUsername });

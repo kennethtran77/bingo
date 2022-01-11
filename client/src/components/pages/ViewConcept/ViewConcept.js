@@ -11,10 +11,12 @@ import Comments from './Comments';
 const ViewConcept = ({ userId }) => {
     const { conceptId } = useParams();
     const { concepts, isLoading } = useSelector(state => state.conceptsSlice);
-
     const concept = concepts.find(c => c._id === conceptId);
 
-    if (isLoading && !concept)
+    const { users } = useSelector(state => state.usersSlice);
+    const user = users.find(u => u._id === concept.creator);
+
+    if (isLoading && (!concept || !user))
         return 'Loading...';
 
     // If we finished loading but couldn't find the concept, return to homepage
@@ -25,6 +27,7 @@ const ViewConcept = ({ userId }) => {
         <>
             <div className="container">
                 <h1>{ concept.title }</h1>
+                <h3>by <strong>{user.username}</strong></h3>
                 <hr />
                 <Latex>{concept.text}</Latex>
             </div>

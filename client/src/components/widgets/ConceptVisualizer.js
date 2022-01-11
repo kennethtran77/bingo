@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
-import { getUsername } from '../../api';
 import { addToCollection, removeFromCollection } from '../../actions/collections';
 
 import LikeButton from './LikeButton';
@@ -10,24 +9,14 @@ import ConfirmDelete from './ConfirmDelete';
 import DislikeButton from './DislikeButton';
 
 const ConceptVisualizer = ({ concept, remove, userId, showCreator, collection }) => {
-    const [creator, setCreator] = useState('');
+    const { users } = useSelector(state => state.usersSlice);
+    const creator = users.find(u => u._id === concept.creator);
+
     const [toDelete, setToDelete] = useState(false);
 
     const [showAllTags, setShowAllTags] = useState(false);
 
     const dispatch = useDispatch();
-
-    useEffect(() => {
-        let mounted = true;
-
-        getUsername(concept.creator).then(res => {
-            if (mounted) {
-                setCreator(res.data);
-            }
-        });
-
-        return () => mounted = false;
-    }, [concept.creator]);
 
     const getRenderedTags = () => {
         return showAllTags ? concept.tags : concept.tags.slice(0, 10);
@@ -54,7 +43,7 @@ const ConceptVisualizer = ({ concept, remove, userId, showCreator, collection })
         <div className="container secondary">
             <div className="max-width">
                 <div className="v-margin">
-                    <strong>{concept.title}</strong> { showCreator && <span className="h-margin">by {creator}</span> }
+                    <strong>{concept.title}</strong> { showCreator && <span className="h-margin">by {creator.username}</span> }
                 </div>
                 <ul id="tags" className="remove-bullet left-flex ">
                     { getRenderedTags().map((tag, index) => (

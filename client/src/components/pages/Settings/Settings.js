@@ -4,7 +4,7 @@ import { updateSettings, updateUsername, updatePassword } from '../../../actions
 
 import './Settings.css';
 
-const Settings = () => {
+const Settings = ({ userId }) => {
     const { settings, isLoading, message } = useSelector(state => state.settingsSlice);
 
     const [input, setInput] = useState({ questionsPerSession: settings.questionsPerSession, username: '', currentPassword: '', newPassword: '', confirmNewPassword: '' });
@@ -24,7 +24,7 @@ const Settings = () => {
 
     const handleSaveUsername = e => {
         e.preventDefault();
-        dispatch(updateUsername(input.username));
+        dispatch(updateUsername(input.username, userId));
         setInput({ ...input, username: '' });
     }
 

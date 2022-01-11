@@ -7,7 +7,7 @@ import decode from 'jwt-decode';
 import { fetchConcepts } from './actions/concepts.js';
 import { fetchCollections } from './actions/collections.js';
 import { fetchPracticeSessions } from './actions/practice.js';
-import { fetchSettings, fetchUsername } from './actions/user.js';
+import { fetchSettings, fetchUsernames } from './actions/user.js';
 
 import './App.css';
 
@@ -33,6 +33,7 @@ const App = () => {
     const session = JSON.parse(localStorage.getItem('profile'));
     const [decodedToken, setDecodedToken] = useState('');
     
+    // force refresh
     useSelector(state => state.authSlice);
 
     const dispatch = useDispatch();
@@ -53,7 +54,7 @@ const App = () => {
             dispatch(fetchCollections());
             dispatch(fetchPracticeSessions());
             dispatch(fetchSettings());
-            dispatch(fetchUsername(decodedToken.id));
+            dispatch(fetchUsernames());
         }
     }, [dispatch, decodedToken]);
 
