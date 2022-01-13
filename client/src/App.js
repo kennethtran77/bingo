@@ -30,7 +30,9 @@ import 'reactjs-popup/dist/index.css';
 import PracticeCollection from './components/pages/Practice/PracticeCollection.js';
 
 const App = () => {
+    // fetch json token from localStorage
     const session = JSON.parse(localStorage.getItem('profile'));
+    // decodedToken should be an object with key `id` representing the user's id
     const [decodedToken, setDecodedToken] = useState('');
     
     // force refresh
@@ -38,7 +40,7 @@ const App = () => {
 
     const dispatch = useDispatch();
 
-    // Load user id
+    // Try to decode token whenever `session` changes
     useEffect(() => {
         if (session?.token) {
             const decoded = decode(session?.token);

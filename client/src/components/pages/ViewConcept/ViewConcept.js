@@ -10,9 +10,12 @@ import Comments from './Comments';
 
 const ViewConcept = ({ userId }) => {
     const { conceptId } = useParams();
+
+    // fetch concept object from store
     const { concepts, isLoading } = useSelector(state => state.conceptsSlice);
     const concept = concepts.find(c => c._id === conceptId);
 
+    // fetch user object from store
     const { users } = useSelector(state => state.usersSlice);
     const user = users.find(u => u._id === concept.creator);
 
