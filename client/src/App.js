@@ -30,8 +30,6 @@ import 'reactjs-popup/dist/index.css';
 import PracticeCollection from './components/pages/Practice/PracticeCollection.js';
 
 const App = () => {
-    // fetch json token from localStorage
-    const session = JSON.parse(localStorage.getItem('profile'));
     // decodedToken should be an object with key `id` representing the user's id
     const [decodedToken, setDecodedToken] = useState('');
     
@@ -42,11 +40,22 @@ const App = () => {
 
     // Try to decode token whenever `session` changes
     useEffect(() => {
-        if (session?.token) {
-            const decoded = decode(session?.token);
-            setDecodedToken(decoded);
-        }
-    }, [session?.token]);
+        const checkForToken = () => {
+            // fetch json token from localStorage
+            const sessionToken = JSON.parse(localStorage.getItem('profile'));
+
+            if (sessionToken?.token) {
+                const decoded = decode(sessionToken?.token);
+                setDecodedToken(decoded);
+            }
+        };
+
+        // add window event listener to check localStorage
+        window.addEventListener('storage', checkForToken);
+
+        // cleanup function, remove window event listener
+        return () => window.removeEventListener('storage', checkForToken);
+    }, []);
 
     // Load data once user ID loads
     useEffect(() => {
