@@ -1,25 +1,24 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
-import ReactPaginate from 'react-paginate';
+import Paginate from '../../widgets/Paginate';
 
 import Comment from './Comment';
 import CommentBox from './CommentBox';
 
 const Comments = ({ concept, userId }) => {
     const { comments, isLoading, message } = useSelector(state => state.commentsSlice);
+    const [conceptComments, setConceptComments] = useState([]);
 
-    const conceptComments = comments.filter(comment => comment.concept === concept._id);
+    // load concept comments into state once comments fetched from store
+    useEffect(() => {
+        if (comments) {
+            setConceptComments(comments.filter(comment => comment.concept === concept._id));
+        }
+    }, [comments]);
 
     // Pagination
-    const [page, setPage] = useState(0);
-
-    const commentsPerPage = 10;
-    const pagesVisited = page * commentsPerPage;
-    const pageCount = Math.ceil(conceptComments.length / commentsPerPage);
-    const slicedComments = conceptComments.slice(pagesVisited, pagesVisited + commentsPerPage);
-
-    const handlePageClick = ({ selected }) => setPage(selected);
+    const [commentsToDisplay, setCommentsToDisplay] = useState([]);
 
     return (
         <>
@@ -27,7 +26,7 @@ const Comments = ({ concept, userId }) => {
             <CommentBox concept={concept} />
             { message.content && <p style={{color: message.colour}} id="message">{message.content}</p> }
             <ul className="remove-bullet">
-                { slicedComments.length ? slicedComments.map((comment, id) => (
+                { commentsToDisplay.length ? commentsToDisplay.map((comment, id) => (
                     <li key={id}>
                         <Comment comment={comment} userId={userId} concept={concept} />
                     </li>
@@ -36,16 +35,10 @@ const Comments = ({ concept, userId }) => {
                 }
             </ul>
             { isLoading && 'Loading...' }
-            <ReactPaginate
-                previousLabel={"<"}
-                nextLabel={">"}
-                pageCount={pageCount}
-                onPageChange={handlePageClick}
-                containerClassName={"pagination-button"}
-                previousLinkClassName={"previous-button"}
-                nextLinkClassName={"next-button"}
-                disabledClassName={"pagination-disabled"}
-                activeClassName={"pagination-active"}
+            <Paginate 
+                items={conceptComments}
+                itemsPerPage={10}
+                setItemsToDisplay={setCommentsToDisplay}
             />
         </>
     );

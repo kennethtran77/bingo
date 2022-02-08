@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import ReactPaginate from 'react-paginate';
-
 import CollectionVisualizer from './CollectionVisualizer';
 
 import SearchBox from '../../widgets/SearchBox';
@@ -10,6 +8,7 @@ import SearchBox from '../../widgets/SearchBox';
 import '../../widgets/ConceptsDisplayer.css';
 
 import { createCollection, deleteCollection } from '../../../actions/collections';
+import Paginate from '../../widgets/Paginate';
 
 const CollectionsDisplayer = ({ userId }) => {
     const [searched, setSearched] = useState(false);
@@ -24,16 +23,6 @@ const CollectionsDisplayer = ({ userId }) => {
         }
     }, [collections]);
     
-    // Pagination
-    const [page, setPage] = useState(0);
-
-    const collectionsPerPage = 5;
-    const pagesVisited = page * collectionsPerPage;
-    const pageCount = Math.ceil(collectionsToDisplay.length / collectionsPerPage);
-    const slicedCollectionsToDisplay = collectionsToDisplay.slice(pagesVisited, pagesVisited + collectionsPerPage);
-
-    const handlePageClick = ({ selected }) => setPage(selected);
-
     const handleCreateCollection = e => {
         if (!userId)
             return;
@@ -50,7 +39,7 @@ const CollectionsDisplayer = ({ userId }) => {
             <div className="container maj">
                 { searched && <h2>Displaying search results:</h2> }
                 <ul className="remove-bullet">
-                    { slicedCollectionsToDisplay.length ? slicedCollectionsToDisplay.map((collection, id) => (
+                    { collectionsToDisplay.length ? collectionsToDisplay.map((collection, id) => (
                         <li key={id}>
                             <CollectionVisualizer
                                 collection={collection}
@@ -63,16 +52,10 @@ const CollectionsDisplayer = ({ userId }) => {
                 </ul>
                 { isLoading && 'Loading...' }
                 <span onClick={handleCreateCollection} className="plus"></span>
-                <ReactPaginate
-                    previousLabel={"<"}
-                    nextLabel={">"}
-                    pageCount={pageCount}
-                    onPageChange={handlePageClick}
-                    containerClassName={"pagination-button"}
-                    previousLinkClassName={"previous-button"}
-                    nextLinkClassName={"next-button"}
-                    disabledClassName={"pagination-disabled"}
-                    activeClassName={"pagination-active"}
+                <Paginate
+                    items={collections}
+                    itemsPerPage={5}
+                    setItemsToDisplay={setCollectionsToDisplay}
                 />
             </div>
             <div className="container min search-box">

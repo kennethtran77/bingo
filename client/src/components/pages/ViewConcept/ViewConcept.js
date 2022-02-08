@@ -19,11 +19,11 @@ const ViewConcept = ({ userId }) => {
     const { users } = useSelector(state => state.usersSlice);
     const user = users.find(u => u._id === concept.creator);
 
-    if (isLoading && (!concept || !user))
+    if (!user || (isLoading && !concept))
         return 'Loading...';
 
-    // If we finished loading but couldn't find the concept, return to homepage
-    if (!concept && !isLoading)
+    // If we finished loading but couldn't find the concept or user, return to homepage
+    if ((!concept || !user) && !isLoading)
         return <Redirect to="/"/>;
 
     return (
