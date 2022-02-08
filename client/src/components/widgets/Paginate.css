@@ -6,11 +6,11 @@ Pagination
     justify-content: center;
 }
 
-.previous-button {
+.pagination-buttons .previous-button {
     color: black;
 }
 
-.pagination-button {
+.pagination-buttons .pagination-button {
     width: 40px;
     margin-right: 5px;
     margin-left: 5px;
@@ -26,21 +26,21 @@ Pagination
     cursor: default;
 }
 
-.pagination-button:disabled {
+.pagination-buttons .pagination-button:disabled {
     background-color: rgb(200, 200, 200);
 }
 
-.pagination-button:visited {
+.pagination-buttons .pagination-button:visited {
     color: black;
 }
 
-.pagination-button:hover {
+.pagination-buttons .pagination-button:hover {
     background-color: #80acdf;
     border: 2px solid #004594;
     color: white;
 }
 
-.pagination-button:active {
+.pagination-buttons .pagination-button:active {
     background-color: #5392db;
     border: 2px solid #004594;
     color: white;

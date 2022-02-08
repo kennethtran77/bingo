@@ -4,7 +4,7 @@ import Popup from 'reactjs-popup';
 
 import './Options.css'
 
-const OptionsMenu = ({ options, displayLatexPreview, toggleLatexPreview }) => {
+const OptionsMenu = ({ options, displayPreview, togglePreview }) => {
     return (
         <Popup
             trigger={<span className="more"></span>}
@@ -17,9 +17,9 @@ const OptionsMenu = ({ options, displayLatexPreview, toggleLatexPreview }) => {
             { options && options.includes('latexDisplay') && <div className="options-menu">
                 <div
                     className="option"
-                    onClick={toggleLatexPreview}
+                    onClick={togglePreview}
                 >
-                    { displayLatexPreview ? 'Hide ' : 'Show '} Latex Preview
+                    { displayPreview ? 'Hide ' : 'Show '} Preview
                 </div>
             </div> }
         </Popup>

@@ -1,8 +1,6 @@
 import React, { useEffect } from 'react';
 import InputOptions from '../../../../widgets/InputOptions';
-import OptionsMenu from '../../../../widgets/OptionsMenu';
 
-import 'katex/dist/katex.min.css';
 import Latex from 'react-latex-next';
 
 const MultipleAnswersEditor = ({ input, setInput, handleEditOption }) => {
@@ -37,10 +35,6 @@ const MultipleAnswersEditor = ({ input, setInput, handleEditOption }) => {
         <>
             <label>
                 Options
-                <OptionsMenu
-                    enabled={input.optionsMathjaxEnabled}
-                    setEnabled={enabled => setInput({ ...input, optionsMathjaxEnabled: enabled})}
-                />
                 <InputOptions
                     options={input.options}
                     addOption={handleAddOption}
