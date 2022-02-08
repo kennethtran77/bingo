@@ -34,10 +34,10 @@ const Paginate = ({ items, itemsPerPage, setItemsToDisplay }) => {
     };
 
     return (
-        <div className="pagination-buttons">
-            <button className="pagination-button" onClick={prevPage} disabled={currentPage <= 0}>←</button>
+        <div className="pagination-buttons v-margin">
+            <button className="pagination-button" onClick={prevPage} disabled={currentPage <= 0}>{"<"}</button>
             { pageCount > 0 && <button className="pagination-button">{currentPage + 1}</button> }
-            <button className="pagination-button" onClick={nextPage} disabled={currentPage >= pageCount - 1}>→</button>
+            <button className="pagination-button" onClick={nextPage} disabled={currentPage >= pageCount - 1}>{">"}</button>
         </div>
     );
 };
