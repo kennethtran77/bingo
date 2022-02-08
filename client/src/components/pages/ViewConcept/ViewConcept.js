@@ -10,21 +10,27 @@ import Comments from './Comments';
 
 const ViewConcept = ({ userId }) => {
     const { conceptId } = useParams();
-    const { concepts, isLoading } = useSelector(state => state.conceptsSlice);
 
+    // fetch concept object from store
+    const { concepts, isLoading } = useSelector(state => state.conceptsSlice);
     const concept = concepts.find(c => c._id === conceptId);
 
-    if (isLoading && !concept)
+    // fetch user object from store
+    const { users } = useSelector(state => state.usersSlice);
+    const user = users.find(u => u._id === concept.creator);
+
+    if (!user || (isLoading && !concept))
         return 'Loading...';
 
-    // If we finished loading but couldn't find the concept, return to homepage
-    if (!concept && !isLoading)
+    // If we finished loading but couldn't find the concept or user, return to homepage
+    if ((!concept || !user) && !isLoading)
         return <Redirect to="/"/>;
 
     return (
         <>
             <div className="container">
                 <h1>{ concept.title }</h1>
+                <h3>by <strong>{user.username}</strong></h3>
                 <hr />
                 <Latex>{concept.text}</Latex>
             </div>

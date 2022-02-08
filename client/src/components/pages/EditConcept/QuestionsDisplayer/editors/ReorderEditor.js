@@ -3,8 +3,6 @@ import React, { useEffect } from 'react';
 import Reorder from '../../../../widgets/Reorder';
 import InputOptions from '../../../../widgets/InputOptions';
 
-import OptionsMenu from '../../../../widgets/OptionsMenu';
-
 const ReorderEditor = ({ title, input, setInput, handleEditOption }) => {
     const answerHasSameElementsAsOrder = input.answer.length === input.options.length && input.answer.every(item => input.options.includes(item));
     const order = answerHasSameElementsAsOrder ? input.answer : input.options;
@@ -30,10 +28,6 @@ const ReorderEditor = ({ title, input, setInput, handleEditOption }) => {
         <>
             <label>
                 Options
-                <OptionsMenu
-                    // enabled={input.optionsMathjaxEnabled}
-                    // setEnabled={enabled => setInput({ ...input, optionsMathjaxEnabled: enabled})}
-                />
                 <InputOptions
                     options={input.options}
                     addOption={handleAddOption}
@@ -49,7 +43,6 @@ const ReorderEditor = ({ title, input, setInput, handleEditOption }) => {
                         title={title}
                         order={input.answer}
                         setOrder={newOrder => setInput(prevState => ({ ...prevState, answer: newOrder }))}
-                        mathjaxEnabled={input.optionsMathjaxEnabled}
                     />
                 </div>
             </label>

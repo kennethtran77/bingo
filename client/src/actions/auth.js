@@ -1,3 +1,5 @@
+import decode from 'jwt-decode';
+
 import * as api from '../api/index.js';
 import { fetchPracticeSessions } from './practice.js';
 
@@ -8,7 +10,6 @@ const setTimedMessage = (message, colour, interval) => (dispatch, getState) => {
 
     // reset the timer if it already exists
     if (timer) {
-        console.log('clearing timer')
         clearTimeout(timer);
     }
 
@@ -29,6 +30,7 @@ export const login = (loginInput, history) => async (dispatch) => {
         // load practice sessions
         if (data?.token) {
             localStorage.setItem('profile', JSON.stringify(data));
+            window.dispatchEvent(new Event('storage')); // force storage event to occur
             dispatch(fetchPracticeSessions());
         }
 
@@ -45,7 +47,16 @@ export const signUp = (signUpInput, history) => async (dispatch) => {
     try {
         // signup
         dispatch({ type: 'auth/startLoading' });
+        // data is an object with key `token`
         const { data } = await api.signUp(signUpInput);
+
+        // userId is the id of the newly created user account
+        const userId = decode(data.token).id;
+        // update users slice
+        dispatch({
+            type: 'users/create',
+            payload: { _id: userId, username: signUpInput.username }
+        });
 
         localStorage.setItem('profile', JSON.stringify(data));
         dispatch({ type: 'auth/stopLoading' });

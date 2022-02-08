@@ -7,7 +7,7 @@ import decode from 'jwt-decode';
 import { fetchConcepts } from './actions/concepts.js';
 import { fetchCollections } from './actions/collections.js';
 import { fetchPracticeSessions } from './actions/practice.js';
-import { fetchSettings, fetchUsername } from './actions/user.js';
+import { fetchSettings, fetchUsernames } from './actions/user.js';
 
 import './App.css';
 
@@ -30,20 +30,39 @@ import 'reactjs-popup/dist/index.css';
 import PracticeCollection from './components/pages/Practice/PracticeCollection.js';
 
 const App = () => {
-    const session = JSON.parse(localStorage.getItem('profile'));
+    // decodedToken should be an object with key `id` representing the user's id
     const [decodedToken, setDecodedToken] = useState('');
     
+    // force refresh
     useSelector(state => state.authSlice);
 
     const dispatch = useDispatch();
 
-    // Load user id
+    // Try to decode token whenever `session` changes
     useEffect(() => {
-        if (session?.token) {
-            const decoded = decode(session?.token);
-            setDecodedToken(decoded);
-        }
-    }, [session?.token]);
+        const checkForToken = () => {
+            // fetch json token from localStorage
+            const sessionToken = localStorage.getItem('profile');
+
+            if (sessionToken) {
+                const parsedToken = JSON.parse(sessionToken);
+
+                if (parsedToken?.token) {
+                    console.log("token changed");
+                    const decoded = decode(parsedToken?.token);
+                    setDecodedToken(decoded);
+                }
+            }
+        };
+
+        checkForToken(); // check for token upon App component mounting
+
+        // add window event listener to check localStorage
+        window.addEventListener('storage', checkForToken);
+
+        // cleanup function, remove window event listener
+        return () => window.removeEventListener('storage', checkForToken);
+    }, []);
 
     // Load data once user ID loads
     useEffect(() => {
@@ -53,7 +72,7 @@ const App = () => {
             dispatch(fetchCollections());
             dispatch(fetchPracticeSessions());
             dispatch(fetchSettings());
-            dispatch(fetchUsername(decodedToken.id));
+            dispatch(fetchUsernames());
         }
     }, [dispatch, decodedToken]);
 

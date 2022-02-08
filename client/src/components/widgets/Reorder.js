@@ -7,7 +7,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 import './Reorder.css';
 
-const Reorder = ({ title, disabled, styles, order, setOrder, mathjaxEnabled }) => {
+const Reorder = ({ title, disabled, styles, order, setOrder }) => {
     // local input state to prevent visual glitch...
     const [localState, setLocalState] = useState(order);
 

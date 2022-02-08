@@ -1,30 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
-import { getUsername, removeFromCollection } from '../../../api';
 import { deleteComment, updateComment } from '../../../actions/comments';
 
 import ConfirmDelete from '../../widgets/ConfirmDelete';
 
 const Comment = ({ comment, userId, concept }) => {
-    const [author, setAuthor] = useState('');
+    const { users } = useSelector(state => state.usersSlice);
+    const author = users.find(u => u._id === comment.author);
+
     const [editMode, setEditMode] = useState(false);
     const [editValue, setEditValue] = useState('');
     const [toDelete, setToDelete] = useState(false);
 
     const dispatch = useDispatch();
-
-    useEffect(() => {
-        let mounted = true;
-
-        getUsername(comment.author).then(res => {
-            if (mounted) {
-                setAuthor(res.data);
-            }
-        });
-
-        return () => mounted = false;
-    }, [comment.author]);
 
     const handleChange = e => {
         e.preventDefault();
@@ -40,7 +29,7 @@ const Comment = ({ comment, userId, concept }) => {
     return toDelete ? <ConfirmDelete title={'this comment'} undo={() => setToDelete(false)} confirm={() => dispatch(deleteComment(concept, comment._id))} /> : (
         <div className="secondary padding v-margin">
             <div className="space-between">
-                <span><strong>{author}</strong></span>
+                <span><strong>{author.username}</strong></span>
                 <span>
                     {comment.created_at !== comment.updated_at ? <span className="h-margin"><i>(Edited)</i></span> : null}
                     <span>{new Date(comment.updated_at).toDateString()}</span>

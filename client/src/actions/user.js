@@ -16,6 +16,18 @@ const setTimedMessage = (message, colour, interval) => (dispatch, getState) => {
     dispatch({ type: 'settings/setMessageTimer', payload: newTimer });
 }
 
+export const fetchUsernames = () => async (dispatch) => {
+    try {
+        dispatch({ type: 'users/startLoading' });
+        const { data } = await api.fetchUsernames();
+        dispatch({ type: 'users/fetchAll', payload: data });
+        dispatch({ type: 'users/stopLoading' });
+    } catch (error) {
+        console.log(error);
+        dispatch({ type: 'users/stopLoading' });
+    }
+}
+
 export const fetchSettings = () => async (dispatch) => {
     try {
         dispatch({ type: 'settings/startLoading' });
@@ -28,22 +40,13 @@ export const fetchSettings = () => async (dispatch) => {
     }
 }
 
-export const fetchUsername = (userId) => async (dispatch) => {
-    try {
-        const { data } = await api.getUsername(userId);
-        dispatch({ type: 'settings/setUsername', payload: data });
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-export const updateUsername = (newUsername) => async (dispatch) => {
+export const updateUsername = (newUsername, userId) => async (dispatch) => {
     try {
         dispatch({ type: 'settings/startLoading' });
         const { data } = await api.updateUsername(newUsername);
         dispatch({
-            type: 'settings/setUsername',
-            payload: newUsername
+            type: 'users/update',
+            payload: { _id: userId, username: newUsername }
         });
         dispatch(setTimedMessage(data.message, 'green', 2500));
         dispatch({ type: 'settings/stopLoading' });

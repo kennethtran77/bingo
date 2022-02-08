@@ -3,7 +3,6 @@ import { useDispatch } from 'react-redux';
 
 import { Prompt } from 'react-router'
 
-import 'katex/dist/katex.min.css';
 import Latex from 'react-latex-next';
 
 import FillInTheBlankEditor from './FillInTheBlankEditor';
@@ -20,7 +19,7 @@ import OptionsMenu from '../../../../widgets/OptionsMenu';
 const QuestionEditor = ({ concept, question }) => {
     // answer should always be a subset of options
     const [input, setInput] = useState({ type: 'FillInTheBlank', title: 'New Question', text: "It's quiet here...", answer: [], options: [] });
-    const [displayLatexPreview, setDisplayLatexPreview] = useState(false);
+    const [displayPreview, setDisplayPreview] = useState(false);
 
     const [alertOpen, setAlertOpen] = useState(false);
 
@@ -112,20 +111,19 @@ const QuestionEditor = ({ concept, question }) => {
                     Text
                     <OptionsMenu
                         options={menuOptions}
-                        displayLatexPreview={displayLatexPreview}
-                        toggleLatexPreview={() => setDisplayLatexPreview(curr => !curr)}
+                        displayPreview={displayPreview}
+                        togglePreview={() => setDisplayPreview(curr => !curr)}
                     />
-                    <input
-                        type='text'
+                    <textarea
                         className="input"
                         value={input.text}
                         onChange={e => setInput({ ...input, text: e.target.value })}
                         autoComplete="off"
                     />
                 </label>
-                { displayLatexPreview &&
+                { displayPreview &&
                     <>
-                        Latex Preview
+                        Preview
                         <div className="container">
                             <Latex>{input.text}</Latex>
                         </div>

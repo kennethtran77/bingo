@@ -169,18 +169,12 @@ export const getUser = async (req, res) => {
     }
 }
 
-export const getUsername = async (req, res) => {
-    const { userId } = req.params;
-
+export const getUsernames = async (req, res) => {
     try {
-        const user = await UserModel.findById(userId);
-
-        if (!user)
-            return res.status(404).json({ message: 'No user with this id was found' });
-        
-        return res.status(200).json(user.username);
+        const users = await UserModel.find({}, '_id username');
+        res.status(200).json(users);
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        res.status(404).json({ message: error.message });
     }
 }
 

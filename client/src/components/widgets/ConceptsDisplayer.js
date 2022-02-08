@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-import ReactPaginate from 'react-paginate';
+import Paginate from './Paginate';
 
 import { createConcept, deleteConcept } from '../../actions/concepts';
 import ConceptVisualizer from './ConceptVisualizer';
@@ -14,21 +14,7 @@ const ConceptsDisplayer = ({ title, concepts, isLoading, userId, showCreator, co
     const [conceptsToDisplay, setConceptsToDisplay] = useState(concepts);
     const [searched, setSearched] = useState(false);
 
-    useEffect(() => {
-        setConceptsToDisplay(concepts);
-    }, [concepts]);
-
-    // Pagination
-    const [page, setPage] = useState(0);
-
-    const conceptsPerPage = 5;
-    const pagesVisited = page * conceptsPerPage;
-    const pageCount = Math.ceil(conceptsToDisplay.length / conceptsPerPage);
-    const slicedConceptsToDisplay = conceptsToDisplay.slice(pagesVisited, pagesVisited + conceptsPerPage);
-
     const dispatch = useDispatch();
-
-    const handlePageClick = ({ selected }) => setPage(selected);
 
     const handleCreateConcept = e => {
         if (!userId)
@@ -58,7 +44,7 @@ const ConceptsDisplayer = ({ title, concepts, isLoading, userId, showCreator, co
                 { title && <h2>{title}</h2>}
                 { searched && <h2>Displaying search results:</h2> }
                 <ul className="remove-bullet">
-                    { slicedConceptsToDisplay.length ? slicedConceptsToDisplay.map((concept, id) => (
+                    { conceptsToDisplay.length ? conceptsToDisplay.map((concept, id) => (
                         <li key={id}>
                             <ConceptVisualizer
                                 concept={concept}
@@ -74,16 +60,10 @@ const ConceptsDisplayer = ({ title, concepts, isLoading, userId, showCreator, co
                 </ul>
                 { isLoading && 'Loading...' }
                 { enableCreating && <span onClick={handleCreateConcept} className="plus"></span> }
-                <ReactPaginate
-                    previousLabel={"<"}
-                    nextLabel={">"}
-                    pageCount={pageCount}
-                    onPageChange={handlePageClick}
-                    containerClassName={"pagination-button"}
-                    previousLinkClassName={"previous-button"}
-                    nextLinkClassName={"next-button"}
-                    disabledClassName={"pagination-disabled"}
-                    activeClassName={"pagination-active"}
+                <Paginate
+                    items={concepts}
+                    itemsPerPage={5}
+                    setItemsToDisplay={setConceptsToDisplay}
                 />
             </div>
             { showSearchBar && (
