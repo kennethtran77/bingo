@@ -42,13 +42,20 @@ const App = () => {
     useEffect(() => {
         const checkForToken = () => {
             // fetch json token from localStorage
-            const sessionToken = JSON.parse(localStorage.getItem('profile'));
+            const sessionToken = localStorage.getItem('profile');
 
-            if (sessionToken?.token) {
-                const decoded = decode(sessionToken?.token);
-                setDecodedToken(decoded);
+            if (sessionToken) {
+                const parsedToken = JSON.parse(sessionToken);
+
+                if (parsedToken?.token) {
+                    console.log("token changed");
+                    const decoded = decode(parsedToken?.token);
+                    setDecodedToken(decoded);
+                }
             }
         };
+
+        checkForToken(); // check for token upon App component mounting
 
         // add window event listener to check localStorage
         window.addEventListener('storage', checkForToken);
