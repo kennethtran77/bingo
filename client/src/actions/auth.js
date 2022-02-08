@@ -30,6 +30,7 @@ export const login = (loginInput, history) => async (dispatch) => {
         // load practice sessions
         if (data?.token) {
             localStorage.setItem('profile', JSON.stringify(data));
+            window.dispatchEvent(new Event('storage')); // force storage event to occur
             dispatch(fetchPracticeSessions());
         }
 
