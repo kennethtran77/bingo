@@ -24,34 +24,37 @@ const Login = () => {
     }
 
     return (
-        <div id="auth">
-            <form className="container" onSubmit={handleSubmit}>
-                <label>
-                    Email
-                    <input
-                        required
-                        type="email"
-                        name="email"
-                        value={input.email}
-                        onChange={handleChange}
-                    />
-                </label>
-                <label>
-                    Password
-                    <input
-                        required
-                        type="password"
-                        name="password"
-                        value={input.password}
-                        onChange={handleChange}
-                    />
-                </label>
-                <input className="small-button" type="submit" value="Log In" />
-                <p>Don't have an account? <Link to="/signup">Sign Up</Link></p>
-                { isLoading && <LoadingSpinner /> }
-                { message.content && <p style={{color: message.colour}} id="message">{message.content}</p> }
-            </form>
-        </div>
+        <>
+            <h1 id="title">bingo</h1>
+            <div id="auth">
+                <form className="container" onSubmit={handleSubmit}>
+                    <label>
+                        Email
+                        <input
+                            required
+                            type="email"
+                            name="email"
+                            value={input.email}
+                            onChange={handleChange}
+                        />
+                    </label>
+                    <label>
+                        Password
+                        <input
+                            required
+                            type="password"
+                            name="password"
+                            value={input.password}
+                            onChange={handleChange}
+                        />
+                    </label>
+                    <input className="small-button" type="submit" value="Log In" />
+                    <p>Don't have an account? <Link to="/signup">Sign Up</Link></p>
+                    { isLoading && <LoadingSpinner /> }
+                    { message.content && <p style={{color: message.colour}} id="message">{message.content}</p> }
+                </form>
+            </div>
+        </>
     );
 };
 
