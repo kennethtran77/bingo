@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
@@ -10,7 +10,16 @@ const PracticeSessionsDisplayer = ({ userId }) => {
     const { practiceSessions, isLoading } = useSelector(state => state.practiceSlice);
 
     // Pagination
-    const [practiceSessionsToDisplay, setPracticeSessionsToDisplay] = useState(practiceSessions);
+    const [practiceSessionsToDisplay, setPracticeSessionsToDisplay] = useState([]);
+    const [sortedPracticeSessions, setSortedPracticeSessions] = useState([]);
+
+    // load practice sessions into component state once practice sessions fetched from store
+    useEffect(() => {
+        if (practiceSessions) {
+            // sort practice sessions by date
+            setSortedPracticeSessions(practiceSessions.sort((a, b) => new Date(b.date) - new Date(a.date)));
+        }
+    }, [practiceSessions]);
 
     return !userId ? <LoadingSpinner /> : (
         <div className="container" id="practice-sessions-displayer">
@@ -43,7 +52,7 @@ const PracticeSessionsDisplayer = ({ userId }) => {
                 </tbody>
             </table>
             <Paginate
-                items={practiceSessions}
+                items={sortedPracticeSessions}
                 itemsPerPage={10}
                 setItemsToDisplay={setPracticeSessionsToDisplay}
             />
