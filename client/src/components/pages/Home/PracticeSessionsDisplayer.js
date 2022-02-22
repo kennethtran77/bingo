@@ -12,7 +12,7 @@ const PracticeSessionsDisplayer = ({ userId }) => {
     // Pagination
     const [practiceSessionsToDisplay, setPracticeSessionsToDisplay] = useState(practiceSessions);
 
-    return !userId ? '' : (
+    return !userId ? <LoadingSpinner /> : (
         <div className="container" id="practice-sessions-displayer">
             <table>
                 <thead>
@@ -31,11 +31,11 @@ const PracticeSessionsDisplayer = ({ userId }) => {
                             <td>{practiceSession.score} / {practiceSession.practiceQuestions.length}</td>
                             <td>{ date }</td>
                             <td>{ practiceSession.title }</td>
-                            <Link className="center-flex small-button v-margin" to={"/practice/results/" + practiceSession._id}>View</Link>
+                            <td><Link className="center-flex small-button v-margin" to={"/practice/results/" + practiceSession._id}>View</Link></td>
                         </tr>
                     );
                 })}
-                { practiceSessionsToDisplay.length == 0 && (
+                { practiceSessionsToDisplay.length === 0 && (
                     <tr key={0}>
                         <td colSpan="3" className="padding">You have not completed any practice sessions.</td>
                     </tr>

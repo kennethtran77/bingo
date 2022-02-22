@@ -137,7 +137,7 @@ const InputCloze = ({ input, setInput }) => {
                             })}
                             placeholder="Blanks"
                         />
-                        <span className="x" onClick={() => removeBlank(index)}></span>
+                        <span className="x" aria-label="Delete Blanks" title="Delete Blanks" onClick={() => removeBlank(index)}></span>
                     </div>
                 )
             ))}

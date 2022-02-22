@@ -11,7 +11,7 @@ import { fetchPracticeQuestionChanged } from '../../api';
 import LoadingSpinner from '../widgets/LoadingSpinner';
 
 const PracticeResults = ({ userId }) => {
-    const [toRender, setToRender] = useState('Loading...');
+    const [toRender, setToRender] = useState(<LoadingSpinner />);
 
     const { sessionId } = useParams();
     const { practiceSessions, isLoading } = useSelector(state => state.practiceSlice);
@@ -19,6 +19,21 @@ const PracticeResults = ({ userId }) => {
     const [questionsChanged, setQuestionsChanged] = useState(null);
 
     const practiceSession = practiceSessions.find(s => s._id === sessionId);
+
+    // check if any of the questions have changed since this session
+    const fetchQuestionsChanged = useCallback(async () => {
+        if (practiceSession) {
+            const changed = Array(practiceSession.practiceQuestions.length).fill(false);
+
+            // changed is a boolean array representing whether or not a question was modified since the practice session
+            for (let i = 0; i < practiceSession.practiceQuestions.length; i++) {
+                let response = await fetchPracticeQuestionChanged(practiceSession._id, practiceSession.practiceQuestions[i].question);
+                changed[i] = response.data;
+            }
+
+            setQuestionsChanged(changed);
+        }
+    }, [practiceSession]);
 
     // Load the practice session results
     useEffect(() => {
@@ -35,22 +50,7 @@ const PracticeResults = ({ userId }) => {
         }
         
         fetchQuestionsChanged();
-    }, [userId, isLoading, practiceSession]);
-
-    // check if any of the questions have changed since this session
-    const fetchQuestionsChanged = useCallback(async () => {
-        if (practiceSession) {
-            const changed = Array(practiceSession.practiceQuestions.length).fill(false);
-
-            // changed is a boolean array representing whether or not a question was modified since the practice session
-            for (let i = 0; i < practiceSession.practiceQuestions.length; i++) {
-                let response = await fetchPracticeQuestionChanged(practiceSession._id, practiceSession.practiceQuestions[i].question);
-                changed[i] = response.data;
-            }
-
-            setQuestionsChanged(changed);
-        }
-    }, [practiceSession]);
+    }, [userId, isLoading, practiceSession, fetchQuestionsChanged]);
 
     useEffect(() => {
         if (practiceSession && questionsChanged) {

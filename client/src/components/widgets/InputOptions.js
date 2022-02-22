@@ -1,4 +1,4 @@
-import React, { useState, useRef, createRef, useEffect } from 'react';
+import React, { useState, useRef, createRef } from 'react';
 import { Prompt } from 'react-router-dom';
 
 import Popup from 'reactjs-popup';

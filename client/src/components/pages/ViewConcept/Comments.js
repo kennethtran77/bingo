@@ -16,7 +16,7 @@ const Comments = ({ concept, userId }) => {
         if (comments) {
             setConceptComments(comments.filter(comment => comment.concept === concept._id));
         }
-    }, [comments]);
+    }, [comments, concept._id]);
 
     // Pagination
     const [commentsToDisplay, setCommentsToDisplay] = useState([]);

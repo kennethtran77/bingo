@@ -14,7 +14,7 @@ const Settings = ({ userId }) => {
 
     useEffect(() => {
         if (settings) {
-            setInput({ ...input, questionsPerSession: settings.questionsPerSession });
+            setInput(input => ({ ...input, questionsPerSession: settings.questionsPerSession }));
         }
     }, [settings]);
 
@@ -26,16 +26,16 @@ const Settings = ({ userId }) => {
     const handleSaveUsername = e => {
         e.preventDefault();
         dispatch(updateUsername(input.username, userId));
-        setInput({ ...input, username: '' });
+        setInput(input => ({ ...input, username: '' }));
     }
 
     const handleSavePassword = e => {
         e.preventDefault();
         dispatch(updatePassword(input.currentPassword, input.newPassword, input.confirmNewPassword));
-        setInput({ ...input, currentPassword: '', newPassword: '', confirmNewPassword: '' });
+        setInput(input => ({ ...input, currentPassword: '', newPassword: '', confirmNewPassword: '' }));
     }
 
-    const handleChange = e => setInput({ ...input, [e.target.name]: e.target.value });
+    const handleChange = e => setInput(input => ({ ...input, [e.target.name]: e.target.value }));
 
     return (
         <>

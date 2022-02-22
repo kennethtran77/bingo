@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { Prompt } from 'react-router';
 
@@ -26,6 +26,8 @@ const ConceptEditor = ({ concept, isLoading }) => {
 
     const dispatch = useDispatch();
 
+    const savedPopupRef = useRef(null);
+
     const madeChanges = input.title !== concept.title || input.text !== concept.text || input.tags !== concept.tags || input.public !== concept.public;
 
     useEffect(() => {
@@ -42,7 +44,11 @@ const ConceptEditor = ({ concept, isLoading }) => {
         }
     }, [concept]);
 
-    const handleSubmit = () => dispatch(updateConcept(concept._id, input));
+    const handleSubmit = e => {
+        e.preventDefault();
+        dispatch(updateConcept(concept._id, input));
+        savedPopupRef.current.open();
+    };
 
     return (
         <div className="editor">
@@ -98,21 +104,31 @@ const ConceptEditor = ({ concept, isLoading }) => {
                         onChange={() => setInput(prevState => ({ ...prevState, public: !prevState.public }))}
                     />
                 </label>
-                <Popup
-                    onOpen={handleSubmit}
-                    trigger={
-                        <input
-                            className="small-button v-margin"
-                            type="button"
-                            value="Save"
-                        />
-                    }
-                    position="right center"
-                    closeOnDocumentClick
-                    closeOnEscape
-                >
-                    <span>Saved concept.</span>
-                </Popup>
+                <div className="flex">
+                    <input
+                        className="small-button v-margin"
+                        type="button"
+                        value="Save"
+                        onClick={handleSubmit}
+                    />
+                    <Popup
+                        ref={savedPopupRef}
+                        trigger={
+                            // use an empty element as the trigger
+                            <div style={{
+                                width: 0,
+                                height: 45,
+                                display: 'inline-block',
+                                visibility: 'hidden',
+                            }} />
+                        }
+                        position="right center"
+                        closeOnDocumentClick
+                        closeOnEscape
+                    >
+                        <span>Saved concept.</span>
+                    </Popup>
+                </div>
             </form>
             { isLoading && <LoadingSpinner /> }
         </div>

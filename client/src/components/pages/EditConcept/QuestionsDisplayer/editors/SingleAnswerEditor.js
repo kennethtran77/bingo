@@ -9,36 +9,45 @@ import selectStyles from '../../../../selectStyles.js';
 
 const SingleAnswerEditor = ({ input, setInput, handleEditOption }) => {
     useEffect(() => {
-        // Force answer to be a length one array if it isn't already
-        if (input.answer.length > 1) {
-            setInput(prevState => ({ ...prevState, answer: [input.answer[0]] }));
-        // Force answer to be a subset of options
-        } else if (!input.options.includes(input.answer[0])) {
-            setInput(prevState => ({ ...prevState, answer: input.options.length ? [input.options[0]] : [] }));
-        }
-    }, [input.answer.length, input.options, setInput]);
+        // apply constraints on inputs
+        setInput(prevInput => {
+            let newInput = { ...prevInput };
 
-    const handleAddOption = option => setInput(prevState => {
-        const newOptions = [ ...prevState.options, option ];
+            // Force answer to be a length one array if it isn't already
+            if (prevInput.answer.length > 1) {
+                newInput.answer = [prevInput.answer[0]];
+            }
+
+            // Force answer to be a subset of options
+            if (!prevInput.options.includes(prevInput.answer[0])) {
+                newInput.answer = prevInput.options.length ? [prevInput.options[0]] : [];
+            }
+
+            return newInput;
+        });
+    }, [setInput]);
+
+    const handleAddOption = option => setInput(prevInput => {
+        const newOptions = [ ...prevInput.options, option ];
 
         // Make sure answer is not empty when options is not empty
         return {
-            ...prevState,
+            ...prevInput,
             options: newOptions,
-            answer: prevState.answer.length ? prevState.answer : [newOptions[0]]
+            answer: prevInput.answer.length ? prevInput.answer : [newOptions[0]]
         }
     })
 
-    const handleRemoveOption = option => setInput(prevState => {
+    const handleRemoveOption = option => setInput(prevInput => {
         // Remove options and answer
-        const newOptions = prevState.options.filter(t => t !== option);
-        const newAnswer = prevState.answer.filter(t => t !== option);
+        const newOptions = prevInput.options.filter(t => t !== option);
+        const newAnswer = prevInput.answer.filter(t => t !== option);
 
         // Make sure answer is not empty when options is not empty
         const defaultAnswer = newOptions.length ? [newOptions[0]] : [];
 
         return {
-            ...prevState,
+            ...prevInput,
             options: newOptions,
             answer: newAnswer.length ? newAnswer : defaultAnswer
         };

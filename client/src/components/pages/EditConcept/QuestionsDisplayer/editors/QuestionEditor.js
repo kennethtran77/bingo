@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { Prompt } from 'react-router'
@@ -25,6 +25,8 @@ const QuestionEditor = ({ concept, question }) => {
 
     const [alertOpen, setAlertOpen] = useState(false);
 
+    const savedPopupRef = useRef(null);
+
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -33,7 +35,8 @@ const QuestionEditor = ({ concept, question }) => {
         }
     }, [question]);
 
-    const madeChanges = input.type !== question.type || input.title !== question.title || input.text !== question.text || input.answer !== question.answer || input.options !== question.options;
+    // True if the question was edited and not saved, False otherwise
+    const madeChanges = input.type !== question.type || input.title !== question.title || input.text !== question.text || input.answer !== question.answer || (input.type !== 'FillInTheBlank' && input.options !== question.options);
 
     const handleEditOption = (index, newOption) => setInput(prevState => {
         let oldOption = prevState.options[index];
@@ -71,6 +74,8 @@ const QuestionEditor = ({ concept, question }) => {
         if (!verifyQuestion(input)) {
             setAlertOpen(true);
         }
+
+        savedPopupRef.current.open();
     }
 
     const menuOptions = ['latexDisplay'];
@@ -132,21 +137,31 @@ const QuestionEditor = ({ concept, question }) => {
                     </>
                 }
                 { fetchEditor(input.type) }
-                <Popup
-                    onOpen={handleSubmit}
-                    trigger={
-                        <input
-                            className="small-button v-margin"
-                            type="button"
-                            value="Save"
-                        />
-                    }
-                    position="right center"
-                    closeOnDocumentClick
-                    closeOnEscape
-                >
-                    <span>Saved question.</span>
-                </Popup>
+                <div className="flex">
+                    <input
+                        className="small-button v-margin"
+                        type="button"
+                        value="Save"
+                        onClick={handleSubmit}
+                    />
+                    <Popup
+                        ref={savedPopupRef}
+                        trigger={
+                            // use an empty element as the trigger
+                            <div style={{
+                                width: 0,
+                                height: 45,
+                                display: 'inline-block',
+                                visibility: 'hidden',
+                            }} />
+                        }
+                        position="right center"
+                        closeOnDocumentClick
+                        closeOnEscape
+                    >
+                        <span>Saved question.</span>
+                    </Popup>
+                </div>
             </form>
         </div>
     );
