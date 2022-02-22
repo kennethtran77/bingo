@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { likeConcept } from '../../actions/concepts';
+import LoadingSpinner from './LoadingSpinner';
 
 const LikeButton = ({ conceptId }) => {
     const { concepts } = useSelector(state => state.conceptsSlice);
@@ -10,7 +11,7 @@ const LikeButton = ({ conceptId }) => {
     const dispatch = useDispatch();
 
     if (!concept)
-        return 'Loading...';
+        return <LoadingSpinner />;
 
     const handleClick = e => {
         e.preventDefault();
@@ -19,7 +20,12 @@ const LikeButton = ({ conceptId }) => {
 
     return (
         <div className="left-flex">
-            <span className="like" onClick={handleClick}></span>
+            <span
+                className="like"
+                onClick={handleClick}
+                aria-label="Like Concept"
+                title="Like Concept"
+            />
             <span>{concept.likes.length}</span>
         </div>
     );

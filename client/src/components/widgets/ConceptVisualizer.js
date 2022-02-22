@@ -60,10 +60,10 @@ const ConceptVisualizer = ({ concept, remove, userId, showCreator, collection })
                         <button onClick={handleAddRemoveToCollection} className="small-button margin">{ collection.concepts.includes(concept._id) ? 'Remove' : 'Add' }</button>
                     ) : (
                         <>
-                            <Link className="small-button margin" to={`/concept/view/${concept._id}`}>View</Link>
-                            { userId === concept.creator && <Link className="small-button margin" to={`/concept/edit/${concept._id}`}>Edit</Link> }
-                            <Link className="small-button margin" to={`/practice/concept/${concept._id}`}>Practice</Link>
-                            { userId === concept.creator && <span onClick={() => setToDelete(true)} className="x"></span> }
+                            <Link className="small-button margin" to={`/concept/view/${concept._id}`} aria-label="View Concept">View</Link>
+                            { userId === concept.creator && <Link className="small-button margin" to={`/concept/edit/${concept._id}`} aria-label="Edit Concept">Edit</Link> }
+                            <Link className="small-button margin" to={`/practice/concept/${concept._id}`} aria-label="Practice Concept">Practice</Link>
+                            { userId === concept.creator && <span onClick={() => setToDelete(true)} className="x" aria-label="Delete Concept" title="Delete Concept"></span> }
                         </>
                     ) }
                 </div>

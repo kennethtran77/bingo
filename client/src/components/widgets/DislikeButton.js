@@ -3,6 +3,8 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { dislikeConcept } from '../../actions/concepts';
 
+import LoadingSpinner from './LoadingSpinner';
+
 const DislikeButton = ({ conceptId }) => {
     const { concepts } = useSelector(state => state.conceptsSlice);
     const concept = concepts.find(c => c._id === conceptId);
@@ -10,7 +12,7 @@ const DislikeButton = ({ conceptId }) => {
     const dispatch = useDispatch();
 
     if (!concept)
-        return 'Loading...';
+        return <LoadingSpinner />;
 
     const handleClick = e => {
         e.preventDefault();
@@ -19,7 +21,12 @@ const DislikeButton = ({ conceptId }) => {
 
     return (
         <div className="left-flex">
-            <span className="dislike" onClick={handleClick}></span>
+            <span
+                className="dislike"
+                onClick={handleClick}
+                aria-label="Dislike Concept"
+                title="Dislike Concept"
+            />
             <span>{concept.dislikes.length}</span>
         </div>
     );

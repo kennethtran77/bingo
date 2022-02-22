@@ -9,6 +9,7 @@ import '../../widgets/ConceptsDisplayer.css';
 
 import { createCollection, deleteCollection } from '../../../actions/collections';
 import Paginate from '../../widgets/Paginate';
+import LoadingSpinner from '../../widgets/LoadingSpinner';
 
 const CollectionsDisplayer = ({ userId }) => {
     const [searched, setSearched] = useState(false);
@@ -39,19 +40,19 @@ const CollectionsDisplayer = ({ userId }) => {
             <div className="container maj">
                 { searched && <h2>Displaying search results:</h2> }
                 <ul className="remove-bullet">
-                    { collectionsToDisplay.length ? collectionsToDisplay.map((collection, id) => (
-                        <li key={id}>
+                    { collectionsToDisplay.length ? collectionsToDisplay.map((collection) => (
+                        <li key={collection._id}>
                             <CollectionVisualizer
                                 collection={collection}
                                 remove={() => remove(collection)}
                             />
                         </li>
                     )) :
-                        <span>It's quite empty here...</span>
+                        <span>You haven't created any collections yet.</span>
                     }
                 </ul>
-                { isLoading && 'Loading...' }
-                <span onClick={handleCreateCollection} className="plus"></span>
+                { isLoading && <LoadingSpinner /> }
+                <span onClick={handleCreateCollection} className="plus" aria-label="Create New Collection" title="Create New Collection"></span>
                 <Paginate
                     items={collections}
                     itemsPerPage={5}

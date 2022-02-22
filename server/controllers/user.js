@@ -47,7 +47,7 @@ export const login = async (req, res) => {
         return res.status(400).json({ message: 'Please fill in all inputs.' });
 
         // check if account exists
-        const user = await UserModel.findOne({ email });
+        const user = await UserModel.findOne({ email: email.toLowerCase() });
 
         if (!user) {
             return res.status(404).json({ message: 'No account with this email was found.' });
@@ -71,6 +71,7 @@ export const login = async (req, res) => {
 
 export const signUp = async (req, res) => {
     const { email, password, confirmPassword, username } = req.body;
+    const lowercaseEmail = email.toString().toLowerCase();
 
     try {
         // check inputs
@@ -93,7 +94,7 @@ export const signUp = async (req, res) => {
             return res.status(400).json({ message: validUsername.message });
 
         // check if account exists
-        const user = await UserModel.findOne({ email });
+        const user = await UserModel.findOne({ email: email.toLowerCase() });
 
         if (user)
             return res.status(400).json({ message: 'An account with this email already exists.' });
@@ -207,7 +208,7 @@ export const updateSettings = async (req, res) => {
 
         // verify input
         if (newSettings.questionsPerSession < 1 || newSettings.questionsPerSession > 10)
-            return res.status(400).json({ message: 'Questions per session must be greater than 0 and less than 11.' })
+            return res.status(400).json({ message: 'Questions per session must be between 1 and 10.' })
 
         user.settings.questionsPerSession = newSettings.questionsPerSession;
 

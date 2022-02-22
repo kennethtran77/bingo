@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import QuestionVisualizer from './QuestionVisualizer';
 
 import { createQuestion, deleteQuestion } from '../../../../actions/questions';
+import LoadingSpinner from '../../../widgets/LoadingSpinner';
 
 const QuestionsDisplayer = ({ concept }) => {
     const dispatch = useDispatch();
@@ -18,7 +19,7 @@ const QuestionsDisplayer = ({ concept }) => {
             concept: concept._id,
             type: 'FillInTheBlank',
             title: 'New Question',
-            text: "It's so quiet here...",
+            text: "Enter some text for this question.",
             answer: [],
             options: [],
         };
@@ -34,9 +35,8 @@ const QuestionsDisplayer = ({ concept }) => {
             <h2>Questions</h2>
             <div>
                 <ul className="remove-bullet">
-                    { conceptQuestions && conceptQuestions.map((question, index) => (
-                        <li key={index}>
-                            {}
+                    { conceptQuestions && conceptQuestions.map((question) => (
+                        <li key={question._id}>
                             <QuestionVisualizer
                                 concept={concept}
                                 question={question}
@@ -45,8 +45,8 @@ const QuestionsDisplayer = ({ concept }) => {
                         </li>
                     )) }
                 </ul>
-                { isLoading && 'Loading...' }
-                <button onClick={handleClick} className="plus"></button>
+                { isLoading && <LoadingSpinner/> }
+                <button onClick={handleClick} className="plus" aria-label="Create New Question" title="Create New Question"></button>
             </div>
         </div>
     );

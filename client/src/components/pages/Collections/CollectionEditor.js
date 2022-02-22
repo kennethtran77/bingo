@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { updateCollection } from '../../../actions/collections';
 
 import InputTags from '../../widgets/InputTags';
+import LoadingSpinner from '../../widgets/LoadingSpinner';
 
 const CollectionEditor = ({ collection, isLoading }) => {
     const [input, setInput] = useState({ title: '', tags: [] });
@@ -49,7 +50,7 @@ const CollectionEditor = ({ collection, isLoading }) => {
                 </label>
                 <input className="small-button" type="button" onClick={handleSubmit} value="Save" />
             </form>
-            { isLoading && 'Loading...' }
+            { isLoading && <LoadingSpinner /> }
         </div>
     );
 };

@@ -48,7 +48,6 @@ const App = () => {
                 const parsedToken = JSON.parse(sessionToken);
 
                 if (parsedToken?.token) {
-                    console.log("token changed");
                     const decoded = decode(parsedToken?.token);
                     setDecodedToken(decoded);
                 }

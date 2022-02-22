@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { Prompt } from 'react-router'
+
+import Popup from 'reactjs-popup';
 
 import Latex from 'react-latex-next';
 
@@ -18,10 +20,12 @@ import OptionsMenu from '../../../../widgets/OptionsMenu';
 
 const QuestionEditor = ({ concept, question }) => {
     // answer should always be a subset of options
-    const [input, setInput] = useState({ type: 'FillInTheBlank', title: 'New Question', text: "It's quiet here...", answer: [], options: [] });
+    const [input, setInput] = useState({ type: 'FillInTheBlank', title: 'New Question', text: "Enter some text for this question.", answer: [], options: [] });
     const [displayPreview, setDisplayPreview] = useState(false);
 
     const [alertOpen, setAlertOpen] = useState(false);
+
+    const savedPopupRef = useRef(null);
 
     const dispatch = useDispatch();
 
@@ -31,7 +35,8 @@ const QuestionEditor = ({ concept, question }) => {
         }
     }, [question]);
 
-    const madeChanges = input.type !== question.type || input.title !== question.title || input.text !== question.text || input.answer !== question.answer || input.options !== question.options;
+    // True if the question was edited and not saved, False otherwise
+    const madeChanges = input.type !== question.type || input.title !== question.title || input.text !== question.text || input.answer !== question.answer || (input.type !== 'FillInTheBlank' && input.options !== question.options);
 
     const handleEditOption = (index, newOption) => setInput(prevState => {
         let oldOption = prevState.options[index];
@@ -69,6 +74,8 @@ const QuestionEditor = ({ concept, question }) => {
         if (!verifyQuestion(input)) {
             setAlertOpen(true);
         }
+
+        savedPopupRef.current.open();
     }
 
     const menuOptions = ['latexDisplay'];
@@ -80,7 +87,7 @@ const QuestionEditor = ({ concept, question }) => {
                 message='You have unsaved changes. Are you sure you want to leave?'
             />
             <Alert
-                message='Warning: this question is not complete. It will not be shown during practice.'
+                message='WARNING: This question is not complete. It will not be shown during practice.'
                 open={alertOpen}
                 setOpen={setAlertOpen}
             />
@@ -130,7 +137,31 @@ const QuestionEditor = ({ concept, question }) => {
                     </>
                 }
                 { fetchEditor(input.type) }
-                <input className="small-button" type="button" onClick={handleSubmit} value="Save" />
+                <div className="flex">
+                    <input
+                        className="small-button v-margin"
+                        type="button"
+                        value="Save"
+                        onClick={handleSubmit}
+                    />
+                    <Popup
+                        ref={savedPopupRef}
+                        trigger={
+                            // use an empty element as the trigger
+                            <div style={{
+                                width: 0,
+                                height: 45,
+                                display: 'inline-block',
+                                visibility: 'hidden',
+                            }} />
+                        }
+                        position="right center"
+                        closeOnDocumentClick
+                        closeOnEscape
+                    >
+                        <span>Saved question.</span>
+                    </Popup>
+                </div>
             </form>
         </div>
     );

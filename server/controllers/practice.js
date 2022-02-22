@@ -9,9 +9,10 @@ import CollectionModel from '../models/collection.js';
 import { shuffle, verifyQuestion, verifyAnswer } from '../utils.js';
 
 
-const shuffleReorderQuestions = questions => {
+// shuffle the ordering in Single Answer, Multiple Answers, and Reorder questions
+const shuffleQuestions = questions => {
     questions.forEach((question, index) => {
-        if (question.type === 'Reorder') {
+        if (question.type === 'Reorder' || question.type === 'MultipleAnswers' || question.type === 'SingleAnswer') {
             shuffle(question.options);
             questions[index] = question;
         }
@@ -22,7 +23,8 @@ export const getSessions = async (req, res) => {
     const userId = req.user.id;
 
     try {
-        const sessions = await PracticeSessionModel.find({ "userId": userId });
+        // sort the practice sessions by date
+        const sessions = await PracticeSessionModel.find({ "userId": userId }).sort({ date: -1 });
 
         res.status(200).send(sessions);
     } catch (error) {
@@ -46,8 +48,8 @@ export const generateConceptQuestions = async (req, res) => {
             .filter(question => verifyQuestion(question))
             .slice(0, Math.min(questionsPerSession, questions.length));
 
-        // shuffle the order in any reorder questions
-        shuffleReorderQuestions(generatedQuestions);
+        // shuffle the options in each question
+        shuffleQuestions(generatedQuestions);
 
         res.json(generatedQuestions);
     } catch (error) {
@@ -71,8 +73,8 @@ export const generateCollectionQuestions = async (req, res) => {
             .filter(question => verifyQuestion(question))
             .slice(0, Math.min(questionsPerSession, questions.length));
 
-        // shuffle the order in any reorder questions
-        shuffleReorderQuestions(generatedQuestions);
+        // shuffle the options in each question
+        shuffleQuestions(generatedQuestions);
 
         res.json(generatedQuestions);
     } catch (error) {

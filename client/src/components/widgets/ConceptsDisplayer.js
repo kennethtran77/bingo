@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import Paginate from './Paginate';
@@ -7,9 +7,13 @@ import { createConcept, deleteConcept } from '../../actions/concepts';
 import ConceptVisualizer from './ConceptVisualizer';
 
 import SearchBox from './SearchBox';
+import LoadingSpinner from './LoadingSpinner';
 
 import './ConceptsDisplayer.css';
 
+/**
+ * A component that displays a listing of the given concepts.
+ */
 const ConceptsDisplayer = ({ title, concepts, isLoading, userId, showCreator, collection, showSearchBar = true, enableCreating = true}) => {
     const [conceptsToDisplay, setConceptsToDisplay] = useState(concepts);
     const [searched, setSearched] = useState(false);
@@ -36,30 +40,35 @@ const ConceptsDisplayer = ({ title, concepts, isLoading, userId, showCreator, co
         dispatch(createConcept(newConcept));
     }
     
-    const remove = concept => dispatch(deleteConcept(concept._id));
-
     return !userId ? (<h2>Please log in to view concepts.</h2>) : (
         <div className="row">
             <div className="container maj">
                 { title && <h2>{title}</h2>}
                 { searched && <h2>Displaying search results:</h2> }
                 <ul className="remove-bullet">
-                    { conceptsToDisplay.length ? conceptsToDisplay.map((concept, id) => (
-                        <li key={id}>
+                    { conceptsToDisplay.length ? conceptsToDisplay.map((concept) => (
+                        <li key={concept._id}>
                             <ConceptVisualizer
                                 concept={concept}
-                                remove={() => remove(concept)}
+                                remove={() => dispatch(deleteConcept(concept._id))}
                                 userId={userId}
                                 showCreator={showCreator}
                                 collection={collection}
                             />
                         </li>
                     )) :
-                        <span>It's quite empty here...</span>
+                        <span>There are no concepts to display.</span>
                     }
                 </ul>
-                { isLoading && 'Loading...' }
-                { enableCreating && <span onClick={handleCreateConcept} className="plus"></span> }
+                { isLoading && <LoadingSpinner/> }
+                { enableCreating &&
+                    <span
+                        onClick={handleCreateConcept}
+                        className="plus"
+                        aria-label="create new concept"
+                        title="Create New Concept"
+                    />
+                }
                 <Paginate
                     items={concepts}
                     itemsPerPage={5}

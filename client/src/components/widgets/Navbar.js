@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Popup from 'reactjs-popup';
 
 import './Navbar.css';
+import LoadingSpinner from './LoadingSpinner';
 
 const Navbar = ({ decodedToken }) => {
     // fetch user object from store
@@ -29,7 +30,7 @@ const Navbar = ({ decodedToken }) => {
         }
     }, [location, logout, decodedToken]);
 
-    return !user ? 'Not logged in' : (
+    return (
         <div id="navbar">
             <div id="navbar-wrapper" className="space-between">
                 <h1>bingo</h1>
@@ -39,7 +40,7 @@ const Navbar = ({ decodedToken }) => {
                     <Link className="nav-button" to="/collections">Collections</Link>
                     <Link className="nav-button" to="/browse">Browse Concepts</Link>
                     <div className="center-flex">
-                        <strong className="h-margin">{user.username}</strong>
+                        <strong className="h-margin">{user ? user.username : <LoadingSpinner />}</strong>
                         <button className="nav-button h-margin" onClick={logout}>Log Out</button>
                     </div>
                 </div>
@@ -55,8 +56,12 @@ const Navbar = ({ decodedToken }) => {
                         <Link className="nav-button" to="/collections">Collections</Link>
                         <Link className="nav-button" to="/browse">Browse Concepts</Link>
                         <div className="container">
-                            <div className="h-margin">Logged in as</div>
-                            <div className="h-margin"><strong>{user.username}</strong></div>
+                            { user ? (
+                                <>
+                                    <div className="h-margin">Logged in as</div>
+                                    <div className="h-margin"><strong>{user.username}</strong></div>
+                                </>
+                            ) : <LoadingSpinner /> }
                         </div>
                         <span className="nav-button" onClick={logout}>Log Out</span>
                     </div>
