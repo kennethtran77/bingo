@@ -64,7 +64,7 @@ const Settings = ({ userId }) => {
                             <input
                                 type="text"
                                 name="username"
-                                autoComplete="off"
+                                autoComplete="new-password"
                                 value={input.username}
                                 onChange={handleChange}
                             />
@@ -78,7 +78,7 @@ const Settings = ({ userId }) => {
                             <input
                                 type="password"
                                 name="currentPassword"
-                                autoComplete="off"
+                                autoComplete="new-password"
                                 value={input.currentPassword}
                                 onChange={handleChange}
                             />
@@ -88,7 +88,7 @@ const Settings = ({ userId }) => {
                             <input
                                 type="password"
                                 name="newPassword"
-                                autoComplete="off"
+                                autoComplete="new-password"
                                 value={input.newPassword}
                                 onChange={handleChange}
                             />
@@ -98,7 +98,7 @@ const Settings = ({ userId }) => {
                             <input
                                 type="password"
                                 name="confirmNewPassword"
-                                autoComplete="off"
+                                autoComplete="new-password"
                                 value={input.confirmNewPassword}
                                 onChange={handleChange}
                             />

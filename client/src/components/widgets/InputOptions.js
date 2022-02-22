@@ -1,10 +1,12 @@
-import React, { useState, useRef, createRef } from 'react';
+import React, { useState, useRef, createRef, useEffect } from 'react';
 import { Prompt } from 'react-router-dom';
 
 import Popup from 'reactjs-popup';
 
 const InputOptions = ({ options, addOption, editOption, removeOption, placeholder }) => {
     const [inputs, setInputs] = useState(options);
+
+    // store message and popup open status for each option in component state
     const [messages, setMessages] = useState(options.map(_ => ''));
 
     const refs = useRef([]);
@@ -53,6 +55,7 @@ const InputOptions = ({ options, addOption, editOption, removeOption, placeholde
 
         editOption(index, newOption);
         setMessage(index, 'Saved!');
+        openPopup(index);
     }
 
     const handleKeyDown = (e, index) => {
@@ -61,11 +64,18 @@ const InputOptions = ({ options, addOption, editOption, removeOption, placeholde
         if (e.key === 'Enter') {
             e.preventDefault();
             saveOption(index, value);
-            refs.current[index].current.open();
+            openPopup(index);
         } else {
             refs.current[index].current.close();
         }
     }
+
+    // open the popup for option with given index with a delay
+    const openPopup = index => {
+        setTimeout(() => {
+            refs.current[index].current.open();
+        }, 10);
+    };
 
     return (
         <div className="container">
@@ -89,18 +99,28 @@ const InputOptions = ({ options, addOption, editOption, removeOption, placeholde
                                 placeholder={placeholder}
                                 onKeyDown={(e) => handleKeyDown(e, index)}
                             />
+                            <span
+                                className="save"
+                                style={{ marginLeft: 5 }}
+                                aria-label="Save Option"
+                                title="Save Option"
+                                onClick={e => {
+                                    e.preventDefault();
+                                    saveOption(index, inputs[index]);
+                                }}
+                            >
+                                ↓
+                            </span>
                             <Popup
                                 ref={refs.current[index]}
-                                onOpen={() => saveOption(index, inputs[index])}
                                 trigger={
-                                    <span className="h-margin save">
-                                        <span
-                                            aria-label="Save Option"
-                                            title="Save Option"
-                                        >
-                                            ↓
-                                        </span>
-                                    </span>
+                                    // use an empty element as the trigger
+                                    <div style={{
+                                        width: 0,
+                                        height: 0,
+                                        display: 'block',
+                                        visibility: 'hidden'
+                                    }} />
                                 }
                                 position="right center"
                                 closeOnDocumentClick
