@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import LoadingSpinner from '../../widgets/LoadingSpinner';
 
 import Paginate from '../../widgets/Paginate';
 
@@ -26,15 +27,15 @@ const Comments = ({ concept, userId }) => {
             <CommentBox concept={concept} />
             { message.content && <p style={{color: message.colour}} id="message">{message.content}</p> }
             <ul className="remove-bullet">
-                { commentsToDisplay.length ? commentsToDisplay.map((comment, id) => (
-                    <li key={id}>
+                { commentsToDisplay.length ? commentsToDisplay.map((comment) => (
+                    <li key={comment._id}>
                         <Comment comment={comment} userId={userId} concept={concept} />
                     </li>
                 )) :
                     <span>No comments yet.</span>
                 }
             </ul>
-            { isLoading && 'Loading...' }
+            { isLoading && <LoadingSpinner /> }
             <Paginate 
                 items={conceptComments}
                 itemsPerPage={10}

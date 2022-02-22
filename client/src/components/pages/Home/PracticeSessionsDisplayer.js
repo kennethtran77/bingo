@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 
 import './PracticeSessionsDisplayer.css';
 import Paginate from '../../widgets/Paginate';
+import LoadingSpinner from '../../widgets/LoadingSpinner';
 
 const PracticeSessionsDisplayer = ({ userId }) => {
     const { practiceSessions, isLoading } = useSelector(state => state.practiceSlice);
@@ -22,18 +23,23 @@ const PracticeSessionsDisplayer = ({ userId }) => {
                     </tr>
                 </thead>
                 <tbody>
-                { practiceSessionsToDisplay.map((practiceSession, id) => {
+                { practiceSessionsToDisplay.map((practiceSession) => {
                     let date = new Date(practiceSession.date);
                     date = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
                     return (
-                        <tr key={id}>
-                        <   td>{practiceSession.score} / {practiceSession.practiceQuestions.length}</td>
+                        <tr key={practiceSession._id}>
+                            <td>{practiceSession.score} / {practiceSession.practiceQuestions.length}</td>
                             <td>{ date }</td>
                             <td>{ practiceSession.title }</td>
                             <Link className="center-flex small-button v-margin" to={"/practice/results/" + practiceSession._id}>View</Link>
                         </tr>
                     );
-                }) }
+                })}
+                { practiceSessionsToDisplay.length == 0 && (
+                    <tr key={0}>
+                        <td colspan="3" className="padding">You have not completed any practice sessions.</td>
+                    </tr>
+                ) }
                 </tbody>
             </table>
             <Paginate
@@ -41,7 +47,7 @@ const PracticeSessionsDisplayer = ({ userId }) => {
                 itemsPerPage={10}
                 setItemsToDisplay={setPracticeSessionsToDisplay}
             />
-            { isLoading && 'Loading...' }
+            { isLoading && <LoadingSpinner /> }
         </div>
     );
 };

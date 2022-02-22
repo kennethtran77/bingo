@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateSettings, updateUsername, updatePassword } from '../../../actions/user';
+import LoadingSpinner from '../../widgets/LoadingSpinner';
 
 import './Settings.css';
 
@@ -40,7 +41,7 @@ const Settings = ({ userId }) => {
         <>
             <h2>Settings</h2>
             <div id="settings" className="container">
-                { isLoading && <p>Loading...</p> }
+                { isLoading && <LoadingSpinner /> }
                 { message.content && <p style={{color: message.colour}}>{message.content}</p> }
                 <div>
                     <label>

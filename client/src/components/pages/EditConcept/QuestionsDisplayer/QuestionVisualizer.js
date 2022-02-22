@@ -19,7 +19,7 @@ const QuestionVisualizer = ({ concept, question, remove }) => {
                 <h2>{question.title}</h2>
                 <div className="center-flex">
                     <button className="small-button" onClick={handleToggleEditor}>{showEditor ? 'Hide Editor' : 'Show Editor'}</button>
-                    <span onClick={() => setToDelete(true)} className="h-margin x"></span>
+                    <span onClick={() => setToDelete(true)} className="h-margin x" aria-label="Delete Question" title="Delete Question"></span>
                 </div>
             </div>
             { showEditor && <QuestionEditor concept={concept} question={question} /> }

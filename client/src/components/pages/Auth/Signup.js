@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { signUp } from '../../../actions/auth.js';
 
 import './Auth.css';
+import LoadingSpinner from '../../widgets/LoadingSpinner.js';
 
 const Signup = () => {
     const [input, setInput] = useState({ email: '', username: '', password: '', confirmPassword: '' });
@@ -68,7 +69,7 @@ const Signup = () => {
                 </label>
                 <input className="small-button" type="submit" value="Sign Up" />
                 <p>Already have an account? <Link to="/login">Log In</Link></p>
-                { isLoading && <p>Loading...</p> }
+                { isLoading && <LoadingSpinner /> }
                 { message.content && <span style={{color: message.colour}} id="message">{message.content}</span> }
             </form>
         </div>

@@ -18,7 +18,7 @@ import OptionsMenu from '../../../../widgets/OptionsMenu';
 
 const QuestionEditor = ({ concept, question }) => {
     // answer should always be a subset of options
-    const [input, setInput] = useState({ type: 'FillInTheBlank', title: 'New Question', text: "It's quiet here...", answer: [], options: [] });
+    const [input, setInput] = useState({ type: 'FillInTheBlank', title: 'New Question', text: "Enter some text for this question.", answer: [], options: [] });
     const [displayPreview, setDisplayPreview] = useState(false);
 
     const [alertOpen, setAlertOpen] = useState(false);
@@ -80,7 +80,7 @@ const QuestionEditor = ({ concept, question }) => {
                 message='You have unsaved changes. Are you sure you want to leave?'
             />
             <Alert
-                message='Warning: this question is not complete. It will not be shown during practice.'
+                message='WARNING: This question is not complete. It will not be shown during practice.'
                 open={alertOpen}
                 setOpen={setAlertOpen}
             />
@@ -130,7 +130,7 @@ const QuestionEditor = ({ concept, question }) => {
                     </>
                 }
                 { fetchEditor(input.type) }
-                <input className="small-button" type="button" onClick={handleSubmit} value="Save" />
+                <input className="small-button v-margin" type="button" onClick={handleSubmit} value="Save" />
             </form>
         </div>
     );

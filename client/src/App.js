@@ -8,6 +8,7 @@ import { fetchConcepts } from './actions/concepts.js';
 import { fetchCollections } from './actions/collections.js';
 import { fetchPracticeSessions } from './actions/practice.js';
 import { fetchSettings, fetchUsernames } from './actions/user.js';
+import { fetchComments } from './actions/comments.js';
 
 import './App.css';
 
@@ -48,7 +49,6 @@ const App = () => {
                 const parsedToken = JSON.parse(sessionToken);
 
                 if (parsedToken?.token) {
-                    console.log("token changed");
                     const decoded = decode(parsedToken?.token);
                     setDecodedToken(decoded);
                 }
