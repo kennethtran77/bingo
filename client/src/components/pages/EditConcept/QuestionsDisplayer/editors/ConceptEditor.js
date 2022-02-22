@@ -5,6 +5,8 @@ import { Prompt } from 'react-router';
 import { EditorState, convertToRaw, ContentState } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 
+import Popup from 'reactjs-popup';
+
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
 
@@ -16,6 +18,7 @@ import './ConceptEditor.css';
 import { updateConcept } from '../../../../../actions/concepts';
 
 import InputTags from '../../../../widgets/InputTags';
+import LoadingSpinner from '../../../../widgets/LoadingSpinner';
 
 const ConceptEditor = ({ concept, isLoading }) => {
     const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
@@ -39,10 +42,7 @@ const ConceptEditor = ({ concept, isLoading }) => {
         }
     }, [concept]);
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        dispatch(updateConcept(concept._id, input));
-    }
+    const handleSubmit = () => dispatch(updateConcept(concept._id, input));
 
     return (
         <div className="editor">
@@ -98,9 +98,23 @@ const ConceptEditor = ({ concept, isLoading }) => {
                         onChange={() => setInput(prevState => ({ ...prevState, public: !prevState.public }))}
                     />
                 </label>
-                <input className="small-button" type="button" onClick={handleSubmit} value="Save" />
+                <Popup
+                    onOpen={handleSubmit}
+                    trigger={
+                        <input
+                            className="small-button v-margin"
+                            type="button"
+                            value="Save"
+                        />
+                    }
+                    position="right center"
+                    closeOnDocumentClick
+                    closeOnEscape
+                >
+                    <span>Saved concept.</span>
+                </Popup>
             </form>
-            { isLoading && 'Loading...' }
+            { isLoading && <LoadingSpinner /> }
         </div>
     );
 }

@@ -91,10 +91,10 @@ const InputOptions = ({ options, addOption, editOption, removeOption, placeholde
                             />
                             <Popup
                                 ref={refs.current[index]}
+                                onOpen={() => saveOption(index, inputs[index])}
                                 trigger={
                                     <span className="h-margin save">
                                         <span
-                                            onClick={() => saveOption(index, inputs[index])}
                                             aria-label="Save Option"
                                             title="Save Option"
                                         >

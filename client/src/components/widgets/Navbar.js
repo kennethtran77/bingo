@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Popup from 'reactjs-popup';
 
 import './Navbar.css';
+import LoadingSpinner from './LoadingSpinner';
 
 const Navbar = ({ decodedToken }) => {
     // fetch user object from store
@@ -29,7 +30,7 @@ const Navbar = ({ decodedToken }) => {
         }
     }, [location, logout, decodedToken]);
 
-    return !user ? 'Not logged in' : (
+    return !user ? <LoadingSpinner /> : (
         <div id="navbar">
             <div id="navbar-wrapper" className="space-between">
                 <h1>bingo</h1>

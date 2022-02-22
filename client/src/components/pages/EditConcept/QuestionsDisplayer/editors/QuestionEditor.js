@@ -3,6 +3,8 @@ import { useDispatch } from 'react-redux';
 
 import { Prompt } from 'react-router'
 
+import Popup from 'reactjs-popup';
+
 import Latex from 'react-latex-next';
 
 import FillInTheBlankEditor from './FillInTheBlankEditor';
@@ -130,7 +132,21 @@ const QuestionEditor = ({ concept, question }) => {
                     </>
                 }
                 { fetchEditor(input.type) }
-                <input className="small-button v-margin" type="button" onClick={handleSubmit} value="Save" />
+                <Popup
+                    onOpen={handleSubmit}
+                    trigger={
+                        <input
+                            className="small-button v-margin"
+                            type="button"
+                            value="Save"
+                        />
+                    }
+                    position="right center"
+                    closeOnDocumentClick
+                    closeOnEscape
+                >
+                    <span>Saved question.</span>
+                </Popup>
             </form>
         </div>
     );
