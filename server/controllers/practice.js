@@ -23,7 +23,8 @@ export const getSessions = async (req, res) => {
     const userId = req.user.id;
 
     try {
-        const sessions = await PracticeSessionModel.find({ "userId": userId });
+        // sort the practice sessions by date
+        const sessions = await PracticeSessionModel.find({ "userId": userId }).sort({ date: -1 });
 
         res.status(200).send(sessions);
     } catch (error) {
