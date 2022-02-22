@@ -3,12 +3,13 @@ import { useSelector } from 'react-redux';
 import { Redirect, useParams, Link } from 'react-router-dom';
 
 import { generateConceptQuestions } from '../../../api';
+import LoadingSpinner from '../../widgets/LoadingSpinner';
 
 import Practice from './Practice';
 
 const PracticeConcept = () => {
     // State hooks
-    const [toRender, setToRender] = useState('Loading...');
+    const [toRender, setToRender] = useState(<LoadingSpinner />);
 
     const { conceptId } = useParams();
 
@@ -23,7 +24,7 @@ const PracticeConcept = () => {
     useEffect(() => {
         // If the concept hasn't loaded yet
         if (isLoading && !concept) {
-            setToRender('Loading...');
+            setToRender(<LoadingSpinner />);
             return;
         }
 
