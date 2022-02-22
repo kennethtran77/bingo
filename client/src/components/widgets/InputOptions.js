@@ -116,7 +116,7 @@ const InputOptions = ({ options, addOption, editOption, removeOption, placeholde
                         </li>
                     );
                 })}
-                { <span onClick={handleAddOption} className="plus"></span> }
+                { <span onClick={handleAddOption} className="plus" aria-label="Create New Option" title="Create New Option"></span> }
             </ul>
         </div>
     );
