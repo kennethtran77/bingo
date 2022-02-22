@@ -37,7 +37,7 @@ const PracticeSessionsDisplayer = ({ userId }) => {
                 })}
                 { practiceSessionsToDisplay.length == 0 && (
                     <tr key={0}>
-                        <td colspan="3" className="padding">You have not completed any practice sessions.</td>
+                        <td colSpan="3" className="padding">You have not completed any practice sessions.</td>
                     </tr>
                 ) }
                 </tbody>
