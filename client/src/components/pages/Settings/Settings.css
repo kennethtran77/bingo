@@ -1,9 +1,20 @@
+#settings {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
 #settings input {
-    width: 50%;
+    width: 100%;
     display: block;
     margin-bottom: 10px;
 }
 
 #settings label {
     display: block;
+}
+
+#settings #content {
+    display: block;
+    margin: 20px auto;
+    max-width: 400px;
 }

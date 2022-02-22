@@ -39,70 +39,72 @@ const Settings = ({ userId }) => {
 
     return (
         <>
-            <h2>Settings</h2>
+            <h2 style={{textAlign: 'center'}}>Settings</h2>
             <div id="settings" className="container">
-                { isLoading && <LoadingSpinner /> }
-                { message.content && <p style={{color: message.colour}}>{message.content}</p> }
-                <div>
-                    <label>
-                        Questions Per Practice Session
-                        <input
-                            type="number"
-                            name="questionsPerSession"
-                            min="1" max="10"
-                            value={input.questionsPerSession}
-                            onChange={handleChange}
-                        />
-                    </label>
-                    <button className="small-button" onClick={handleSaveSettings}>Save</button>
-                </div>
-                <div>
-                    <h3>Change Username</h3>
-                    <label>
-                        Username
-                        <input
-                            type="text"
-                            name="username"
-                            autoComplete="off"
-                            value={input.username}
-                            onChange={handleChange}
-                        />
-                    </label>
-                    <button className="small-button" onClick={handleSaveUsername}>Save</button>
-                </div>
-                <div>
-                    <h3>Change Password</h3>
-                    <label>
-                        Current Password
-                        <input
-                            type="password"
-                            name="currentPassword"
-                            autoComplete="off"
-                            value={input.currentPassword}
-                            onChange={handleChange}
-                        />
-                    </label>
-                    <label>
-                        New Password
-                        <input
-                            type="password"
-                            name="newPassword"
-                            autoComplete="off"
-                            value={input.newPassword}
-                            onChange={handleChange}
-                        />
-                    </label>
-                    <label>
-                        Confirm New Password
-                        <input
-                            type="password"
-                            name="confirmNewPassword"
-                            autoComplete="off"
-                            value={input.confirmNewPassword}
-                            onChange={handleChange}
-                        />
-                    </label>
-                    <button className="small-button" onClick={handleSavePassword}>Save</button>
+                <div id="content">
+                    { isLoading && <LoadingSpinner /> }
+                    { message.content && <p style={{color: message.colour}}>{message.content}</p> }
+                    <div>
+                        <label>
+                            Questions Per Practice Session
+                            <input
+                                type="number"
+                                name="questionsPerSession"
+                                min="1" max="10"
+                                value={input.questionsPerSession}
+                                onChange={handleChange}
+                            />
+                        </label>
+                        <button className="small-button" onClick={handleSaveSettings}>Save</button>
+                    </div>
+                    <div>
+                        <h3>Change Username</h3>
+                        <label>
+                            Username
+                            <input
+                                type="text"
+                                name="username"
+                                autoComplete="off"
+                                value={input.username}
+                                onChange={handleChange}
+                            />
+                        </label>
+                        <button className="small-button" onClick={handleSaveUsername}>Save</button>
+                    </div>
+                    <div>
+                        <h3>Change Password</h3>
+                        <label>
+                            Current Password
+                            <input
+                                type="password"
+                                name="currentPassword"
+                                autoComplete="off"
+                                value={input.currentPassword}
+                                onChange={handleChange}
+                            />
+                        </label>
+                        <label>
+                            New Password
+                            <input
+                                type="password"
+                                name="newPassword"
+                                autoComplete="off"
+                                value={input.newPassword}
+                                onChange={handleChange}
+                            />
+                        </label>
+                        <label>
+                            Confirm New Password
+                            <input
+                                type="password"
+                                name="confirmNewPassword"
+                                autoComplete="off"
+                                value={input.confirmNewPassword}
+                                onChange={handleChange}
+                            />
+                        </label>
+                        <button className="small-button" onClick={handleSavePassword}>Save</button>
+                    </div>
                 </div>
             </div>
         </>
