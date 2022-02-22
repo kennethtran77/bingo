@@ -9,9 +9,10 @@ import CollectionModel from '../models/collection.js';
 import { shuffle, verifyQuestion, verifyAnswer } from '../utils.js';
 
 
-const shuffleReorderQuestions = questions => {
+// shuffle the ordering in Single Answer, Multiple Answers, and Reorder questions
+const shuffleQuestions = questions => {
     questions.forEach((question, index) => {
-        if (question.type === 'Reorder') {
+        if (question.type === 'Reorder' || question.type === 'MultipleAnswers' || question.type === 'SingleAnswer') {
             shuffle(question.options);
             questions[index] = question;
         }
@@ -46,8 +47,8 @@ export const generateConceptQuestions = async (req, res) => {
             .filter(question => verifyQuestion(question))
             .slice(0, Math.min(questionsPerSession, questions.length));
 
-        // shuffle the order in any reorder questions
-        shuffleReorderQuestions(generatedQuestions);
+        // shuffle the options in each question
+        shuffleQuestions(generatedQuestions);
 
         res.json(generatedQuestions);
     } catch (error) {
@@ -71,8 +72,8 @@ export const generateCollectionQuestions = async (req, res) => {
             .filter(question => verifyQuestion(question))
             .slice(0, Math.min(questionsPerSession, questions.length));
 
-        // shuffle the order in any reorder questions
-        shuffleReorderQuestions(generatedQuestions);
+        // shuffle the options in each question
+        shuffleQuestions(generatedQuestions);
 
         res.json(generatedQuestions);
     } catch (error) {
