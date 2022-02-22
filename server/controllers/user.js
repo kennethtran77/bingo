@@ -207,7 +207,7 @@ export const updateSettings = async (req, res) => {
 
         // verify input
         if (newSettings.questionsPerSession < 1 || newSettings.questionsPerSession > 10)
-            return res.status(400).json({ message: 'Questions per session must be greater than 0 and less than 11.' })
+            return res.status(400).json({ message: 'Questions per session must be between 1 and 10.' })
 
         user.settings.questionsPerSession = newSettings.questionsPerSession;
 
