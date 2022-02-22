@@ -47,7 +47,7 @@ export const login = async (req, res) => {
         return res.status(400).json({ message: 'Please fill in all inputs.' });
 
         // check if account exists
-        const user = await UserModel.findOne({ email });
+        const user = await UserModel.findOne({ email: email.toLowerCase() });
 
         if (!user) {
             return res.status(404).json({ message: 'No account with this email was found.' });
@@ -71,6 +71,7 @@ export const login = async (req, res) => {
 
 export const signUp = async (req, res) => {
     const { email, password, confirmPassword, username } = req.body;
+    const lowercaseEmail = email.toString().toLowerCase();
 
     try {
         // check inputs
@@ -93,7 +94,7 @@ export const signUp = async (req, res) => {
             return res.status(400).json({ message: validUsername.message });
 
         // check if account exists
-        const user = await UserModel.findOne({ email });
+        const user = await UserModel.findOne({ email: email.toLowerCase() });
 
         if (user)
             return res.status(400).json({ message: 'An account with this email already exists.' });
