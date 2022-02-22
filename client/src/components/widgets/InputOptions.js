@@ -76,7 +76,7 @@ const InputOptions = ({ options, addOption, editOption, removeOption, placeholde
             <ul className="remove-bullet">
                 { options && options.map((option, index) => {
                     return (
-                        <li key={index} className="padding center-flex">
+                        <li key={option} className="padding center-flex">
                             <input
                                 type="text"
                                 value={inputs[index]}

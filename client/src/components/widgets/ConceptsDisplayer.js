@@ -11,6 +11,9 @@ import LoadingSpinner from './LoadingSpinner';
 
 import './ConceptsDisplayer.css';
 
+/**
+ * A component that displays a listing of the given concepts.
+ */
 const ConceptsDisplayer = ({ title, concepts, isLoading, userId, showCreator, collection, showSearchBar = true, enableCreating = true}) => {
     const [conceptsToDisplay, setConceptsToDisplay] = useState(concepts);
     const [searched, setSearched] = useState(false);

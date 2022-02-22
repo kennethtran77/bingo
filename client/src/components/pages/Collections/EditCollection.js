@@ -2,6 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Redirect, useParams } from 'react-router-dom';
 import ConceptsDisplayer from '../../widgets/ConceptsDisplayer';
+import LoadingSpinner from '../../widgets/LoadingSpinner';
 
 import CollectionEditor from './CollectionEditor';
 
@@ -18,7 +19,7 @@ const EditCollection = ({ userId }) => {
     const allConcepts = conceptsSlice.concepts.filter(concept => !collection.concepts.includes(concept._id));
 
     if (isLoading && !collection)
-        return 'Loading...';
+        return <LoadingSpinner />;
 
     // If we finished loading but couldn't find the collection, return to homepage
     if ((!collection && !isLoading) || collection.creator.toString() !== userId)
