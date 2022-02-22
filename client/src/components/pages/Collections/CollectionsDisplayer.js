@@ -52,7 +52,7 @@ const CollectionsDisplayer = ({ userId }) => {
                     }
                 </ul>
                 { isLoading && <LoadingSpinner /> }
-                <span onClick={handleCreateCollection} className="plus"></span>
+                <span onClick={handleCreateCollection} className="plus" aria-label="Create New Collection" title="Create New Collection"></span>
                 <Paginate
                     items={collections}
                     itemsPerPage={5}

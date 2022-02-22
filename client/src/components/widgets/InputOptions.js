@@ -93,7 +93,13 @@ const InputOptions = ({ options, addOption, editOption, removeOption, placeholde
                                 ref={refs.current[index]}
                                 trigger={
                                     <span className="h-margin save">
-                                        <span onClick={() => saveOption(index, inputs[index])}>↓</span>
+                                        <span
+                                            onClick={() => saveOption(index, inputs[index])}
+                                            aria-label="Save Option"
+                                            title="Save Option"
+                                        >
+                                            ↓
+                                        </span>
                                     </span>
                                 }
                                 position="right center"
@@ -101,7 +107,12 @@ const InputOptions = ({ options, addOption, editOption, removeOption, placeholde
                             >
                                 <span>{messages[index]}</span>
                             </Popup>
-                            <span onClick={() => handleRemoveOption(index)} className="x h-margin"></span>
+                            <span
+                                onClick={() => handleRemoveOption(index)}
+                                className="x h-margin"
+                                aria-label="Delete Option"
+                                title="Delete Option"
+                            />
                         </li>
                     );
                 })}
