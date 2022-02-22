@@ -43,7 +43,7 @@ export const updateConcept = async (req, res) => {
 
     // Check to see if the concept with given id exists
     if (!mongoose.Types.ObjectId.isValid(conceptId))
-        return res.status(404).send(`No concept found with id ${conceptId}`);
+        return res.status(404).json({ message: `No concept found with id ${conceptId}`});
 
     const concept = await ConceptModel.findById(conceptId);
 
@@ -58,8 +58,6 @@ export const updateConcept = async (req, res) => {
 
     await concept.save();
 
-    // await ConceptModel.findByIdAndUpdate(conceptId, updatedConcept, { new: true });
-
     res.status(200).json(concept);
 }
 
@@ -69,7 +67,7 @@ export const deleteConcept = async (req, res) => {
     const concept = await ConceptModel.findById(conceptId);
 
     if (!mongoose.Types.ObjectId.isValid(conceptId))
-        return res.status(404).send(`No concept found with id ${conceptId}`);
+        return res.status(404).json({ message: `No concept found with id ${conceptId}` });
     
     if (req.user.id !== concept.creator.toString())
         return res.status(403).json({ message: 'Unauthorized action' });
@@ -98,7 +96,7 @@ export const likeConcept = async (req, res) => {
     const concept = await ConceptModel.findById(conceptId);
 
     if (!mongoose.Types.ObjectId.isValid(conceptId))
-        return res.status(404).send(`No concept found with id ${conceptId}`);
+        return res.status(404).json({ message: `No concept found with id ${conceptId}` });
 
     const userId = req.user.id;
 
@@ -125,7 +123,7 @@ export const dislikeConcept = async (req, res) => {
     const concept = await ConceptModel.findById(conceptId);
 
     if (!mongoose.Types.ObjectId.isValid(conceptId))
-        return res.status(404).send(`No concept found with id ${conceptId}`);
+        return res.status(404).json({ message: `No concept found with id ${conceptId}` });
 
     const userId = req.user.id;
 
