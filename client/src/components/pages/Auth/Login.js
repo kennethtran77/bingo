@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useHistory, Link } from 'react-router-dom';
 
 import { useSelector, useDispatch } from 'react-redux';
@@ -16,12 +16,12 @@ const Login = () => {
     const dispatch = useDispatch();
     const history = useHistory();
 
-    const handleChange = e => setInput({ ...input, [e.target.name]: e.target.value });
+    const handleChange = useCallback(e => setInput({ ...input, [e.target.name]: e.target.value }), [input]);
 
-    const handleSubmit = e => {
+    const handleSubmit = useCallback(e => {
         e.preventDefault();
         dispatch(login(input, history));
-    }
+    }, [input, history]);
 
     return (
         <>
