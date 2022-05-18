@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import InputOptions from '../../../../widgets/InputOptions';
 
 import Latex from 'react-latex-next';
@@ -8,25 +8,6 @@ import Select from 'react-select';
 import selectStyles from '../../../../selectStyles.js';
 
 const SingleAnswerEditor = ({ input, setInput, handleEditOption }) => {
-    useEffect(() => {
-        // apply constraints on inputs
-        setInput(prevInput => {
-            let newInput = { ...prevInput };
-
-            // Force answer to be a length one array if it isn't already
-            if (prevInput.answer.length > 1) {
-                newInput.answer = [prevInput.answer[0]];
-            }
-
-            // Force answer to be a subset of options
-            if (!prevInput.options.includes(prevInput.answer[0])) {
-                newInput.answer = prevInput.options.length ? [prevInput.options[0]] : [];
-            }
-
-            return newInput;
-        });
-    }, [setInput]);
-
     const handleAddOption = option => setInput(prevInput => {
         const newOptions = [ ...prevInput.options, option ];
 

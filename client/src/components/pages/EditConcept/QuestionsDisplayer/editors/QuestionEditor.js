@@ -15,8 +15,13 @@ import ReorderEditor from './ReorderEditor';
 import { updateQuestion } from '../../../../../actions/questions';
 import { verifyQuestion } from '../../../../../util';
 
-import Alert from '../../../../widgets/Alert';
-import OptionsMenu from '../../../../widgets/OptionsMenu';
+import Modal from '../../../../widgets/Modal';
+import Tooltip from '../../../../widgets/Tooltip';
+
+const FILL_IN_THE_BLANK = 'FillInTheBlank';
+const SINGLE_ANSWER = 'SingleAnswer';
+const MULTIPLE_ANSWERS = 'MultipleAnswers';
+const REORDER = 'Reorder';
 
 const QuestionEditor = ({ concept, question }) => {
     // answer should always be a subset of options
@@ -42,7 +47,7 @@ const QuestionEditor = ({ concept, question }) => {
         let oldOption = prevState.options[index];
         let newOptions = [...prevState.options];
         newOptions[index] = newOption;
-        
+
         return {
             ...prevState,
             options: newOptions,
@@ -52,13 +57,13 @@ const QuestionEditor = ({ concept, question }) => {
 
     const fetchEditor = type => {
         switch(type) {
-            case 'FillInTheBlank':
+            case FILL_IN_THE_BLANK:
                 return <FillInTheBlankEditor input={input} setInput={setInput} />;
-            case 'MultipleAnswers':
+            case MULTIPLE_ANSWERS:
                 return <MultipleAnswersEditor input={input} setInput={setInput} handleEditOption={handleEditOption} />;
-            case 'Reorder':
+            case REORDER:
                 return <ReorderEditor title={question.title} input={input} setInput={setInput} handleEditOption={handleEditOption} />;
-            case 'SingleAnswer':
+            case SINGLE_ANSWER:
                 return <SingleAnswerEditor input={input} setInput={setInput} handleEditOption={handleEditOption} />;
             default:
                 return 'Error';
@@ -78,7 +83,31 @@ const QuestionEditor = ({ concept, question }) => {
         savedPopupRef.current.open();
     }
 
-    const menuOptions = ['latexDisplay'];
+    const handleChangeType = e => {
+        const newType = e.target.value;
+
+        setInput(prevInput => {
+            // clear answer upon change
+            let newInput = { ...prevInput, type: newType };
+
+            switch (newType) {
+                case REORDER:
+                    newInput.answer = [prevInput.options];
+                    break;
+                case FILL_IN_THE_BLANK:
+                    newInput.answer = [''];
+                    break;
+                case SINGLE_ANSWER:
+                    newInput.answer = prevInput.options.length ? [prevInput.options[0]] : [];
+                    break;
+                default:
+                    newInput.answer = [];
+                    break;
+            }
+
+            return newInput;
+        });
+    }
 
     return (
         <div className="editor">
@@ -86,10 +115,15 @@ const QuestionEditor = ({ concept, question }) => {
                 when={madeChanges}
                 message='You have unsaved changes. Are you sure you want to leave?'
             />
-            <Alert
+            {/* <Alert
                 message='WARNING: This question is not complete. It will not be shown during practice.'
                 open={alertOpen}
                 setOpen={setAlertOpen}
+            /> */}
+            <Modal
+                content='WARNING: This question is not complete. It will not be shown during practice.'
+                active={alertOpen}
+                setActive={setAlertOpen}
             />
             <form>
                 <label>
@@ -106,21 +140,21 @@ const QuestionEditor = ({ concept, question }) => {
                     <select
                         value={input.type}
                         className="input"
-                        onChange={e => setInput({ ...input, type: e.target.value })}
+                        onChange={handleChangeType}
                     >
-                        <option value="FillInTheBlank">Fill-in-The-Blank</option>
-                        <option value="SingleAnswer">Single Answer</option>
-                        <option value="MultipleAnswers">Multiple Answers</option>
-                        <option value="Reorder">Reorder</option>
+                        <option value={FILL_IN_THE_BLANK}>Fill-in-The-Blank</option>
+                        <option value={SINGLE_ANSWER}>Single Answer</option>
+                        <option value={MULTIPLE_ANSWERS}>Multiple Answers</option>
+                        <option value={REORDER}>Reorder</option>
                     </select>
                 </label>
                 <label>
                     Text
-                    <OptionsMenu
-                        options={menuOptions}
-                        displayPreview={displayPreview}
-                        togglePreview={() => setDisplayPreview(curr => !curr)}
-                    />
+                    <Tooltip content={
+                        <div onClick={() => setDisplayPreview(curr => !curr)}>{ displayPreview ? 'Hide ' : 'Show '} Preview</div>
+                    }>
+                        <div className="more" />
+                    </Tooltip>
                     <textarea
                         className="input"
                         value={input.text}
@@ -161,6 +195,20 @@ const QuestionEditor = ({ concept, question }) => {
                     >
                         <span>Saved question.</span>
                     </Popup>
+                    <Modal
+                        content="hi"
+                        
+                    >
+                        <button
+                            className="small-button v-margin"
+                            onClick={e => {
+                                e.preventDefault();
+                                
+                            }}
+                        >
+                            Test
+                        </button>
+                    </Modal>
                 </div>
             </form>
         </div>

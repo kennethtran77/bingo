@@ -1,16 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import InputOptions from '../../../../widgets/InputOptions';
 
 import Latex from 'react-latex-next';
 
 const MultipleAnswersEditor = ({ input, setInput, handleEditOption }) => {
-    useEffect(() => {
-        // Force answer to be a subset of options
-        if (!input.answer.every(item => input.options.includes(item))) {
-            setInput(prevState => ({ ...prevState, answer: input.options.length ? [input.options[0]] : [] }));
-        }
-    }, [input.answer, input.options, setInput]);
-
     const handleTick = option => {
         // Remove option as answer
         if (input.answer.includes(option)) {

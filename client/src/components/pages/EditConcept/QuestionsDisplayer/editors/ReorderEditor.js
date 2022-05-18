@@ -1,28 +1,57 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Reorder from '../../../../widgets/Reorder';
 import InputOptions from '../../../../widgets/InputOptions';
+import OrderingSelector from '../../../../widgets/OrderingSelector';
 
 const ReorderEditor = ({ title, input, setInput, handleEditOption }) => {
-    const answerHasSameElementsAsOrder = input.answer.length === input.options.length && input.answer.every(item => input.options.includes(item));
-    const order = answerHasSameElementsAsOrder ? input.answer : input.options;
+    // currOrdering is an index that represents the current ordering to edit
+    // 0 <= currOrdering < input.answer.length
+    const [currOrdering, setCurrOrdering] = useState(0);
+    
+    // order is a singular array representing the current ordering
+    const [order, setOrder] = useState(input.options);
 
-    // Update the answer to be the current order
+    // update order state
     useEffect(() => {
-        setInput(prevState => ({ ...prevState, answer: order }) );
-    }, [order, setInput, input.type]);
+        setOrder(input.answer[currOrdering]);
+    }, [input, currOrdering]);
 
     const handleAddOption = option => setInput(prevState => ({
         ...prevState,
         options: [ ...prevState.options, option ],
-        answer: [ ...prevState.answer, option ]
+        answer: prevState.answer.map(ordering => ordering.concat(option)) // add `option` to all orderings
     }))
 
     const handleRemoveOption = option => setInput(prevState => ({
         ...prevState,
         options: prevState.options.filter(o => o !== option),
-        answer: prevState.answer.filter(o => o !== option)
+        answer: prevState.answer.map(ordering => ordering.filter(o => o !== option)) // remove all occurrences of `option`
     }))
+    
+    const addOrdering = () => setInput(prevState => ({
+        ...prevState,
+        answer: prevState.answer.concat([input.options])
+    }));
+
+    /**
+     * Set the ordering at index `index` to be `ordering`
+     * @param {Integer} index 
+     * @param {Array} ordering 
+     */
+    const setOrdering = (index, ordering) => setInput(prevState => ({
+        ...prevState,
+        answer: prevState.answer.slice(0, index).concat([ordering]).concat(prevState.answer.slice(index + 1))
+    }));
+
+    /**
+     * Delete the ordering at index `index`
+     * @param {Integer} index
+     */
+    const deleteOrdering = (index) => setInput(prevState => ({
+        ...prevState,
+        answer: prevState.answer.slice(0, index).concat(prevState.answer.slice(index + 1))
+    }));
 
     return (
         <>
@@ -37,13 +66,24 @@ const ReorderEditor = ({ title, input, setInput, handleEditOption }) => {
                 />
             </label>
             <label>
-                Correct Order
+                Correct Orders
                 <div className="container">
-                    <Reorder
-                        title={title}
-                        order={input.answer}
-                        setOrder={newOrder => setInput(prevState => ({ ...prevState, answer: newOrder }))}
-                    />
+                    { !input.options.length ? <p>Create some options first.</p> : 
+                        <>
+                            <OrderingSelector
+                                currOrdering={currOrdering}
+                                selectOrdering={setCurrOrdering}
+                                orderings={input.answer}
+                                addOrdering={addOrdering}
+                                deleteOrdering={deleteOrdering}
+                            />
+                            <Reorder
+                                title={title}
+                                order={order}
+                                setOrder={newOrder => setOrdering(currOrdering, newOrder)}
+                            />
+                        </>
+                    }
                 </div>
             </label>
         </>
