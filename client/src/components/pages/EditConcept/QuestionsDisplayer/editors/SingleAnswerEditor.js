@@ -1,32 +1,11 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import InputOptions from '../../../../widgets/InputOptions';
 
 import Latex from 'react-latex-next';
 
-import Select from 'react-select';
-
-import selectStyles from '../../../../selectStyles.js';
+import Dropdown from '../../../../widgets/Dropdown';
 
 const SingleAnswerEditor = ({ input, setInput, handleEditOption }) => {
-    useEffect(() => {
-        // apply constraints on inputs
-        setInput(prevInput => {
-            let newInput = { ...prevInput };
-
-            // Force answer to be a length one array if it isn't already
-            if (prevInput.answer.length > 1) {
-                newInput.answer = [prevInput.answer[0]];
-            }
-
-            // Force answer to be a subset of options
-            if (!prevInput.options.includes(prevInput.answer[0])) {
-                newInput.answer = prevInput.options.length ? [prevInput.options[0]] : [];
-            }
-
-            return newInput;
-        });
-    }, [setInput]);
-
     const handleAddOption = option => setInput(prevInput => {
         const newOptions = [ ...prevInput.options, option ];
 
@@ -55,7 +34,7 @@ const SingleAnswerEditor = ({ input, setInput, handleEditOption }) => {
 
     const options = input.options.map(option => ({
         value: option,
-        label: <Latex>{option}</Latex>
+        display: <Latex>{option}</Latex>
     }));
 
     return (
@@ -72,19 +51,13 @@ const SingleAnswerEditor = ({ input, setInput, handleEditOption }) => {
             </label>
             <label>
                 Answer
-                <Select
-                    options={options}
-                    isSearchable={false}
-                    value={{
+                <Dropdown
+                    items={options}
+                    currItem={{
                         value: input.answer[0],
-                        label: !input.answer.length ? '...' : <Latex>{input.answer[0]}</Latex>
+                        display: !input.answer.length ? '...' : <Latex>{input.answer[0]}</Latex>
                     }}
-                    onChange={(value, action) => {
-                        if (action.action === 'select-option') {
-                            setInput(prevState => ({ ...prevState, answer: [value.value]}))
-                        }
-                    }}
-                    styles={selectStyles}
+                    onChange={newItem => setInput(prevState => ({ ...prevState, answer: [newItem.value]} ))}
                 />
             </label>
         </>

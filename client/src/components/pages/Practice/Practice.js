@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import PracticeQuestionVisualizer from './PracticeQuestionVisualizer';
 import { processSession } from '../../../actions/practice';
@@ -23,11 +23,13 @@ const Practice = ({ questions, title }) => {
     }));
 
     const dispatch = useDispatch();
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const handleSubmit = useCallback(() => {
         if (!questions)
             return;
+
+        // make an array of practice question responses
 
         const inputs = input.map((input, index) => ({
             conceptId: questions[index].concept,
@@ -40,8 +42,8 @@ const Practice = ({ questions, title }) => {
             answer: questions[index].answer
         }));
 
-        dispatch(processSession(title, inputs, history));
-    }, [dispatch, questions, title, history, input]);
+        dispatch(processSession(title, inputs, navigate));
+    }, [dispatch, questions, title, navigate, input]);
 
     return (
         <>

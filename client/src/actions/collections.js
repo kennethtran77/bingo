@@ -42,12 +42,10 @@ export const removeFromCollection = (collection, conceptId) => async (dispatch) 
     }
 };
 
-export const createCollection = (collectionName) => async (dispatch) => {
+export const createCollection = () => async (dispatch) => {
     try {
-        const newCollection = { title: collectionName, concepts: [], tags: [] };
-
         dispatch({ type: 'collections/startLoading' });
-        const { data } = await api.createCollection(newCollection);
+        const { data } = await api.createCollection();
         dispatch({ type: 'collections/create', payload: data });
         dispatch({ type: 'collections/stopLoading' });
     } catch (error) {
@@ -59,9 +57,13 @@ export const createCollection = (collectionName) => async (dispatch) => {
 export const updateCollection = (collectionId, updatedCollection) => async (dispatch) => {
     try {
         dispatch({ type: 'collections/startLoading' });
-        const { data } = await api.updateCollection(collectionId, updatedCollection);
-        dispatch({ type: 'collections/update', payload: data });
+        const res = await api.updateCollection(collectionId, updatedCollection);
+
+        if (res.data.updatedCollection)
+            dispatch({ type: 'collections/update', payload: res.data.updatedCollection });
+
         dispatch({ type: 'collections/stopLoading' });
+        return res;
     } catch (error) {
         console.log(error);
         dispatch({ type: 'collections/stopLoading' });

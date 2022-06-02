@@ -4,11 +4,13 @@ import { useDispatch } from 'react-redux';
 
 import { updateCollection } from '../../../actions/collections';
 
+import Tooltip from '../../widgets/Tooltip';
 import InputTags from '../../widgets/InputTags';
 import LoadingSpinner from '../../widgets/LoadingSpinner';
 
 const CollectionEditor = ({ collection, isLoading }) => {
     const [input, setInput] = useState({ title: '', tags: [] });
+    const [saveMessage, setSaveMessage] = useState('');
 
     const dispatch = useDispatch();
 
@@ -20,7 +22,13 @@ const CollectionEditor = ({ collection, isLoading }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        dispatch(updateCollection(collection._id, { ...collection, title: input.title, tags: input.tags }));
+        setSaveMessage('Saving...');
+        dispatch(updateCollection(collection._id, { ...collection, title: input.title, tags: input.tags }))
+        .then(res => {
+            if (res.data.message) {
+                setSaveMessage(res.data.message);
+            }
+        });
     }
 
     return (
@@ -48,7 +56,20 @@ const CollectionEditor = ({ collection, isLoading }) => {
                         maxLength={30}
                     />
                 </label>
-                <input className="small-button" type="button" onClick={handleSubmit} value="Save" />
+                <div className="flex">
+                    <Tooltip
+                        showOnClick={true}
+                        content={saveMessage}
+                        direction={"right"}
+                    >
+                        <input
+                            className="small-button v-margin"
+                            type="button"
+                            value="Save"
+                            onClick={handleSubmit}
+                        />
+                    </Tooltip>
+                </div>
             </form>
             { isLoading && <LoadingSpinner /> }
         </div>

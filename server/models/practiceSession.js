@@ -16,7 +16,7 @@ export const practiceSessionSchema = mongoose.Schema({
     userId: String,
     title: String,
     score: Number,
-    date: { type: Date, default: new Date() },
+    date: { type: Date, default: Date.now() },
     practiceQuestions: [practiceQuestionSchema]
 }, { versionKey: false });
 

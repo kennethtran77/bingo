@@ -6,6 +6,8 @@ import QuestionVisualizer from './QuestionVisualizer';
 import { createQuestion, deleteQuestion } from '../../../../actions/questions';
 import LoadingSpinner from '../../../widgets/LoadingSpinner';
 
+import NewButton from '../../../widgets/NewButton';
+
 const QuestionsDisplayer = ({ concept }) => {
     const dispatch = useDispatch();
     const { questions, isLoading } = useSelector(state => state.questionsSlice);
@@ -15,17 +17,8 @@ const QuestionsDisplayer = ({ concept }) => {
     const handleClick = e => {
         e.preventDefault();
 
-        const newQuestion = {
-            concept: concept._id,
-            type: 'FillInTheBlank',
-            title: 'New Question',
-            text: "Enter some text for this question.",
-            answer: [],
-            options: [],
-        };
-
         // dispatch the action to invoke the API
-        dispatch(createQuestion(concept, newQuestion));
+        dispatch(createQuestion(concept));
     }
 
     const remove = question => dispatch(deleteQuestion(concept, question._id));
@@ -46,7 +39,7 @@ const QuestionsDisplayer = ({ concept }) => {
                     )) }
                 </ul>
                 { isLoading && <LoadingSpinner/> }
-                <button onClick={handleClick} className="plus" aria-label="Create New Question" title="Create New Question"></button>
+                <NewButton onClick={handleClick} aria-label="Create New Question" tooltip="Create New Question" />
             </div>
         </div>
     );

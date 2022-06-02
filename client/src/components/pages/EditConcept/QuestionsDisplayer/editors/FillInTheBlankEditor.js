@@ -1,22 +1,27 @@
 import React, { useEffect } from 'react';
 import InputCloze from '../../../../widgets/InputCloze';
+import NewButton from '../../../../widgets/NewButton';
 
 const FillInTheBlankEditor = ({ input, setInput }) => {
-    // Readjust input.options and input.answer whenever switching to FillInTheBlank
+    // Ensure that input.answer always contains at least one input field
     useEffect(() => {
-        // Clear input.options array
-        setInput(prevState => ({ ...prevState, options: [] }));
-
-        // Make sure input.answer is correct if empty
-        if (input.answer.length < 1) {
-            setInput(prevState => ({ ...prevState, answer: [''] }));
+        if (!input.answer.length) {
+            setInput(prevInput => ({ ...prevInput, answer: [''] }));
         }
-    }, [input.type, setInput, input.answer]);
+    }, [input, setInput]);
+
+    const addBlankAtEnd = () => {
+        setInput(prevInput => ({
+            ...prevInput,
+            answer: prevInput.answer.concat([[], ''])
+        }));
+    };
 
     return (
         <>
             <label>
                 Cloze Field
+                <NewButton onClick={addBlankAtEnd} ariaLabel="Add Blank At End" tooltip="Add Blank At End" />
                 <InputCloze
                     input={input}
                     setInput={setInput}

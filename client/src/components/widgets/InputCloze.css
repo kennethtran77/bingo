@@ -2,12 +2,27 @@
     border: rgb(95, 95, 95) 1px solid;
     cursor: text;
     flex-wrap: wrap;
-    padding-bottom: 10px;
+    display: flex;
+    position: relative;
+    height: 100%;
 }
 
-.blanks {
+.input-cloze .blanks {
     display: flex;
     min-height: 40px;
+    position: relative;
+}
+
+.input-cloze .blanks .input-tag {
+    max-width: 200px;
+    word-wrap: break-word;
+    display: inline-block;
+}
+
+.input-cloze .blanks .delete-blank {
+    position: absolute;
+    right: -10px;
+    top: -10px;
 }
 
 .input-cloze #input-tags-field {

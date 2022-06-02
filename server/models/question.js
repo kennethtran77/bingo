@@ -5,7 +5,7 @@ const questionSchema = mongoose.Schema({
     type: { type: String, required: true },
     title: { type: String },
     text: { type: String },
-    answer: { type: [] },
+    answer: { type: [mongoose.Schema.Types.Mixed] },
     options: { type: [String] }
 }, { versionKey: false });
 

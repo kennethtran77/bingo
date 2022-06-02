@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
+
+import InfoIcon from '@mui/icons-material/Info';
+
+import AccordionButton from '../../../widgets/AccordionButton';
 import ConfirmDelete from '../../../widgets/ConfirmDelete';
+import DeleteButton from '../../../widgets/DeleteButton';
+import Tooltip from '../../../widgets/Tooltip';
 
 import QuestionEditor from './editors/QuestionEditor';
 
@@ -16,10 +22,21 @@ const QuestionVisualizer = ({ concept, question, remove }) => {
     : (
         <div className="container secondary">
             <div className="flex space-between">
-                <h2>{question.title}</h2>
+                { question.title ? <h2>{question.title}</h2> : (
+                    <div className="center-flex gap">
+                        <h2>{'<Untitled>'}</h2>
+                        <Tooltip
+                            direction='right'
+                            content='This question will have a blank title during practice.'
+                            showOnClick={false}
+                        >
+                            <InfoIcon />
+                        </Tooltip>
+                    </div>
+                )}
                 <div className="center-flex">
-                    <button className="small-button" onClick={handleToggleEditor}>{showEditor ? 'Hide Editor' : 'Show Editor'}</button>
-                    <span onClick={() => setToDelete(true)} className="h-margin x" aria-label="Delete Question" title="Delete Question"></span>
+                    <AccordionButton open={showEditor} onClick={handleToggleEditor} tooltip={showEditor ? 'Hide Editor' : 'Show Editor'} />
+                    <DeleteButton onClick={() => setToDelete(true)} className="h-margin" aria-label="Delete Question" tooltip="Delete Question" />
                 </div>
             </div>
             { showEditor && <QuestionEditor concept={concept} question={question} /> }

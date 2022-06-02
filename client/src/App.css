@@ -14,50 +14,53 @@ img {
     margin-top: 100px;
 }
 
-.margin {
-    margin: 5px;
-}
-
-.padding {
-    padding: 5px;
-}
-
 .link {
     cursor: pointer;
+    user-select: none;
+    -webkit-user-drag: none;
 }
 
 textarea {
     width: 100%;
     resize: vertical;
     min-height: 60px;
-    max-height: 200px;
+    /* max-height: 200px; */
     font-size: 16px;
     box-sizing: border-box;
     font-family: 'Montserrat', serif;
     padding: 5px;
+    border: rgb(95, 95, 95) 1px solid;
 }
 
-input[type=text], input[type=password], input[type=email], input[type=number], select {
+input[type=text], input[type=password], input[type=email], input[type=number] {
     height: 35px;
     font-size: 16px;
     box-sizing: border-box;
     font-family: 'Montserrat', serif;
+    border: rgb(95, 95, 95) 1px solid;
+    border-radius: 2px;
 }
 
-.container, .popup-content {
+input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, input[type=number]:focus, textarea:focus {
+    outline: black 1px solid;
+    border-radius: 0;
+}
+
+.container {
     border-radius: 5px;
     border: 1px solid rgb(204, 204, 204);
     margin: 10px;
     padding: 15px;
     background-color: white;
-    -webkit-box-shadow: 0px 0px 6px -3px rgba(0,0,0,0.64); 
-    box-shadow: 0px 0px 6px -3px rgba(0,0,0,0.64);
     /* background-color: rgb(248, 252, 255); */
 }
 
+.shadow {
+    -webkit-box-shadow: 0px 0px 6px -3px rgba(0,0,0,0.64); 
+    box-shadow: 0px 0px 6px -3px rgba(0,0,0,0.64);
+}
+
 .secondary {
-    -webkit-box-shadow: none !important;
-    box-shadow: none !important;
     background-color: rgb(228, 243, 255);
     border: 1px solid rgb(183, 222, 255);
 }
@@ -66,124 +69,8 @@ input[type=text], input[type=password], input[type=email], input[type=number], s
     display: flex;
 }
 
-.plus {
-    border: none;
-    color: white;
-    background-color: darkslateblue;
-    border-radius: 50%;
-    text-decoration: none;
-    padding: 1px 5px 1px 5px;
-}
-
-.plus:hover {
-    background-color: rgb(55, 47, 107);
-    cursor: pointer;
-}
-
-.plus::after {
-    content: '+';
-}
-
-
-.save {
-    border: none;
-    color: white;
-    background-color: rgb(255, 199, 79);
-    border-radius: 50%;
-    text-decoration: none;
-    padding: 1px 5px 1px 5px;
-    height: 18px;
-}
-
-.save:hover {
-    background-color: rgb(250, 188, 54);
-    cursor: pointer;
-}
-
-/* .save::after {
-    content: '↓';
-} */
-
-.x {
-    display: inline-block;
-    border: none;
-    color: white;
-    background-color: rgb(209, 0, 0);
-    border-radius: 50%;
-    text-decoration: none;
-    padding: 0 5px 0 5px;
-    height: 19px;
-}
-
-.x::after {
-    content: '×';
-}
-
-.x:hover {
-    background-color: rgb(149, 0, 0);
-    cursor: pointer;
-}
-
-
-.like, .dislike {
-    display: inline-block;
-    border: none;
-    color: white;
-    text-decoration: none;
-    transition: transform .2s;
-}
-
-.like::after {
-    content: '👍';
-}
-
-.dislike::after {
-    content: '👎';
-}
-
-.like:hover, .dislike:hover {
-    transform: scale(1.25); 
-    cursor: pointer;
-}
-
-
-.more {
-    display: inline-block;
-    border: none;
-    color: white;
-    background-color: rgb(51, 51, 51);
-    border-radius: 5px;
-    text-decoration: none;
-    height: 15px;
-    padding: 1px 5px 5px 5px;
-}
-
-.more::after {
-    content: '≡';
-}
-
-.more:hover {
-    background-color: rgb(32, 32, 32);
-    cursor: pointer;
-}
-
-.edit {
-    display: inline-block;
-    border: none;
-    color: white;
-    background-color: rgb(82, 82, 82);
-    border-radius: 50%;
-    text-decoration: none;
-    padding: 0 5px 0 5px;
-    height: 18px;
-}
-
-.edit::after {
-    content: '≡';
-}
-
-.edit:hover {
-    background-color: rgb(51, 51, 51);
+.gap {
+    gap: 5px;
 }
 
 .h-margin {
@@ -194,6 +81,18 @@ input[type=text], input[type=password], input[type=email], input[type=number], s
 .v-margin {
     margin-top: 5px;
     margin-bottom: 5px;
+}
+
+.margin {
+    margin: 5px;
+}
+
+.padding {
+    padding: 5px;
+}
+
+.no-margin {
+    margin: 0;
 }
 
 .small-button {
@@ -263,54 +162,16 @@ input[type=text], input[type=password], input[type=email], input[type=number], s
 }
 
 /*
-Pagination
-*/
-.previous-button {
-    color: black;
-}
-
-.pagination-button {
-    width: 80%;
-    height: 40px;
-    list-style: none;
-    display: flex;
-    justify-content: center;
-}
-  
-.pagination-button a {
-    padding: 10px;
-    margin: 8px;
-    border: 2px solid #0057ba;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: 250ms;
-}
-  
-.pagination-button a:hover {
-    background-color: #80acdf;
-    border: 2px solid #004594;
-    color: white;
-}
-  
-.pagination-active a {
-    color: black;
-    background-color: white;
-}
-  
-.pagination-disabled a {
-    background-color: #80acdf;
-    color: black;
-    cursor: not-allowed;
-}
-
-.pagination-disabled a:hover {
-    background-color: #80acdf;
-    color: black;
-}
-
-/*
 Responsive
 */
+@media only screen and (min-width: 620px) {
+    .main {
+        margin-left: 15%;
+        margin-right: 15%;
+        margin-bottom: 15px;
+    }
+}
+
 @media only screen and (min-width: 1200px) {
     .row {
         display: flex;
@@ -322,13 +183,5 @@ Responsive
     
     .min {
         flex-grow: 1;
-    }
-}
-
-@media only screen and (min-width: 620px) {
-    .main {
-        margin-left: 15%;
-        margin-right: 15%;
-        margin-bottom: 15px;
     }
 }

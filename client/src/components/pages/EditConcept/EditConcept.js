@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Redirect, useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 import LoadingSpinner from '../../widgets/LoadingSpinner';
 
 import ConceptEditor from './QuestionsDisplayer/editors/ConceptEditor'
@@ -18,7 +18,7 @@ const EditConcept = ({ userId }) => {
 
     // If we finished loading but couldn't find the concept, return to homepage
     if ((!concept && !isLoading) || concept.creator !== userId)
-        return <Redirect to="/"/>;
+        return <Navigate to="/"/>;
 
     return (
         <>

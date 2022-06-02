@@ -4,9 +4,10 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { addToCollection, removeFromCollection } from '../../actions/collections';
 
-import LikeButton from './LikeButton';
+import LikeDislike from './LikeDislike';
 import ConfirmDelete from './ConfirmDelete';
-import DislikeButton from './DislikeButton';
+import { dislikeConcept, likeConcept } from '../../actions/concepts';
+import DeleteButton from './DeleteButton';
 
 const ConceptVisualizer = ({ concept, remove, userId, showCreator, collection }) => {
     const { users } = useSelector(state => state.usersSlice);
@@ -29,6 +30,9 @@ const ConceptVisualizer = ({ concept, remove, userId, showCreator, collection })
 
     const handleAddRemoveToCollection = e => {
         e.preventDefault();
+
+        if (!collection)
+            return;
 
         // Remove
         if (collection.concepts.includes(concept._id)) {
@@ -60,17 +64,20 @@ const ConceptVisualizer = ({ concept, remove, userId, showCreator, collection })
                         <button onClick={handleAddRemoveToCollection} className="small-button margin">{ collection.concepts.includes(concept._id) ? 'Remove' : 'Add' }</button>
                     ) : (
                         <>
-                            <Link className="small-button margin" to={`/concept/view/${concept._id}`} aria-label="View Concept">View</Link>
-                            { userId === concept.creator && <Link className="small-button margin" to={`/concept/edit/${concept._id}`} aria-label="Edit Concept">Edit</Link> }
-                            <Link className="small-button margin" to={`/practice/concept/${concept._id}`} aria-label="Practice Concept">Practice</Link>
-                            { userId === concept.creator && <span onClick={() => setToDelete(true)} className="x" aria-label="Delete Concept" title="Delete Concept"></span> }
+                            <Link className="small-button link margin" to={`/concept/view/${concept._id}`} aria-label="View Concept">View</Link>
+                            { userId === concept.creator && <Link className="small-button link margin" to={`/concept/edit/${concept._id}`} aria-label="Edit Concept">Edit</Link> }
+                            <Link className="small-button link margin" to={`/practice/concept/${concept._id}`} aria-label="Practice Concept">Practice</Link>
+                            { userId === concept.creator && <DeleteButton onClick={() => setToDelete(true)} ariaLabel="Delete Concept" tooltip="Delete Concept"></DeleteButton> }
                         </>
                     ) }
                 </div>
-                <div className="left-flex">
-                    <LikeButton conceptId={concept._id}/>
-                    <DislikeButton conceptId={concept._id}/>
-                </div>
+                <LikeDislike
+                    userId={userId}
+                    likes={concept.likes}
+                    dislikes={concept.dislikes}
+                    like={() => dispatch(likeConcept(concept._id))}
+                    dislike={() => dispatch(dislikeConcept(concept._id))}
+                />
             </div>
         </div>
     )

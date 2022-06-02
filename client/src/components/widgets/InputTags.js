@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
+import DeleteButton from './DeleteButton';
 
 import './InputTags.css';
 
-const InputTags = ({ className = '', id = '', tags, addTag, removeTag, placeholder, maxLength }) => {
-    const [input, setInput] = useState('');
+const InputTags = ({ className = '', id = '', tags, addTag, removeTag, placeholder, maxLength, onKeyDown = (e) => {} }, ref) => {
+    const [value, setValue] = useState('');
     const [fieldState, setFieldState] = useState('');
     
     const handleKeyDown = e => {
+        onKeyDown(e);
+
         const value = e.target.value.trim();
 
         if (e.key === 'Enter' && value) {
@@ -16,12 +19,12 @@ const InputTags = ({ className = '', id = '', tags, addTag, removeTag, placehold
                 return;
             }
             
-            setInput('');
+            setValue('');
             addTag(value);
         } else if (e.key === 'Backspace' && !value) {
             e.preventDefault();
             if (tags.length > 0) {
-                setInput(tags[tags.length - 1]);
+                setValue(tags[tags.length - 1]);
                 removeTag(tags[tags.length - 1]);
             }
         }
@@ -38,15 +41,16 @@ const InputTags = ({ className = '', id = '', tags, addTag, removeTag, placehold
     return (
         <div className={styling} id={id}>
             { tags && tags.map((tag, index) => (
-                <span className="input-tag" key={index}>
-                    {tag}
-                    <span className="x h-margin" onClick={() => removeTag(tag)}></span>
+                <span className="input-tag" tabIndex={0} key={index} >
+                    <span className="text">{tag}</span>
+                    <DeleteButton className="delete h-margin" onClick={() => removeTag(tag)} fontSize={'15px'} />
                 </span>
             )) }
             <input
                 id="input-tags-field"
                 type="text"
-                value={input}
+                value={value}
+                ref={ref}
                 maxLength={maxLength}
                 autoComplete="off"
                 placeholder={placeholder ? placeholder : ""}
@@ -55,10 +59,10 @@ const InputTags = ({ className = '', id = '', tags, addTag, removeTag, placehold
                 onMouseLeave={() => { if (fieldState === 'hover') setFieldState('') }}
                 onFocus={() => setFieldState('focused')}
                 onBlur={() => setFieldState('')}
-                onChange={e => setInput(e.target.value)}
+                onChange={e => setValue(e.target.value)}
             />
         </div>
     )
 }
 
-export default InputTags;
+export default React.forwardRef(InputTags);

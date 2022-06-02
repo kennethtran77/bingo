@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const api = axios.create({ baseURL: 'http://192.168.2.251:5000' });
+const api = axios.create({ baseURL: 'http://localhost:5000' });
 
 // attach the JWT token to ea2ch request
 api.interceptors.request.use(req => {
@@ -14,7 +14,7 @@ api.interceptors.request.use(req => {
 // concepts
 export const fetchConcepts = () => api.get(`/concepts`);
 export const fetchConceptsBySearch = (query) => api.get(`/concepts/search?query=${query.search || ''}&tags=${query.tags}`);
-export const createConcept = (newConcept) => api.post(`/concepts`, newConcept);
+export const createConcept = () => api.post(`/concepts`);
 export const updateConcept = (conceptId, updatedConcept) => api.patch(`/concepts/${conceptId}`, updatedConcept);
 export const deleteConcept = (conceptId) => api.delete(`/concepts/${conceptId}`);
 export const likeConcept = (conceptId) => api.post(`/concepts/like/${conceptId}`);
@@ -22,7 +22,7 @@ export const dislikeConcept = (conceptId) => api.post(`/concepts/dislike/${conce
 
 // questions
 export const fetchQuestions = (conceptId) => api.get(`/concepts/${conceptId}/questions`);
-export const createQuestion = (conceptId, newQuestion) => api.post(`/concepts/${conceptId}/questions`, newQuestion);
+export const createQuestion = (conceptId) => api.post(`/concepts/${conceptId}/questions`);
 export const updateQuestion = (conceptId, questionId, updatedQuestion) => api.patch(`/concepts/${conceptId}/questions/${questionId}`, updatedQuestion);
 export const deleteQuestion = (conceptId, questionId) => api.delete(`/concepts/${conceptId}/questions/${questionId}`);
 export const verifyQuestion = (conceptId, questionId) => api.get(`/concepts/${conceptId}/questions/verify/${questionId}`);
@@ -35,7 +35,7 @@ export const deleteComment = (conceptId, commentId) => api.delete(`/concepts/${c
 
 // collections
 export const fetchCollections = () => api.get(`/collections`);
-export const createCollection = (collection) => api.post(`/collections`, { collection });
+export const createCollection = () => api.post(`/collections`);
 export const deleteCollection = (collectionId) => api.delete(`/collections/${collectionId}`);
 export const updateCollection = (collectionId, updatedCollection) => api.patch(`/collections/${collectionId}`, updatedCollection);
 export const addToCollection = (collectionId, conceptId) => api.patch(`/collections/add/${collectionId}`, { conceptId });

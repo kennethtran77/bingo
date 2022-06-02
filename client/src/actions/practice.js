@@ -11,13 +11,13 @@ export const fetchPracticeSessions = () => async (dispatch) => {
     }
 }
 
-export const processSession = (title, inputs, history) => async (dispatch) => {
+export const processSession = (title, inputs, navigate) => async (dispatch) => {
     try {
         const { data } = await api.processSession(title, inputs);
         dispatch({ type: 'practice/create', payload: data });
 
         // Redirect to the results page
-        history.push(`/practice/results/${data._id}`);
+        navigate(`/practice/results/${data._id}`, { replace: true });
     } catch (error) {
         console.log(error.message);
     }

@@ -1,0 +1,13 @@
+.accordion-button {
+    display: inline-block;
+    background-color: rgb(82, 82, 82);
+    color: white;
+    border-radius: 50%;
+    text-decoration: none;
+    padding: 1px;
+}
+
+.accordion-button:hover, .accordion-button:focus {
+    background-color: rgb(53, 53, 53);
+    cursor: pointer;
+}

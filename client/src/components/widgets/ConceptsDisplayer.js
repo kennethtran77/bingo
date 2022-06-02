@@ -9,6 +9,8 @@ import ConceptVisualizer from './ConceptVisualizer';
 import SearchBox from './SearchBox';
 import LoadingSpinner from './LoadingSpinner';
 
+import NewButton from './NewButton';
+
 import './ConceptsDisplayer.css';
 
 /**
@@ -25,19 +27,8 @@ const ConceptsDisplayer = ({ title, concepts, isLoading, userId, showCreator, co
             return;
 
         e.preventDefault();
-
-        const newConcept = {
-            title: 'New Concept',
-            text: '',
-            tags: [],
-            public: true,
-            questions: [],
-            likes: [],
-            dislikes: [],
-            comments: []
-        };
         
-        dispatch(createConcept(newConcept));
+        dispatch(createConcept());
     }
     
     return !userId ? (<h2>Please log in to view concepts.</h2>) : (
@@ -62,11 +53,10 @@ const ConceptsDisplayer = ({ title, concepts, isLoading, userId, showCreator, co
                 </ul>
                 { isLoading && <LoadingSpinner/> }
                 { enableCreating &&
-                    <span
+                    <NewButton
                         onClick={handleCreateConcept}
-                        className="plus"
                         aria-label="create new concept"
-                        title="Create New Concept"
+                        tooltip="Create New Concept"
                     />
                 }
                 <Paginate

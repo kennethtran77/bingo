@@ -1,29 +1,46 @@
-import React, { useState, useRef, createRef } from 'react';
-import { Prompt } from 'react-router-dom';
+import React, { useState } from 'react';
+// import { Prompt } from 'react-router-dom';
 
-import Popup from 'reactjs-popup';
+import SaveButton from './SaveButton';
+import ControlledTooltip from './ControlledTooltip';
+
+import NewButton from './NewButton';
+import DeleteButton from './DeleteButton';
 
 const InputOptions = ({ options, addOption, editOption, removeOption, placeholder }) => {
     const [inputs, setInputs] = useState(options);
 
     // store message and popup open status for each option in component state
     const [messages, setMessages] = useState(options.map(_ => ''));
+    const [open, setOpenStates] = useState(options.map(_ => false));
 
-    const refs = useRef([]);
-
+    /**
+     * Sets the tooltip message for an option that will display upon change
+     * @param {Integer} index the index of the option
+     * @param {String} message the message to set
+     */
     const setMessage = (index, message) => setMessages(prevMessages => {
         let newMessages = [...prevMessages];
         newMessages[index] = message;
         return newMessages;
     });
 
-    // Initiate refs
-    if (refs.current.length !== options.length) {
-        refs.current = Array(options.length).fill().map((_, i) => refs.current[i] || createRef());
-    }
+    /**
+     * Sets whether the tooltip for an option is displayed
+     * @param {Integer} index the index of the option
+     * @param {Boolean} open whether or not the tooltip is displayed
+     */
+    const setOpen = (index, open) => setOpenStates(prevOpen => {
+        let newOpen = [...prevOpen];
+        newOpen[index] = open;
+        return newOpen;
+    });
 
     const madeChanges = JSON.stringify(inputs) !== JSON.stringify(options);
 
+    /**
+     * Adds a new field for an option
+     */
     const handleAddOption = () => {
         let counter = options.length + 1;
         let value = 'New Option ' + counter;
@@ -37,12 +54,23 @@ const InputOptions = ({ options, addOption, editOption, removeOption, placeholde
         setInputs(prevInputs => [...prevInputs, value]);
     }
 
+    /**
+     * Removes an option's field 
+     * @param {Integer} index the index of the option
+     */
     const handleRemoveOption = (index) => {
         removeOption(options[index]);
         setInputs(prevInputs => [...prevInputs.slice(0, index), ...prevInputs.slice(index + 1)]);
     }
 
+    /**
+     * 
+     * @param {Integer} index 
+     * @param {String} newOption 
+     */
     const saveOption = (index, newOption) => {
+        setOpen(index, true);
+
         if (!newOption) {
             setMessage(index, 'Save failed: Options cannot be empty.');
             return;
@@ -55,34 +83,24 @@ const InputOptions = ({ options, addOption, editOption, removeOption, placeholde
 
         editOption(index, newOption);
         setMessage(index, 'Saved!');
-        openPopup(index);
     }
 
     const handleKeyDown = (e, index) => {
         const value = e.target.value.trim();
+        setOpen(index, false);
 
         if (e.key === 'Enter') {
             e.preventDefault();
             saveOption(index, value);
-            openPopup(index);
-        } else {
-            refs.current[index].current.close();
         }
     }
 
-    // open the popup for option with given index with a delay
-    const openPopup = index => {
-        setTimeout(() => {
-            refs.current[index].current.open();
-        }, 10);
-    };
-
     return (
-        <div className="container">
-            <Prompt
+        <div className="container no-margin">
+            {/* <Prompt
                 when={madeChanges}
                 message='You have unsaved changes. Are you sure you want to leave?'
-            />
+            /> */}
             <ul className="remove-bullet">
                 { options && options.map((option, index) => {
                     return (
@@ -91,52 +109,39 @@ const InputOptions = ({ options, addOption, editOption, removeOption, placeholde
                                 type="text"
                                 value={inputs[index]}
                                 onChange={e => setInputs(prevInputs => {
-                                    refs.current[index].current.close();
                                     let newInputs = [...prevInputs];
                                     newInputs[index] = e.target.value;
                                     return newInputs;
                                 })}
                                 placeholder={placeholder}
                                 onKeyDown={(e) => handleKeyDown(e, index)}
+                                onBlur={() => setOpen(index, false)}
                             />
-                            <span
-                                className="save"
-                                style={{ marginLeft: 5 }}
-                                aria-label="Save Option"
-                                title="Save Option"
-                                onClick={e => {
-                                    e.preventDefault();
-                                    saveOption(index, inputs[index]);
-                                }}
+                            <ControlledTooltip
+                                active={open[index]}
+                                setActive={active => setOpen(index, active)}
+                                content={messages[index]}
+                                direction={"right"}
                             >
-                                ↓
-                            </span>
-                            <Popup
-                                ref={refs.current[index]}
-                                trigger={
-                                    // use an empty element as the trigger
-                                    <div style={{
-                                        width: 0,
-                                        height: 0,
-                                        display: 'block',
-                                        visibility: 'hidden'
-                                    }} />
-                                }
-                                position="right center"
-                                closeOnDocumentClick
-                            >
-                                <span>{messages[index]}</span>
-                            </Popup>
-                            <span
+                                <SaveButton
+                                    className="h-margin"
+                                    aria-label="Save Option"
+                                    tooltip="Save Option"
+                                    onClick={e => {
+                                        e.preventDefault();
+                                        saveOption(index, inputs[index]);
+                                    }}
+                                />
+                            </ControlledTooltip>
+                            <DeleteButton
                                 onClick={() => handleRemoveOption(index)}
-                                className="x h-margin"
                                 aria-label="Delete Option"
-                                title="Delete Option"
+                                tooltip="Delete Option"
                             />
                         </li>
                     );
                 })}
-                { <span onClick={handleAddOption} className="plus" aria-label="Create New Option" title="Create New Option"></span> }
+                { <NewButton onClick={handleAddOption} aria-label="Create New Option" tooltip="Create New Option" /> }
             </ul>
         </div>
     );

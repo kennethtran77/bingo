@@ -10,6 +10,7 @@ import '../../widgets/ConceptsDisplayer.css';
 import { createCollection, deleteCollection } from '../../../actions/collections';
 import Paginate from '../../widgets/Paginate';
 import LoadingSpinner from '../../widgets/LoadingSpinner';
+import NewButton from '../../widgets/NewButton';
 
 const CollectionsDisplayer = ({ userId }) => {
     const [searched, setSearched] = useState(false);
@@ -30,7 +31,7 @@ const CollectionsDisplayer = ({ userId }) => {
 
         e.preventDefault();
 
-        dispatch(createCollection('New Collection'));
+        dispatch(createCollection());
     }
     
     const remove = collection => dispatch(deleteCollection(collection._id));
@@ -52,7 +53,7 @@ const CollectionsDisplayer = ({ userId }) => {
                     }
                 </ul>
                 { isLoading && <LoadingSpinner /> }
-                <span onClick={handleCreateCollection} className="plus" aria-label="Create New Collection" title="Create New Collection"></span>
+                <NewButton onClick={handleCreateCollection} className="plus" aria-label="Create New Collection" tooltip="Create New Collection" />
                 <Paginate
                     items={collections}
                     itemsPerPage={5}

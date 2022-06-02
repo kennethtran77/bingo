@@ -1,5 +1,3 @@
-import mongoose from 'mongoose';
-
 import UserModel from '../models/user.js';
 import ConceptModel from '../models/concept.js';
 import QuestionModel from '../models/question.js';
@@ -10,11 +8,10 @@ import { shuffle, verifyQuestion, verifyAnswer } from '../utils.js';
 
 
 // shuffle the ordering in Single Answer, Multiple Answers, and Reorder questions
-const shuffleQuestions = questions => {
-    questions.forEach((question, index) => {
+const shuffleQuestionsOptions = questions => {
+    questions.forEach((question) => {
         if (question.type === 'Reorder' || question.type === 'MultipleAnswers' || question.type === 'SingleAnswer') {
             shuffle(question.options);
-            questions[index] = question;
         }
     });
 };
@@ -44,11 +41,11 @@ export const generateConceptQuestions = async (req, res) => {
 
         // filter
         let generatedQuestions = questions
-            .filter(question => verifyQuestion(question))
-            .slice(0, Math.min(questionsPerSession, questions.length));
+            .filter(question => verifyQuestion(question))  // filter out incomplete/invalid questions
+            .slice(0, Math.min(questionsPerSession, questions.length));  // do not keep more than `questionsPerSession` questions
 
         // shuffle the options in each question
-        shuffleQuestions(generatedQuestions);
+        shuffleQuestionsOptions(generatedQuestions);
 
         res.json(generatedQuestions);
     } catch (error) {
@@ -69,11 +66,11 @@ export const generateCollectionQuestions = async (req, res) => {
         shuffle(questions);
 
         let generatedQuestions = questions
-            .filter(question => verifyQuestion(question))
-            .slice(0, Math.min(questionsPerSession, questions.length));
+            .filter(question => verifyQuestion(question))  // filter out incomplete/invalid questions
+            .slice(0, Math.min(questionsPerSession, questions.length));  // do not keep more than `questionsPerSession` questions
 
         // shuffle the options in each question
-        shuffleQuestions(generatedQuestions);
+        shuffleQuestionsOptions(generatedQuestions);
 
         res.json(generatedQuestions);
     } catch (error) {
@@ -86,11 +83,11 @@ export const processSession = async (req, res) => {
     const userId = req.user.id;
 
     try {
-        if (!mongoose.Types.ObjectId.isValid(userId))
-            return res.status(404).send(`No user found with id ${userId}`);
-
         // fetch the user
         const user = await UserModel.findById(userId);
+
+        if (!user)
+            return res.status(404).send(`No user found with id ${userId}`);
 
         const practiceQuestions = inputs.map(input => ({
             concept: input.conceptId,
@@ -111,7 +108,8 @@ export const processSession = async (req, res) => {
             userId,
             title,
             practiceQuestions,
-            score
+            score,
+            date: Date.now()
         }).save();
 
         user.sessionsCompleted.push(practiceSession);
@@ -128,15 +126,29 @@ export const fetchPracticeQuestionChanged = async (req, res) => {
     try {
         const { sessionId, questionId } = req.query;
 
-        if (!mongoose.Types.ObjectId.isValid(sessionId))
+        const practiceSession = await PracticeSessionModel.findById(sessionId);
+
+        if (!practiceSession)
             res.status(200).send(false);
 
-        const practiceSession = await PracticeSessionModel.findById(sessionId);
-        const question = await QuestionModel.findById(questionId);
+        // get the newest version of the question with id `questionId`
+        const currentQuestion = await QuestionModel.findById(questionId);
 
+        // if the question was deleted, then mark it as changed automatically
+        if (!currentQuestion) {
+            res.status(200).send(true);
+        }
+
+        // get the practice question from the practice session
         const practiceQuestion = practiceSession.practiceQuestions.filter(q => q.question.toString() === questionId)[0];
 
-        res.status(200).send(question.title !== practiceQuestion.title || question.type !== practiceQuestion.type || question.text !== practiceQuestion.text || JSON.stringify(question.type === 'Reorder' ? question.answer : question.answer.sort()) !== JSON.stringify(practiceQuestion.type === 'Reorder' ? practiceQuestion.answer : practiceQuestion.answer.sort()) || JSON.stringify(question.options.sort()) !== JSON.stringify(practiceQuestion.options.sort()))
+        const titleChanged = currentQuestion.title !== practiceQuestion.title;
+        const typeChanged = currentQuestion.type !== practiceQuestion.type;
+        const textChanged = currentQuestion.text !== practiceQuestion.text;
+        const optionsChanged = JSON.stringify([...currentQuestion.options].sort()) !== JSON.stringify([...practiceQuestion.options].sort());
+        const answerChanged = currentQuestion.type === practiceQuestion.type && JSON.stringify(currentQuestion.answer) !== JSON.stringify(practiceQuestion.answer);
+
+        res.status(200).send(titleChanged || typeChanged || textChanged || optionsChanged || answerChanged);
     } catch (error) {
         console.log(error);
     }

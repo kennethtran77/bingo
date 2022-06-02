@@ -14,10 +14,10 @@ export const getCollections = async (req, res) => {
 };
 
 export const createCollection = async (req, res) => {
-    const { collection } = req.body;
-
     const newCollection = new CollectionModel({
-        ...collection,
+        title: 'New Collection',
+        concepts: [],
+        tags: [],
         creator: req.user.id
     });
 
@@ -44,6 +44,9 @@ export const updateCollection = async (req, res) => {
         if (req.user.id !== collection.creator.toString())
             return res.status(403).json({ message: 'Unauthorized action' });
         
+        if (title.length < 3)
+            return res.status(200).json({ message: 'Save failed: title must be at least 3 characters long.' });
+
         const updatedCollection = {
             creator: collection.creator,
             concepts: collection.concepts,
@@ -54,7 +57,7 @@ export const updateCollection = async (req, res) => {
 
         await CollectionModel.findByIdAndUpdate(collectionId, updatedCollection, { new: true });
 
-        res.status(200).json(updatedCollection);
+        res.status(200).json({ updatedCollection, message: 'Saved collection.' });
     } catch (error) {
         res.status(409).json({ message: error.message });
     };

@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Redirect, useParams, Link } from 'react-router-dom';
+import { Navigate, useParams, Link } from 'react-router-dom';
 
 import { generateConceptQuestions } from '../../../api';
 import LoadingSpinner from '../../widgets/LoadingSpinner';
 
 import Practice from './Practice';
 
-const PracticeConcept = () => {
-    // State hooks
-    const [toRender, setToRender] = useState(<LoadingSpinner />);
-
+const PracticeConcept = ({ userId }) => {
     const { conceptId } = useParams();
+
+    const [questions, setQuestions] = useState(null);
 
     // Pull state from store
     const { concepts, isLoading } = useSelector(state => state.conceptsSlice);
@@ -20,50 +19,37 @@ const PracticeConcept = () => {
     // Check if the concept with the given id exists
     const concept = concepts.find(c => c._id === conceptId);
 
-    // Load the concept and generate the questions
+    // Load the concept questions once the concept is fetched
     useEffect(() => {
-        // If the concept hasn't loaded yet
-        if (isLoading && !concept) {
-            setToRender(<LoadingSpinner />);
-            return;
+        if (concept) {
+            // Fetch questions
+            generateConceptQuestions(concept._id, settings.questionsPerSession)
+                .then(res => {
+                    const questions = res.data;
+                    setQuestions(questions);
+                })
+                .catch(err => console.log(err));
         }
+    }, [concept, settings.questionsPerSession]);
 
-        // If we finished loading but couldn't find the concept, return to homepage
-        if (!concept && !isLoading) {
-            setToRender(<Redirect to="/"/>);
-            return;
-        }
+    // If the concept or its questions hasn't loaded yet, display loading spinner
+    if ((!concept && isLoading) || !questions)
+        return <LoadingSpinner />;
 
-        if (!concept.questions.length) {
-            setToRender(
-                <>
-                    <p>This concept has no practicable questions!</p>
-                    <Link to="/" className="small-button">Go Home</Link>
-                </>
-            );
-        }
+    // If the concept doesn't exist, or is private and does not belong to the current user, return to home
+    if ((!concept && isLoading) || (concept && !concept.public && concept.creator !== userId))
+        return <Navigate to="/"/>
 
-        // Fetch questions
-        generateConceptQuestions(concept._id, settings.questionsPerSession)
-            .then(res => {
-                const questions = res.data;
-
-                if (!questions.length) {
-                    setToRender(
-                        <>
-                            <p>This concept has no practicable questions!</p>
-                            <Link to="/" className="small-button">Go Home</Link>
-                        </>
-                    );
-                    return;
-                }
-
-                setToRender(<Practice questions={questions} title={concept.title} />);
-            })
-            .catch(err => console.log(err));
-    }, [concept, isLoading, settings.questionsPerSession]);
-
-    return toRender;
+    // If the questions loaded and are empty, display error message
+    if (questions && !questions.length)
+        return (
+            <>
+                <p>This concept has no practicable questions!</p>
+                <Link to="/" className="small-button link">Go Home</Link>
+            </>
+        );
+    
+    return <Practice questions={questions} title={concept.title} />;
 }
 
 export default PracticeConcept;

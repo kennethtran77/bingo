@@ -1,16 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import InputOptions from '../../../../widgets/InputOptions';
 
 import Latex from 'react-latex-next';
 
 const MultipleAnswersEditor = ({ input, setInput, handleEditOption }) => {
-    useEffect(() => {
-        // Force answer to be a subset of options
-        if (!input.answer.every(item => input.options.includes(item))) {
-            setInput(prevState => ({ ...prevState, answer: input.options.length ? [input.options[0]] : [] }));
-        }
-    }, [input.answer, input.options, setInput]);
-
     const handleTick = option => {
         // Remove option as answer
         if (input.answer.includes(option)) {
@@ -45,19 +38,23 @@ const MultipleAnswersEditor = ({ input, setInput, handleEditOption }) => {
             </label>
             <label>
                 Answers
-                    <ul className="container remove-bullet">
-                        { input.options.length ? input.options.map((option, index) => (
-                            <li key={index} className="secondary container">
-                                <label><Latex>{option}</Latex></label>
-                                <input
-                                    type="checkbox"
-                                    value={option}
-                                    checked={input.answer.includes(option)}
-                                    onChange={() => handleTick(option)}
-                                />
-                            </li>
-                        )) : <p>Add some options...</p> }
-                    </ul>
+                    <div className="container no-margin">
+                        { !input.options.length ? <p>Create some options first.</p> :
+                            <ul className="remove-bullet">
+                                { input.options.map((option, index) => (
+                                    <li key={index} className="secondary container">
+                                        <label><Latex>{option}</Latex></label>
+                                        <input
+                                            type="checkbox"
+                                            value={option}
+                                            checked={input.answer.includes(option)}
+                                            onChange={() => handleTick(option)}
+                                        />
+                                    </li>
+                                ))}
+                            </ul>
+                        }
+                    </div>
             </label>
         </>
     );
