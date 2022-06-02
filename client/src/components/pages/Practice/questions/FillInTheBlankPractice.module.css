@@ -1,0 +1,12 @@
+.blank {
+    outline: none !important;
+    border-width: 0 0 2px !important;
+    border-color: rgb(68, 68, 68) !important;
+    background-color: none;
+    width: 50%;
+    display: inline;
+}
+
+.blank:focus {
+    border-color: rgb(0, 0, 0) !important;
+}

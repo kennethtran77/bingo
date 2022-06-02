@@ -1,19 +1,18 @@
 import React from 'react';
 
-import './FillInTheBlankPractice.css';
+import style from './FillInTheBlankPractice.module.css';
 
-const FillInTheBlankPractice = ({ question, disabled, styles, input, setInput }) => {
+import { correctColour, incorrectColour } from '../../../../util';
+
+const FillInTheBlankPractice = ({ question, showCorrectAnswer = false, disabled = false, input, setInput }) => {
     return (
         <>
             { question.answer.map((answer, answerIndex) => {
                 let itemStyles = {};
+                const isInputFieldCorrect = question.answer[answerIndex].includes(input[answerIndex]);
 
-                if (question.answer[answerIndex].includes(input[answerIndex])) {
-                    // correct
-                    itemStyles = !styles ? {} : styles.correctAnswer;
-                } else {
-                    // incorrect
-                    itemStyles = !styles ? {} : styles.incorrectAnswer;
+                if (showCorrectAnswer) {
+                    itemStyles.color = isInputFieldCorrect ? correctColour : incorrectColour;
                 }
 
                 return (
@@ -21,7 +20,7 @@ const FillInTheBlankPractice = ({ question, disabled, styles, input, setInput })
                     Array.isArray(answer) ? (
                         <input
                             type="text"
-                            className="blank"
+                            className={style.blank}
                             style={itemStyles}
                             key={answerIndex}
                             disabled={disabled}
@@ -35,7 +34,7 @@ const FillInTheBlankPractice = ({ question, disabled, styles, input, setInput })
                         />
                     ) : (
                     // Display the text
-                        <span key={answerIndex}>{ answer }</span>
+                        <span key={answerIndex} style={{ wordBreak: 'break-all' }}>{ answer }</span>
                     )
                 )
             } )}

@@ -21,10 +21,15 @@ export const getConcepts = async (req, res) => {
 }
 
 export const createConcept = async (req, res) => {
-    const concept = req.body;
-
     const newConcept = new ConceptModel({
-        ...concept,
+        title: 'New Concept',
+        text: '',
+        tags: [],
+        public: true,
+        questions: [],
+        likes: [],
+        dislikes: [],
+        comments: [],
         creator: req.user.id
     });
 
@@ -50,6 +55,9 @@ export const updateConcept = async (req, res) => {
     if (req.user.id !== concept.creator.toString())
         return res.status(403).json({ message: 'Unauthorized action' });
 
+    if (title.length < 3)
+        return res.status(200).json({ message: 'Save failed: title must be at least 3 characters long.' });
+
     concept.title = title;
     concept.text = text;
     concept.tags = tags;
@@ -58,7 +66,7 @@ export const updateConcept = async (req, res) => {
 
     await concept.save();
 
-    res.status(200).json(concept);
+    res.status(200).json({ updatedConcept: concept, message: 'Saved concept.' });
 }
 
 export const deleteConcept = async (req, res) => {

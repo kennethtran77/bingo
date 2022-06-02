@@ -18,7 +18,7 @@ const settingsReducer = (state = { settings: { questionsPerSession: 10 }, isLoad
             return { ...state, messageTimer: action.payload };
         default:
             return state;
-    };
+    }
 };
 
 export default settingsReducer;

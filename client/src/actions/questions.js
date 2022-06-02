@@ -27,10 +27,10 @@ export const fetchQuestions = (concept) => async (dispatch, getState) => {
     }
 };
 
-export const createQuestion = (concept, newQuestion) => async (dispatch) => {
+export const createQuestion = (concept) => async (dispatch) => {
     try {
         dispatch({ type: 'questions/startLoading' });
-        const { data } = await api.createQuestion(concept._id, newQuestion);
+        const { data } = await api.createQuestion(concept._id);
         dispatch({
             type: 'questions/create',
             payload: data
@@ -54,13 +54,17 @@ export const createQuestion = (concept, newQuestion) => async (dispatch) => {
 export const updateQuestion = (concept, questionId, updatedQuestion) => async (dispatch) => {
     try {
         dispatch({ type: 'questions/startLoading' });
-        const { data } = await api.updateQuestion(concept._id, questionId, updatedQuestion);
-        dispatch({
-            type: 'questions/update',
-            payload: data
-        });
+        const res = await api.updateQuestion(concept._id, questionId, updatedQuestion);
+
+        if (res.data.updatedQuestion) {
+            dispatch({
+                type: 'questions/update',
+                payload: res.data.updatedQuestion
+            });
+        }
 
         dispatch({ type: 'questions/stopLoading' });
+        return res;
     } catch (error) {
         console.log(error);
     }

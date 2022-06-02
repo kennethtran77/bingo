@@ -52,7 +52,6 @@ export const getQuestion = async (req, res) => {
 
 export const createQuestion = async (req, res) => {
     const { conceptId } = req.params;
-    const question = req.body;
 
     try {
         // Check to see if the concept with given id exists
@@ -66,7 +65,15 @@ export const createQuestion = async (req, res) => {
             return res.status(403).json({ message: 'Unauthorized action' });
 
         // create the new question document
-        const newQuestion = await new QuestionModel({ ...question, creator: req.userId }).save();
+        const newQuestion = await new QuestionModel({
+            concept: conceptId,
+            type: 'FillInTheBlank',
+            title: 'New Question',
+            text: 'Enter some text for this question.',
+            answer: [],
+            options: [],
+            creator: req.userId
+        }).save();
 
         // add the desired question
         concept.questions.push(newQuestion);
@@ -91,7 +98,7 @@ export const updateQuestion = async (req, res) => {
 
     if (req.user.id !== concept.creator.toString())
         return res.status(403).json({ message: 'Unauthorized action' });
-    
+
     const updatedQuestion = {
         concept: conceptId,
         type,
@@ -104,7 +111,12 @@ export const updateQuestion = async (req, res) => {
 
     await QuestionModel.findByIdAndUpdate(questionId, updatedQuestion, { new: true });
 
-    res.status(200).json(updatedQuestion);
+    let responseObj = { updatedQuestion };
+
+    if (!verifyQ(updatedQuestion))
+        responseObj.message = 'This question is incomplete/invalid. It will not be shown during practice.';
+
+    res.status(200).json(responseObj);
 }
 
 export const deleteQuestion = async (req, res) => {

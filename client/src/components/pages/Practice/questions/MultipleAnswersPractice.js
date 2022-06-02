@@ -3,7 +3,9 @@ import React from 'react';
 import 'katex/dist/katex.min.css';
 import Latex from 'react-latex-next';
 
-const MultipleAnswersPractice = ({ question, disabled, styles, input, setInput }) => {
+import { correctColour, incorrectColour } from '../../../../util';
+
+const MultipleAnswersPractice = ({ question, showCorrectAnswer = false, disabled = false, input, setInput }) => {
 
     const handleTick = option => {
         if (input.includes(option)) {
@@ -19,13 +21,12 @@ const MultipleAnswersPractice = ({ question, disabled, styles, input, setInput }
         <ul className="remove-bullet">
             { question.options.map((option, optionIndex) => {
                 let itemStyles = {};
+                const isCorrect = input.includes(option) && question.answer.includes(option);
 
-                if (input.includes(option) && question.answer.includes(option)) {
-                    // correct
-                    itemStyles = !styles ? {} : styles.correctAnswer;
-                } else {
-                    // incorrect
-                    itemStyles = !styles ? {} : styles.incorrectAnswer;
+                if (showCorrectAnswer) {
+                    itemStyles.borderColor = isCorrect ? correctColour : incorrectColour;
+                    itemStyles.borderStyle = 'solid';
+                    itemStyles.borderWidth = '2px';
                 }
 
                 return (

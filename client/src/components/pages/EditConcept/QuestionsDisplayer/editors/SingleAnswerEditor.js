@@ -3,9 +3,7 @@ import InputOptions from '../../../../widgets/InputOptions';
 
 import Latex from 'react-latex-next';
 
-import Select from 'react-select';
-
-import selectStyles from '../../../../selectStyles.js';
+import Dropdown from '../../../../widgets/Dropdown';
 
 const SingleAnswerEditor = ({ input, setInput, handleEditOption }) => {
     const handleAddOption = option => setInput(prevInput => {
@@ -36,7 +34,7 @@ const SingleAnswerEditor = ({ input, setInput, handleEditOption }) => {
 
     const options = input.options.map(option => ({
         value: option,
-        label: <Latex>{option}</Latex>
+        display: <Latex>{option}</Latex>
     }));
 
     return (
@@ -53,19 +51,13 @@ const SingleAnswerEditor = ({ input, setInput, handleEditOption }) => {
             </label>
             <label>
                 Answer
-                <Select
-                    options={options}
-                    isSearchable={false}
-                    value={{
+                <Dropdown
+                    items={options}
+                    currItem={{
                         value: input.answer[0],
-                        label: !input.answer.length ? '...' : <Latex>{input.answer[0]}</Latex>
+                        display: !input.answer.length ? '...' : <Latex>{input.answer[0]}</Latex>
                     }}
-                    onChange={(value, action) => {
-                        if (action.action === 'select-option') {
-                            setInput(prevState => ({ ...prevState, answer: [value.value]}))
-                        }
-                    }}
-                    styles={selectStyles}
+                    onChange={newItem => setInput(prevState => ({ ...prevState, answer: [newItem.value]} ))}
                 />
             </label>
         </>

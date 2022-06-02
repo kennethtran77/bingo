@@ -21,29 +21,27 @@ const setTimedMessage = (message, colour, interval) => (dispatch, getState) => {
     dispatch({ type: 'auth/setMessageTimer', payload: newTimer });
 }
 
-export const login = (loginInput, history) => async (dispatch) => {
+export const login = (loginInput) => async (dispatch) => {
     try {
         // login
         dispatch({ type: 'auth/startLoading' });
         const { data } = await api.login(loginInput);
 
         // load practice sessions
-        if (data?.token) {
+        if (data && data.token) {
             localStorage.setItem('profile', JSON.stringify(data));
             window.dispatchEvent(new Event('storage')); // force storage event to occur
             dispatch(fetchPracticeSessions());
         }
 
         dispatch({ type: 'auth/stopLoading' });
-
-        history.push('/');
     } catch (error) {
         dispatch(setTimedMessage(error.response.data.message, 'red', 2500));
         dispatch({ type: 'auth/stopLoading' });
     }
 };
 
-export const signUp = (signUpInput, history) => async (dispatch) => {
+export const signUp = (signUpInput, navigate) => async (dispatch) => {
     try {
         // signup
         dispatch({ type: 'auth/startLoading' });
@@ -61,7 +59,7 @@ export const signUp = (signUpInput, history) => async (dispatch) => {
         localStorage.setItem('profile', JSON.stringify(data));
         dispatch({ type: 'auth/stopLoading' });
 
-        history.push('/');
+        navigate('/', { replace: true });
     } catch (error) {
         dispatch(setTimedMessage(error.response.data.message, 'red', 2500));
         dispatch({ type: 'auth/stopLoading' });

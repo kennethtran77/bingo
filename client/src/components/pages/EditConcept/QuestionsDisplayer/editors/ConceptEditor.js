@@ -1,11 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { Prompt } from 'react-router';
 
 import { EditorState, convertToRaw, ContentState } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
-
-import Popup from 'reactjs-popup';
 
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
@@ -17,16 +14,17 @@ import './ConceptEditor.css';
 
 import { updateConcept } from '../../../../../actions/concepts';
 
+import Tooltip from '../../../../widgets/Tooltip';
 import InputTags from '../../../../widgets/InputTags';
 import LoadingSpinner from '../../../../widgets/LoadingSpinner';
 
 const ConceptEditor = ({ concept, isLoading }) => {
     const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
     const [input, setInput] = useState({ title: '', text: '', tags: [], public: true });
+    const [hasFocus, setHasFocus] = useState(false);
+    const [saveMessage, setSaveMessage] = useState('');
 
     const dispatch = useDispatch();
-
-    const savedPopupRef = useRef(null);
 
     const madeChanges = input.title !== concept.title || input.text !== concept.text || input.tags !== concept.tags || input.public !== concept.public;
 
@@ -46,16 +44,21 @@ const ConceptEditor = ({ concept, isLoading }) => {
 
     const handleSubmit = e => {
         e.preventDefault();
-        dispatch(updateConcept(concept._id, input));
-        savedPopupRef.current.open();
+        setSaveMessage('Saving...');
+        dispatch(updateConcept(concept._id, input))
+        .then(res => {
+            if (res.data.message) {
+                setSaveMessage(res.data.message);
+            }
+        });
     };
 
     return (
         <div className="editor">
-            <Prompt
+            {/* <Prompt
                 when={madeChanges}
                 message='You have unsaved changes. Are you sure you want to leave?'
-            />
+            /> */}
             <h2>Edit Concept</h2>
             <form className="form">
                 <label>
@@ -72,9 +75,11 @@ const ConceptEditor = ({ concept, isLoading }) => {
                     Text
                     <Editor
                         wrapperClassName="wrapper-class"
-                        editorClassName="editor-class"
+                        editorClassName={`editor-class ${hasFocus ? 'focus' : ''}`}
                         toolbarClassName="toolbar-class"
                         editorState={editorState}
+                        onFocus={() => setHasFocus(true)}
+                        onBlur={() => setHasFocus(false)}
                         onEditorStateChange={newState => {
                             setEditorState(newState);
                             setInput({ ...input, text: draftToHtml(convertToRaw(newState.getCurrentContent()))});
@@ -105,29 +110,18 @@ const ConceptEditor = ({ concept, isLoading }) => {
                     />
                 </label>
                 <div className="flex">
-                    <input
-                        className="small-button v-margin"
-                        type="button"
-                        value="Save"
-                        onClick={handleSubmit}
-                    />
-                    <Popup
-                        ref={savedPopupRef}
-                        trigger={
-                            // use an empty element as the trigger
-                            <div style={{
-                                width: 0,
-                                height: 45,
-                                display: 'inline-block',
-                                visibility: 'hidden',
-                            }} />
-                        }
-                        position="right center"
-                        closeOnDocumentClick
-                        closeOnEscape
+                    <Tooltip
+                        showOnClick={true}
+                        content={saveMessage}
+                        direction={"right"}
                     >
-                        <span>Saved concept.</span>
-                    </Popup>
+                        <input
+                            className="small-button v-margin"
+                            type="button"
+                            value="Save"
+                            onClick={handleSubmit}
+                        />
+                    </Tooltip>
                 </div>
             </form>
             { isLoading && <LoadingSpinner /> }

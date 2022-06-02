@@ -1,6 +1,6 @@
-#navbar {
+nav {
     background-color: white;
-    overflow: hidden;
+    overflow: visible;
     width: 100%;
     top: 0;
     margin: 0 0 0 0;
@@ -14,8 +14,8 @@
     margin-left: 15px;
 }
 
-#navbar #navbar-wrapper .more {
-    margin-right: 15px;
+nav h1 {
+    user-select: none;
 }
 
 .nav-button {
@@ -55,8 +55,12 @@
     flex-direction: column;
 }
 
+#navbar-menu {
+    margin-right: 15px;
+}
+
 /*
-Responsive
+Desktop
 */
 @media only screen and (min-width: 1024px) {
     #navbar-options {
@@ -76,10 +80,7 @@ Responsive
 
     #navbar-wrapper {
         margin-left: 15%;
+        margin-right: 15%;
     }
-    
-    #navbar #navbar-wrapper .more {
-        margin-right: 20%;
-    }
-    
+
 }

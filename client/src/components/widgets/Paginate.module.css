@@ -6,12 +6,9 @@ Pagination
     justify-content: center;
 }
 
-.pagination-buttons .previous-button {
-    color: black;
-}
-
 .pagination-buttons .pagination-button {
     width: 40px;
+    height: 45px;
     margin-right: 5px;
     margin-left: 5px;
     background-color: white;
@@ -27,7 +24,10 @@ Pagination
 }
 
 .pagination-buttons .pagination-button:disabled {
-    background-color: rgb(200, 200, 200);
+    background-color: rgb(200, 200, 200) !important;
+    color: black !important;
+    border: 2px solid rgb(200, 200, 200) !important;
+    cursor: not-allowed;
 }
 
 .pagination-buttons .pagination-button:visited {

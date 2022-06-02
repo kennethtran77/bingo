@@ -3,39 +3,33 @@ import React from 'react';
 import 'katex/dist/katex.min.css';
 import Latex from 'react-latex-next';
 
-import Select from 'react-select';
+import Dropdown from '../../../widgets/Dropdown';
+import { correctColour, incorrectColour } from '../../../../util';
 
-import selectStyles from '../../../selectStyles';
-
-const SingleAnswerPractice = ({ question, disabled, styles, input, setInput }) => {
+const SingleAnswerPractice = ({ question, showCorrectAnswer, disabled, input, setInput }) => {
     const options = question.options.map(option => ({
         value: option,
-        label: <Latex>{option}</Latex>
+        display: <Latex>{option}</Latex>
     }));
 
-    let style = !styles ? {} : input[0] === question.answer[0] ? styles.correctAnswer : styles.incorrectAnswer;
+    let headerStyle = {}
+
+    if (showCorrectAnswer) {
+        headerStyle.borderColor = input[0] === question.answer[0] ? correctColour : incorrectColour;
+        headerStyle.borderStyle = 'solid';
+        headerStyle.borderWidth = '2px';
+    }
 
     return (
-        <Select
-            options={options}
-            isSearchable={false}
-            isDisabled={disabled}
-            value={{
+        <Dropdown
+            items={options}
+            currItem={{
                 value: input[0],
-                label: !input[0] ? '...' : <Latex>{input[0]}</Latex>
+                display: !input[0] ? '...' : <Latex>{input[0]}</Latex>
             }}
-            onChange={(value, action) => {
-                if (action.action === 'select-option') {
-                    setInput([value.value]);
-                }
-            }}
-            styles={{
-                ...selectStyles,
-                control: (provided, state) => ({
-                    ...provided,
-                    ...style
-                })
-            }}
+            onChange={newItem => setInput([newItem.value])}
+            disabled={disabled}
+            headerStyle={headerStyle}
         />
     );
 }

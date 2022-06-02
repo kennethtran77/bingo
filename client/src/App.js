@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Route, Switch, Redirect } from 'react-router';
+import { Route, Routes, Navigate } from 'react-router';
 
 import decode from 'jwt-decode';
 
@@ -26,7 +26,6 @@ import ViewConcept from './components/pages/ViewConcept/ViewConcept';
 import Collections from './components/pages/Collections/Collections';
 import EditCollection from './components/pages/Collections/EditCollection';
 
-import 'reactjs-popup/dist/index.css';
 import PracticeCollection from './components/pages/Practice/PracticeCollection.js';
 
 const App = () => {
@@ -47,8 +46,8 @@ const App = () => {
             if (sessionToken) {
                 const parsedToken = JSON.parse(sessionToken);
 
-                if (parsedToken?.token) {
-                    const decoded = decode(parsedToken?.token);
+                if (parsedToken && parsedToken.token) {
+                    const decoded = decode(parsedToken.token);
                     setDecodedToken(decoded);
                 }
             }
@@ -86,29 +85,34 @@ const App = () => {
         </>
     );
 
-    return !decodedToken ? (
-        <Switch>
-            <Route path='/signup'><Signup /></Route>
-            <Route><Login /></Route>
-        </Switch>
-    ) : (
+    if (!decodedToken)
+        return (
+            <Routes>
+                <Route path='*' element={<Navigate to="/" />}></Route>
+                <Route path='/signup' element={<Signup />}></Route>
+                <Route path='/login' element={<Login />}></Route>
+                <Route path='/' element={<Login />}></Route>
+            </Routes>
+        );
+
+    return (
         <>
-            <Switch>
-                <Route exact path="/">{ wrap(Home) }</Route>
-                <Route path="/create" >{ wrap(EditConcept) }</Route>
-                <Route exact path="/concept/view/:conceptId">{ wrap(ViewConcept) }</Route>
-                <Route exact path='/concept/edit/:conceptId' >{ wrap(EditConcept) }</Route>
-                <Route exact path='/practice/concept/:conceptId' >{ wrap(PracticeConcept) }</Route>
-                <Route exact path='/collection/edit/:collectionId' >{ wrap(EditCollection) }</Route>
-                <Route exact path='/practice/collection/:collectionId' >{ wrap(PracticeCollection) }</Route>
-                <Route exact path="/login" ><Redirect to="/" /></Route>
-                <Route exact path="/signup" ><Redirect to="/" /></Route>
-                <Route exact path="/settings">{ wrap(Settings) }</Route>
-                <Route exact path="/browse" >{ wrap(BrowseConcepts) }</Route>
-                <Route exact path="/collections" >{ wrap(Collections) }</Route>
-                <Route exact path="/practice/results/:sessionId">{ wrap(PracticeResults) }</Route>
-                <Route component={Error} />
-            </Switch>
+            <Routes>
+                <Route path='*' element={<Error />}></Route>
+                <Route exact path="/" element={ wrap(Home) }></Route>
+                <Route exact path="/login" element={<Navigate to="/" />}></Route>
+                <Route exact path="/signup" element={<Navigate to="/" />}></Route>
+                <Route path="/create" element={ wrap(EditConcept) }></Route>
+                <Route exact path="/concept/view/:conceptId" element={ wrap(ViewConcept) }></Route>
+                <Route exact path='/concept/edit/:conceptId' element={ wrap(EditConcept) }></Route>
+                <Route exact path='/practice/concept/:conceptId' element={ wrap(PracticeConcept) }></Route>
+                <Route exact path='/collection/edit/:collectionId' element={ wrap(EditCollection) }></Route>
+                <Route exact path='/practice/collection/:collectionId' element={ wrap(PracticeCollection) }></Route>
+                <Route exact path="/settings" element={ wrap(Settings) }></Route>
+                <Route exact path="/browse" element={ wrap(BrowseConcepts) }></Route>
+                <Route exact path="/collections" element={ wrap(Collections) }></Route>
+                <Route exact path="/practice/results/:sessionId" element={ wrap(PracticeResults) }></Route>
+            </Routes>
         </>
     );
 };

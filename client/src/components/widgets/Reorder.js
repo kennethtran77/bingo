@@ -5,9 +5,12 @@ import Latex from 'react-latex-next';
 
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
-import './Reorder.css';
+import styling from './Reorder.module.css';
 
-const Reorder = ({ title, disabled, styles, order, setOrder }) => {
+/**
+ * styles is an array of object styles where styles[index] is the style for the item at index `index` in `order`
+ */
+const Reorder = ({ title, disabled = false, styles, order, setOrder }) => {
     // local input state to prevent visual glitch...
     const [localState, setLocalState] = useState(order);
 
@@ -39,9 +42,9 @@ const Reorder = ({ title, disabled, styles, order, setOrder }) => {
     }, [order]);
 
     return disabled ? (
-        <ul className="reorder" >
+        <ul className={styling["reorder"]} >
             { order.map((item, index) =>
-                <li key={index} style={!styles ? {} : styles.itemStyles(index)}>
+                <li key={index} className={styling["reorder-item"]} style={styles[index]}>
                     <Latex>{item}</Latex>
                 </li>
             )}
@@ -50,11 +53,11 @@ const Reorder = ({ title, disabled, styles, order, setOrder }) => {
         <DragDropContext onDragEnd={handleOnDragEnd}>
             <Droppable droppableId={title}>
                 {(provided) => (
-                    <ul className="reorder" { ...provided.droppableProps} ref={provided.innerRef} >
+                    <ul className={styling["reorder"]} { ...provided.droppableProps} ref={provided.innerRef} >
                         { localState.map((item, index) => (
                             <Draggable key={item} draggableId={item} index={index}>
                                 {(provided) => (
-                                    <li style={!styles ? {} : styles.itemStyles(index)} ref={provided.innerRef} { ...provided.draggableProps } { ...provided.dragHandleProps }>
+                                    <li className={styling["reorder-item"]} style={styles ? styles[index] : {}} ref={provided.innerRef} { ...provided.draggableProps } { ...provided.dragHandleProps }>
                                         <Latex>{item}</Latex>
                                     </li>
                                 )}

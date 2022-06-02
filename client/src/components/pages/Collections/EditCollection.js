@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Redirect, useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 import ConceptsDisplayer from '../../widgets/ConceptsDisplayer';
 import LoadingSpinner from '../../widgets/LoadingSpinner';
 
@@ -23,7 +23,7 @@ const EditCollection = ({ userId }) => {
 
     // If we finished loading but couldn't find the collection, return to homepage
     if ((!collection && !isLoading) || collection.creator.toString() !== userId)
-        return <Redirect to="/"/>;
+        return <Navigate to="/"/>;
 
     return (
         <>

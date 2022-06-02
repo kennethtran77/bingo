@@ -1,11 +1,9 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-import { Prompt } from 'react-router'
-
-import Popup from 'reactjs-popup';
-
 import Latex from 'react-latex-next';
+
+import { FILL_IN_THE_BLANK, REORDER, MULTIPLE_ANSWERS, SINGLE_ANSWER } from '../../../../../util';
 
 import FillInTheBlankEditor from './FillInTheBlankEditor';
 import SingleAnswerEditor from './SingleAnswerEditor';
@@ -13,24 +11,18 @@ import MultipleAnswersEditor from './MultipleAnswersEditor';
 import ReorderEditor from './ReorderEditor';
 
 import { updateQuestion } from '../../../../../actions/questions';
-import { verifyQuestion } from '../../../../../util';
 
 import Modal from '../../../../widgets/Modal';
 import Tooltip from '../../../../widgets/Tooltip';
-
-const FILL_IN_THE_BLANK = 'FillInTheBlank';
-const SINGLE_ANSWER = 'SingleAnswer';
-const MULTIPLE_ANSWERS = 'MultipleAnswers';
-const REORDER = 'Reorder';
+import Dropdown from '../../../../widgets/Dropdown';
+import MenuButton from '../../../../widgets/MenuButton';
 
 const QuestionEditor = ({ concept, question }) => {
-    // answer should always be a subset of options
-    const [input, setInput] = useState({ type: 'FillInTheBlank', title: 'New Question', text: "Enter some text for this question.", answer: [], options: [] });
+    const [input, setInput] = useState({ type: FILL_IN_THE_BLANK, title: 'New Question', text: "Enter some text for this question.", answer: [''], options: [] });
     const [displayPreview, setDisplayPreview] = useState(false);
 
     const [alertOpen, setAlertOpen] = useState(false);
-
-    const savedPopupRef = useRef(null);
+    const [alertMessage, setAlertMessage] = useState('');
 
     const dispatch = useDispatch();
 
@@ -43,87 +35,71 @@ const QuestionEditor = ({ concept, question }) => {
     // True if the question was edited and not saved, False otherwise
     const madeChanges = input.type !== question.type || input.title !== question.title || input.text !== question.text || input.answer !== question.answer || (input.type !== 'FillInTheBlank' && input.options !== question.options);
 
-    const handleEditOption = (index, newOption) => setInput(prevState => {
-        let oldOption = prevState.options[index];
-        let newOptions = [...prevState.options];
+    /**
+     * Replace the option at index `index` with `newOption`
+     * @param {Number} index 
+     * @param {String} newOption 
+     */
+    const handleEditOption = (index, newOption) => setInput(prevInput => {
+        let oldOption = prevInput.options[index];
+        let newOptions = [...prevInput.options];
         newOptions[index] = newOption;
 
         return {
-            ...prevState,
+            ...prevInput,
             options: newOptions,
-            answer: prevState.answer.map(o => o === oldOption ? newOption : o)
+            answer: 
+                prevInput.type === REORDER ?  // replace all instances of oldOption with newOption
+                    prevInput.answer.map(ordering => ordering.map(o => o === oldOption ? newOption : o )) : 
+                    prevInput.answer.map(o => o === oldOption ? newOption : o)
         }
     });
 
-    const fetchEditor = type => {
-        switch(type) {
-            case FILL_IN_THE_BLANK:
-                return <FillInTheBlankEditor input={input} setInput={setInput} />;
-            case MULTIPLE_ANSWERS:
-                return <MultipleAnswersEditor input={input} setInput={setInput} handleEditOption={handleEditOption} />;
-            case REORDER:
-                return <ReorderEditor title={question.title} input={input} setInput={setInput} handleEditOption={handleEditOption} />;
-            case SINGLE_ANSWER:
-                return <SingleAnswerEditor input={input} setInput={setInput} handleEditOption={handleEditOption} />;
-            default:
-                return 'Error';
+    const questionTypes = {
+        [FILL_IN_THE_BLANK]: {
+            display: 'Fill-In-The-Blank',
+            editor: <FillInTheBlankEditor input={input} setInput={setInput} />
+        },
+        [MULTIPLE_ANSWERS]: {
+            display: 'Multiple Answers',
+            editor: <MultipleAnswersEditor input={input} setInput={setInput} handleEditOption={handleEditOption} />
+        },
+        [REORDER]: {
+            display: 'Reorder',
+            editor: <ReorderEditor title={question._id} input={input} setInput={setInput} handleEditOption={handleEditOption} />
+        },
+        [SINGLE_ANSWER]: {
+            display: 'Single Answer',
+            editor: <SingleAnswerEditor input={input} setInput={setInput} handleEditOption={handleEditOption} />
         }
-    }
+    };
 
     const handleSubmit = e => {
         e.preventDefault();
 
         const updatedConcept = { ...input, concept: concept._id };
-        dispatch(updateQuestion(concept, question._id, updatedConcept));
 
-        if (!verifyQuestion(input)) {
-            setAlertOpen(true);
-        }
-
-        savedPopupRef.current.open();
-    }
-
-    const handleChangeType = e => {
-        const newType = e.target.value;
-
-        setInput(prevInput => {
-            // clear answer upon change
-            let newInput = { ...prevInput, type: newType };
-
-            switch (newType) {
-                case REORDER:
-                    newInput.answer = [prevInput.options];
-                    break;
-                case FILL_IN_THE_BLANK:
-                    newInput.answer = [''];
-                    break;
-                case SINGLE_ANSWER:
-                    newInput.answer = prevInput.options.length ? [prevInput.options[0]] : [];
-                    break;
-                default:
-                    newInput.answer = [];
-                    break;
+        // dispatch the update question action and check response for alert message
+        dispatch(updateQuestion(concept, question._id, updatedConcept))
+        .then(res => {
+            if (res.data.message) {
+                setAlertMessage(res.data.message);
+                setAlertOpen(true);
             }
-
-            return newInput;
         });
     }
 
     return (
         <div className="editor">
-            <Prompt
+            {/* <Prompt
                 when={madeChanges}
                 message='You have unsaved changes. Are you sure you want to leave?'
-            />
-            {/* <Alert
-                message='WARNING: This question is not complete. It will not be shown during practice.'
-                open={alertOpen}
-                setOpen={setAlertOpen}
             /> */}
             <Modal
-                content='WARNING: This question is not complete. It will not be shown during practice.'
+                content={alertMessage}
                 active={alertOpen}
                 setActive={setAlertOpen}
+                type={'warning'}
             />
             <form>
                 <label>
@@ -137,24 +113,52 @@ const QuestionEditor = ({ concept, question }) => {
                 </label>
                 <label>
                     Type
-                    <select
-                        value={input.type}
-                        className="input"
-                        onChange={handleChangeType}
-                    >
-                        <option value={FILL_IN_THE_BLANK}>Fill-in-The-Blank</option>
-                        <option value={SINGLE_ANSWER}>Single Answer</option>
-                        <option value={MULTIPLE_ANSWERS}>Multiple Answers</option>
-                        <option value={REORDER}>Reorder</option>
-                    </select>
+                    <Dropdown
+                        items={Object.keys(questionTypes).map(questionType => ({
+                            value: questionType,
+                            display: questionTypes[questionType].display
+                        }))}
+                        currItem={{
+                            value: input.type,
+                            display: questionTypes[input.type].display
+                        }}
+                        onChange={newItem => {
+                            setInput(prevInput => {
+                                const newType = newItem.value;
+                                let newInput = { ...prevInput, type: newType };
+                    
+                                // clear answer upon change
+                                switch (newType) {
+                                    case REORDER:
+                                        newInput.answer = [prevInput.options];
+                                        break;
+                                    case FILL_IN_THE_BLANK:
+                                        newInput.answer = [''];
+                                        break;
+                                    case SINGLE_ANSWER:
+                                        newInput.answer = prevInput.options.length ? [prevInput.options[0]] : [];
+                                        break;
+                                    default:
+                                        newInput.answer = [];
+                                        break;
+                                }
+                    
+                                return newInput;
+                            });
+                        }}
+                    />
                 </label>
                 <label>
-                    Text
-                    <Tooltip content={
-                        <div onClick={() => setDisplayPreview(curr => !curr)}>{ displayPreview ? 'Hide ' : 'Show '} Preview</div>
-                    }>
-                        <div className="more" />
-                    </Tooltip>
+                    <span className="flex">
+                        Text
+                        <Tooltip
+                            showOnClick={true}
+                            direction="right"
+                            content={<span onClick={() => setDisplayPreview(prev => !prev)}>{ displayPreview ? 'Hide ' : 'Show '} Preview</span>}
+                        >
+                            <MenuButton />
+                        </Tooltip>
+                    </span>
                     <textarea
                         className="input"
                         value={input.text}
@@ -165,50 +169,25 @@ const QuestionEditor = ({ concept, question }) => {
                 { displayPreview &&
                     <>
                         Preview
-                        <div className="container">
+                        <div className="container no-margin">
                             <Latex>{input.text}</Latex>
                         </div>
                     </>
                 }
-                { fetchEditor(input.type) }
+                { questionTypes[input.type].editor }
                 <div className="flex">
-                    <input
-                        className="small-button v-margin"
-                        type="button"
-                        value="Save"
-                        onClick={handleSubmit}
-                    />
-                    <Popup
-                        ref={savedPopupRef}
-                        trigger={
-                            // use an empty element as the trigger
-                            <div style={{
-                                width: 0,
-                                height: 45,
-                                display: 'inline-block',
-                                visibility: 'hidden',
-                            }} />
-                        }
-                        position="right center"
-                        closeOnDocumentClick
-                        closeOnEscape
+                    <Tooltip
+                        showOnClick={true}
+                        content={"Saved question."}
+                        direction={"right"}
                     >
-                        <span>Saved question.</span>
-                    </Popup>
-                    <Modal
-                        content="hi"
-                        
-                    >
-                        <button
+                        <input
                             className="small-button v-margin"
-                            onClick={e => {
-                                e.preventDefault();
-                                
-                            }}
-                        >
-                            Test
-                        </button>
-                    </Modal>
+                            type="button"
+                            value="Save"
+                            onClick={handleSubmit}
+                        />
+                    </Tooltip>
                 </div>
             </form>
         </div>

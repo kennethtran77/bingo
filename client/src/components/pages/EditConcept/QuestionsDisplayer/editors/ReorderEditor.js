@@ -17,18 +17,29 @@ const ReorderEditor = ({ title, input, setInput, handleEditOption }) => {
         setOrder(input.answer[currOrdering]);
     }, [input, currOrdering]);
 
+    /**
+     * Add `option` to the list of all options
+     * @param {String} option 
+     */
     const handleAddOption = option => setInput(prevState => ({
         ...prevState,
         options: [ ...prevState.options, option ],
         answer: prevState.answer.map(ordering => ordering.concat(option)) // add `option` to all orderings
-    }))
+    }));
 
+    /**
+     * Remove `option` from the list of all options
+     * @param {String} option 
+     */
     const handleRemoveOption = option => setInput(prevState => ({
         ...prevState,
         options: prevState.options.filter(o => o !== option),
         answer: prevState.answer.map(ordering => ordering.filter(o => o !== option)) // remove all occurrences of `option`
-    }))
+    }));
     
+    /**
+     * Create a new correct ordering initialized to `options`.
+     */
     const addOrdering = () => setInput(prevState => ({
         ...prevState,
         answer: prevState.answer.concat([input.options])
@@ -67,7 +78,7 @@ const ReorderEditor = ({ title, input, setInput, handleEditOption }) => {
             </label>
             <label>
                 Correct Orders
-                <div className="container">
+                <div className="container no-margin">
                     { !input.options.length ? <p>Create some options first.</p> : 
                         <>
                             <OrderingSelector

@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Redirect, useParams, Link } from 'react-router-dom';
+import { Navigate, useParams, Link } from 'react-router-dom';
 
 import { generateCollectionQuestions } from '../../../api';
 import LoadingSpinner from '../../widgets/LoadingSpinner';
 
 import Practice from './Practice';
 
-const PracticeCollection = () => {
-    // State hooks
-    const [toRender, setToRender] = useState(<LoadingSpinner />);
-
+const PracticeCollection = ({ userId }) => {
     const { collectionId } = useParams();
+
+    const [questions, setQuestions] = useState(null);
 
     // Pull state from store
     const { collections, isLoading } = useSelector(state => state.collectionsSlice);
@@ -20,51 +19,46 @@ const PracticeCollection = () => {
     // Check if the collection with the given id exists
     const collection = collections.find(c => c._id === collectionId);
 
-    // Load the collection and generate the questions
+    // Load the collection questions once the collection is fetched
     useEffect(() => {
-        // If the concept hasn't loaded yet
-        if (isLoading && !collection) {
-            setToRender(<LoadingSpinner />);
-            return;
+        if (collection) {
+            // Fetch questions
+            generateCollectionQuestions(collection._id, settings.questionsPerSession)
+                .then(res => {
+                    const questions = res.data;
+                    setQuestions(questions);
+                })
+                .catch(err => console.log(err));
         }
+    }, [collection, settings.questionsPerSession]);
 
-        // If we finished loading but couldn't find the collection, return to homepage
-        if (!collection && !isLoading) {
-            setToRender(<Redirect to="/"/>);
-            return;
-        }
+    // If the collection or its questions hasn't loaded yet, display loading spinner
+    if ((!collection && isLoading) || !questions)
+        return <LoadingSpinner />;
 
-        if (!collection.concepts.length) {
-            setToRender(
-                <>
-                    <p>This collection has no concepts!</p>
-                    <Link to="/" className="small-button">Go Home</Link>
-                </>
-            );
-            return;
-        }
+    // If the collection doesn't exist, or does not belong to the current user, return to home
+    if ((!collection && isLoading) || (collection && collection.creator !== userId))
+        return <Navigate to="/"/>
 
-        // Fetch questions
-        generateCollectionQuestions(collection._id, settings.questionsPerSession)
-            .then(res => {
-                const questions = res.data;
-
-                if (!questions.length) {
-                    setToRender(
-                        <>
-                            <p>This collection has no practicable questions!</p>
-                            <Link to="/" className="small-button">Go Home</Link>
-                        </>
-                    );
-                    return;
-                }
-
-                setToRender(<Practice questions={questions} title={collection.title} />);
-            })
-            .catch(err => console.log(err));
-    }, [collection, isLoading, settings.questionsPerSession]);
-
-    return toRender;
+    // If the collection is empty, display error message
+    if (collection & !collection.concepts.length)
+        return (
+            <>
+                <p>This collection has no concepts!</p>
+                <Link to="/" className="small-button link">Go Home</Link>
+            </>
+        );
+    
+    // If the questions loaded and are empty, display error message
+    if (questions && !questions.length)
+        return (
+            <>
+                <p>This collection has no practicable questions!</p>
+                <Link to="/" className="small-button link">Go Home</Link>
+            </>
+        );
+    
+    return <Practice questions={questions} title={collection.title} />;
 }
 
 export default PracticeCollection;

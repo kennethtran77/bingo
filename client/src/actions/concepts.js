@@ -24,10 +24,10 @@ export const fetchConcepts = (userId) => async (dispatch) => {
     }
 };
 
-export const createConcept = (concept) => async (dispatch) => {
+export const createConcept = () => async (dispatch) => {
     try {
         dispatch({ type: 'concepts/startLoading' });
-        const { data } = await api.createConcept(concept);
+        const { data } = await api.createConcept();
         dispatch({ type: 'concepts/create', payload: data });
         dispatch({ type: 'concepts/stopLoading' });
     } catch (error) {
@@ -38,9 +38,13 @@ export const createConcept = (concept) => async (dispatch) => {
 export const updateConcept = (conceptId, concept) => async (dispatch) => {
     try {
         dispatch({ type: 'concepts/startLoading' });
-        const { data } = await api.updateConcept(conceptId, concept);
-        dispatch({ type: 'concepts/update', payload: data });
+        const res = await api.updateConcept(conceptId, concept);
+
+        if (res.data.updatedConcept)
+            dispatch({ type: 'concepts/update', payload: res.data.updatedConcept });
+
         dispatch({ type: 'concepts/stopLoading' });
+        return res;
     } catch (error) {
         console.log(error.message);
     }

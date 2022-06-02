@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useHistory, Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -12,7 +12,7 @@ const Signup = () => {
     const [input, setInput] = useState({ email: '', username: '', password: '', confirmPassword: '' });
 
     const dispatch = useDispatch();
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const { isLoading, message } = useSelector(state => state.authSlice);
 
@@ -20,7 +20,7 @@ const Signup = () => {
 
     const handleSubmit = e => {
         e.preventDefault();
-        dispatch(signUp(input, history));
+        dispatch(signUp(input, navigate));
     }
 
     return (

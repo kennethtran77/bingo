@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { useHistory, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -14,14 +14,13 @@ const Login = () => {
     const { isLoading, message } = useSelector(state => state.authSlice);
 
     const dispatch = useDispatch();
-    const history = useHistory();
 
     const handleChange = useCallback(e => setInput({ ...input, [e.target.name]: e.target.value }), [input]);
 
     const handleSubmit = useCallback(e => {
         e.preventDefault();
-        dispatch(login(input, history));
-    }, [input, history]);
+        dispatch(login(input));
+    }, [input, dispatch]);
 
     return (
         <>

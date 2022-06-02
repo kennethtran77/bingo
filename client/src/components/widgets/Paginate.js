@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 
-import './Paginate.css';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+
+import styles from './Paginate.module.css';
 
 const Paginate = ({ items, itemsPerPage, setItemsToDisplay }) => {
     const [currentPage, setCurrentPage] = useState(0);
@@ -34,23 +37,23 @@ const Paginate = ({ items, itemsPerPage, setItemsToDisplay }) => {
     };
 
     return (
-        <div className="pagination-buttons v-margin">
+        <div className={`${styles['pagination-buttons']} v-margin`}>
             <button
-                className="pagination-button"
+                className={styles['pagination-button']}
                 onClick={prevPage}
                 disabled={currentPage <= 0}
                 aria-label="Previous Page"
             >
-                {"<"}
+                <ArrowBackIosIcon />
             </button>
-            { pageCount > 0 && <button className="pagination-button">{currentPage + 1}</button> }
+            { pageCount > 0 && <button className={styles['pagination-button']}>{currentPage + 1}</button> }
             <button
-                className="pagination-button"
+                className={styles['pagination-button']}
                 onClick={nextPage}
                 disabled={currentPage >= pageCount - 1}
                 aria-label="Next Page"
             >
-                {">"}
+                <ArrowForwardIosIcon />
             </button>
         </div>
     );

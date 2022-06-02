@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 
@@ -11,12 +11,12 @@ import App from './App';
 import reducers from './reducers';
 
 const store = createStore(reducers, compose(applyMiddleware(thunk)));
+const root = ReactDOM.createRoot(document.getElementById('root'));
 
-ReactDOM.render(
+root.render(
     <BrowserRouter>
         <Provider store={store}>
             <App/>
         </Provider>
-    </BrowserRouter>,
-    document.getElementById('root')
+    </BrowserRouter>
 );
