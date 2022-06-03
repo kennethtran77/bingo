@@ -54,9 +54,9 @@ const QuestionVisualizer = ({ concept, question, remove }) => {
                 visibility: 'hidden',
                 opacity: 0,
                 overflow: 'hidden',
-                transitionProperty: 'opacity, max-height',
-                transitionDuration: '0.2s, 0.2s',
-                transitionDelay: '0s, 0.2s',
+                transitionProperty: 'opacity, visibility, max-height',
+                transitionDuration: '0.2s, 0s, 0.2s',
+                transitionDelay: '0s, 0.2s, 0.2s',
                 transitionTimingFunction: 'ease-out',
             }}>
                 <QuestionEditor concept={concept} question={question} />

@@ -71,6 +71,11 @@ const InputCloze = ({ input, setInput }) => {
     }
 
     const handleBackspaceOnBlank = (inputIndex, e) => {
+        if (fieldRefs[inputIndex].current.selectionStart !== fieldRefs[inputIndex].current.selectionEnd) {
+            // don't delete a blank when pressing backspace while highlighting text
+            return;
+        }
+
         const fieldIndex = fieldRefs[inputIndex].current.selectionStart;
 
         // Focus on the field to the left
@@ -143,10 +148,35 @@ const InputCloze = ({ input, setInput }) => {
     if (!fieldRefs)
         return <LoadingSpinner />;
 
+    const isBlank = index => Array.isArray(input.answer[index]);
+
+    // update flex growth of non-blank fields
+    useEffect(() => {
+        fieldRefs.forEach((ref, index) => {
+            if (!isBlank(index)) {
+                if (index === input.answer.length - 1) {  // the last field is not a blank
+                    ref.current.style.flexGrow = 1;
+                } else if (index + 1 < input.answer.length) {
+                    // if the current field is not a blank, then the next field must be a blank
+                    const nextRef = fieldRefs[index + 1].current;
+
+                    let currContainer = ref.current;
+                    let nextContainer = nextRef.parentElement.parentElement;
+
+                    if (currContainer.offsetTop != nextContainer.offsetTop) {
+                        currContainer.style.flexGrow = 1;
+                    } else {
+                        currContainer.style.flexGrow = 0;
+                    }
+                }
+            }
+        })
+    }, [fieldRefs, input.answer]);
+
     return (
         <div className={styling}>
-            { input.answer && input.answer.map((ans, index) => (
-                typeof ans === 'string' ? (
+            { input.answer && input.answer.map((ans, index) => {
+                return !isBlank(index) ? (
                     <AutosizingInput
                         value={input.answer[index] || ''}
                         key={index}
@@ -155,7 +185,6 @@ const InputCloze = ({ input, setInput }) => {
                             border: 'none',
                             outline: 'none',
                             background: 'rgba(255, 255, 255, 0)',
-                            flexGrow: index === input.answer.length - 1 ? 1 : 0,
                             minHeight: '45px',
                         }}
                         onKeyDown={(e) => handleKeyDown(index, e)}
@@ -197,7 +226,7 @@ const InputCloze = ({ input, setInput }) => {
                         <DeleteButton className="delete-blank" aria-label="Delete Blanks" tooltip="Delete Blanks" onClick={() => removeBlank(index)} />
                     </div>
                 )
-            ))}
+             }) }
         </div>
     )
 }
