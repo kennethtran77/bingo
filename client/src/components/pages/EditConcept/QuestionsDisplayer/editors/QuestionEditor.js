@@ -24,6 +24,7 @@ const QuestionEditor = ({ concept, question }) => {
 
     const [alertOpen, setAlertOpen] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
+    const [saveMessage, setSaveMessage] = useState('');
 
     const dispatch = useDispatch();
 
@@ -83,11 +84,17 @@ const QuestionEditor = ({ concept, question }) => {
 
         const updatedConcept = { ...input, concept: concept._id };
 
+        setSaveMessage('Saving...');
+
         // dispatch the update question action and check response for alert message
         dispatch(updateQuestion(concept, question._id, updatedConcept))
         .then(res => {
             if (res.data.message) {
-                setAlertMessage(res.data.message);
+                setSaveMessage(res.data.message);
+            }
+
+            if (res.data.alert) {
+                setAlertMessage(res.data.alert);
                 setAlertOpen(true);
             }
         });
@@ -182,7 +189,7 @@ const QuestionEditor = ({ concept, question }) => {
                 <div className="flex">
                     <Tooltip
                         showOnClick={true}
-                        content={"Saved question."}
+                        content={saveMessage}
                         direction={"right"}
                     >
                         <input

@@ -64,7 +64,7 @@ const InputOptions = ({ options, addOption, editOption, removeOption, placeholde
     }
 
     /**
-     * 
+     * Sets the option at index `index` to be `newOption`
      * @param {Integer} index 
      * @param {String} newOption 
      */

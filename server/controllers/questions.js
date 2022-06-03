@@ -111,10 +111,10 @@ export const updateQuestion = async (req, res) => {
 
     await QuestionModel.findByIdAndUpdate(questionId, updatedQuestion, { new: true });
 
-    let responseObj = { updatedQuestion };
+    let responseObj = { updatedQuestion, message: 'Saved question.' };
 
     if (!verifyQ(updatedQuestion))
-        responseObj.message = 'This question is incomplete/invalid. It will not be shown during practice.';
+        responseObj.alert = 'This question is incomplete/invalid. It will not be shown during practice.';
 
     res.status(200).json(responseObj);
 }

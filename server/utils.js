@@ -21,6 +21,10 @@ export const shuffle = (arr) => {
  * @returns {Boolean} whether the question is correct
  */
 export const verifyQuestion = (question) => {
+    // question is invalid if `question.options` contains duplicates or is empty
+    if (question.type !== 'FillInTheBlank' && (new Set(question.options).length < question.options.length || !question.options.length))
+        return false;
+
     switch (question.type) {
         case 'FillInTheBlank':
             // check if answer has at least one blank with at least one non-empty element
