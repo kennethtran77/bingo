@@ -16,9 +16,10 @@ import Modal from '../../../../widgets/Modal';
 import Tooltip from '../../../../widgets/Tooltip';
 import Dropdown from '../../../../widgets/Dropdown';
 import MenuButton from '../../../../widgets/MenuButton';
+import LoadingSpinner from '../../../../widgets/LoadingSpinner';
 
 const QuestionEditor = ({ concept, question }) => {
-    const [input, setInput] = useState({ type: FILL_IN_THE_BLANK, title: 'New Question', text: "Enter some text for this question.", answer: [''], options: [] });
+    const [input, setInput] = useState(null);
     const [displayPreview, setDisplayPreview] = useState(false);
 
     const [alertOpen, setAlertOpen] = useState(false);
@@ -31,6 +32,9 @@ const QuestionEditor = ({ concept, question }) => {
             setInput(question);
         }
     }, [question]);
+
+    if (!input || !question)
+        return <LoadingSpinner />;
 
     // True if the question was edited and not saved, False otherwise
     const madeChanges = input.type !== question.type || input.title !== question.title || input.text !== question.text || input.answer !== question.answer || (input.type !== 'FillInTheBlank' && input.options !== question.options);

@@ -10,6 +10,12 @@ const SaveButton = ({ onClick, ariaLabel, tooltip, className }) => {
             title={tooltip}
             role='button'
             aria-label={ariaLabel}
+            style={{
+                margin: 0,
+                padding: 0,
+                lineHeight: 1,
+                display: 'inline-block'
+            }}
         >
             <SaveAltIcon
                 tabIndex={0}

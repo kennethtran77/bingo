@@ -4,7 +4,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 
 import styles from './MenuButton.module.css';
 
-const MenuButton = ({ onClick, ariaLabel, tooltip, disabled = false, className, id, fontSize = '20px' }) => {
+const MenuButton = ({ onClick, ariaLabel, tooltip, disabled = false, className, id, fontSize = '20px'}) => {
     return (
         <span
             title={tooltip}

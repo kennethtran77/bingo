@@ -109,7 +109,9 @@ input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, inp
 }
 
 .small-button:disabled {
-    background-color: rgb(200, 200, 200);
+    background-color: rgb(200, 200, 200) !important;
+    color: black !important;
+    cursor: not-allowed;
 }
 
 .small-button:visited {
