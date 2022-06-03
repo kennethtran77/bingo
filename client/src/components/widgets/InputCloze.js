@@ -154,9 +154,9 @@ const InputCloze = ({ input, setInput }) => {
     useEffect(() => {
         fieldRefs.forEach((ref, index) => {
             if (!isBlank(index)) {
-                if (index === input.answer.length - 1) {  // the last field is not a blank
+                if (index === fieldRefs.length - 1) {  // the last field is not a blank
                     ref.current.style.flexGrow = 1;
-                } else if (index + 1 < input.answer.length) {
+                } else if (index + 1 < fieldRefs.length) {
                     // if the current field is not a blank, then the next field must be a blank
                     const nextRef = fieldRefs[index + 1].current;
 
