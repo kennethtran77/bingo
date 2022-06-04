@@ -1,5 +1,3 @@
-import mongoose from 'mongoose';
-
 import CommentModel from '../models/comment.js';
 import ConceptModel from '../models/concept.js';
 
@@ -8,11 +6,11 @@ export const getComments = async (req, res) => {
     const { conceptId } = req.params;
 
     try {
-        // Check to see if the concept with given id exists
-        if (!mongoose.Types.ObjectId.isValid(conceptId))
-            return res.status(404).send(`No concept found with id ${conceptId}`);
-
         const concept = await ConceptModel.findById(conceptId);
+
+        // Check to see if the concept with given id exists
+        if (!concept)
+            return res.status(404).send(`No concept found with id ${conceptId}`);
 
         const ids = concept.comments;
 
@@ -30,7 +28,7 @@ export const createComment = async (req, res) => {
 
     try {
         // Check to see if the concept with given id exists
-        if (!mongoose.Types.ObjectId.isValid(conceptId))
+        if (!concept)
             return res.status(404).send(`No concept found with id ${conceptId}`);
 
         // fetch the concept document
@@ -58,14 +56,14 @@ export const deleteComment = async (req, res) => {
     const { conceptId, commentId } = req.params;
 
     // Check to see if the concept with given id exists
-    if (!mongoose.Types.ObjectId.isValid(conceptId))
+    if (!await ConceptModel.exists(conceptId))
         return res.status(404).send(`No concept found with id ${conceptId}`);
 
-    // Check to see if the comment with given id exists
-    if (!mongoose.Types.ObjectId.isValid(commentId))
-        return res.status(404).send(`No comment found with id ${commentId}`);
-
     const comment = await CommentModel.findById(commentId);
+
+    // Check to see if the comment with given id exists
+    if (!comment)
+        return res.status(404).send(`No comment found with id ${commentId}`);
 
     if (req.user.id !== comment.author.toString())
         return res.status(403).json({ message: 'Unauthorized action' });
@@ -80,14 +78,14 @@ export const updateComment = async (req, res) => {
     const { text } = req.body;
 
     // Check to see if the concept with given id exists
-    if (!mongoose.Types.ObjectId.isValid(conceptId))
+    if (!await ConceptModel.exists(conceptId))
         return res.status(404).send(`No concept found with id ${conceptId}`);
 
-    // Check to see if the comment with given id exists
-    if (!mongoose.Types.ObjectId.isValid(commentId))
-        return res.status(404).send(`No comment found with id ${commentId}`);
-
     const comment = await CommentModel.findById(commentId);
+
+    // Check to see if the comment with given id exists
+    if (!comment)
+        return res.status(404).send(`No comment found with id ${commentId}`);
 
     if (req.user.id !== comment.author.toString())
         return res.status(403).json({ message: 'Unauthorized action' });

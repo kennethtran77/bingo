@@ -1,5 +1,3 @@
-import mongoose from 'mongoose';
-
 import ConceptModel from '../models/concept.js';
 import QuestionModel from '../models/question.js';
 
@@ -9,11 +7,11 @@ export const getQuestions = async (req, res) => {
     const { conceptId } = req.params;
 
     try {
-        // Check to see if the concept with given id exists
-        if (!mongoose.Types.ObjectId.isValid(conceptId))
-            return res.status(404).send(`No concept found with id ${conceptId}`);
-
         const concept = await ConceptModel.findById(conceptId);
+
+        // Check to see if the concept with given id exists
+        if (!concept)
+            return res.status(404).send(`No concept found with id ${conceptId}`);
 
         if (req.user.id !== concept.creator.toString())
             return res.status(403).json({ message: 'Unauthorized action' });
@@ -32,11 +30,11 @@ export const getQuestion = async (req, res) => {
     const { conceptId, questionId } = req.params;
 
     try {
-        // Check to see if the concept with given id exists
-        if (!mongoose.Types.ObjectId.isValid(conceptId))
-            return res.status(404).send(`No concept found with id ${conceptId}`);
-
         const concept = await ConceptModel.findById(conceptId);
+
+        // Check to see if the concept with given id exists
+        if (!concept)
+            return res.status(404).send(`No concept found with id ${conceptId}`);
 
         if (req.user.id !== concept.creator.toString())
             return res.status(403).json({ message: 'Unauthorized action' });
@@ -54,13 +52,13 @@ export const createQuestion = async (req, res) => {
     const { conceptId } = req.params;
 
     try {
-        // Check to see if the concept with given id exists
-        if (!mongoose.Types.ObjectId.isValid(conceptId))
-            return res.status(404).send(`No concept found with id ${conceptId}`);
-
-        // fetch the concept document
         const concept = await ConceptModel.findById(conceptId);
 
+        // Check to see if the concept with given id exists
+        if (!concept)
+            return res.status(404).send(`No concept found with id ${conceptId}`);
+
+        // check if user is authorized to add questions to concept
         if (req.user.id !== concept.creator.toString())
             return res.status(403).json({ message: 'Unauthorized action' });
 
@@ -90,11 +88,11 @@ export const updateQuestion = async (req, res) => {
     const { conceptId, questionId } = req.params;
     const { title, type, text, answer, options } = req.body;
 
-    // Check to see if the concept with given id exists
-    if (!mongoose.Types.ObjectId.isValid(conceptId))
-        return res.status(404).send(`No concept found with id ${conceptId}`);
-
     const concept = await ConceptModel.findById(conceptId);
+
+    // Check to see if the concept with given id exists
+    if (!concept)
+        return res.status(404).send(`No concept found with id ${conceptId}`);
 
     if (req.user.id !== concept.creator.toString())
         return res.status(403).json({ message: 'Unauthorized action' });
@@ -122,11 +120,11 @@ export const updateQuestion = async (req, res) => {
 export const deleteQuestion = async (req, res) => {
     const { conceptId, questionId } = req.params;
 
-    // Check to see if the concept with given id exists
-    if (!mongoose.Types.ObjectId.isValid(conceptId))
-        return res.status(404).send(`No concept found with id ${conceptId}`);
-
     const concept = await ConceptModel.findById(conceptId);
+
+    // Check to see if the concept with given id exists
+    if (!concept)
+        return res.status(404).send(`No concept found with id ${conceptId}`);
 
     if (req.user.id !== concept.creator.toString())
         return res.status(403).json({ message: 'Unauthorized action' });
@@ -139,12 +137,11 @@ export const deleteQuestion = async (req, res) => {
 export const verifyQuestion = async (req, res) => {
     const { conceptId, questionId } = req.params;
 
-    // Check to see if the concept with given id exists
-    if (!mongoose.Types.ObjectId.isValid(conceptId))
-        return res.status(404).send(`No concept found with id ${conceptId}`);
-
-    // fetch the concept
     const concept = await ConceptModel.findById(conceptId);
+
+    // Check to see if the concept with given id exists
+    if (!concept)
+        return res.status(404).send(`No concept found with id ${conceptId}`);
 
     const question = concept.questions.find(q => q._id == questionId);
 
