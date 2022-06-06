@@ -32,6 +32,8 @@ export const fetchComments = (conceptId) => api.get(`/concepts/${conceptId}/comm
 export const createComment = (conceptId, newComment) => api.post(`/concepts/${conceptId}/comments`, newComment);
 export const updateComment = (conceptId, commentId, updatedComment) => api.patch(`/concepts/${conceptId}/comments/${commentId}`, updatedComment);
 export const deleteComment = (conceptId, commentId) => api.delete(`/concepts/${conceptId}/comments/${commentId}`);
+export const likeComment = (conceptId, commentId) => api.post(`/concepts/${conceptId}/comments/like/${commentId}`);
+export const dislikeComment = (conceptId, commentId) => api.post(`/concepts/${conceptId}/comments/dislike/${commentId}`);
 
 // collections
 export const fetchCollections = () => api.get(`/collections`);
