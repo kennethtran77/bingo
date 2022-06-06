@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import PracticeQuestionVisualizer from './PracticeQuestionVisualizer';
+import PracticeQuestion from './PracticeQuestion';
 import { processSession } from '../../../actions/practice';
 
 const Practice = ({ questions, title }) => {
@@ -51,7 +51,7 @@ const Practice = ({ questions, title }) => {
             <ul className="remove-bullet">
                 { questions.map((question, index) => (
                     <li key={index}>
-                        <PracticeQuestionVisualizer
+                        <PracticeQuestion
                             question={question}
                             disabled={false}
                             input={input[index]}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import QuestionVisualizer from './QuestionVisualizer';
+import Question from './Question';
 
 import { createQuestion, deleteQuestion } from '../../../../actions/questions';
 import LoadingSpinner from '../../../widgets/LoadingSpinner';
@@ -30,7 +30,7 @@ const QuestionsDisplayer = ({ concept }) => {
                 <ul className="remove-bullet">
                     { conceptQuestions && conceptQuestions.map((question) => (
                         <li key={question._id}>
-                            <QuestionVisualizer
+                            <Question
                                 concept={concept}
                                 question={question}
                                 remove={() => remove(question)}

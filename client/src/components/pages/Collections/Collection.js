@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import ConfirmDelete from '../../widgets/ConfirmDelete';
 import DeleteButton from '../../widgets/DeleteButton';
 
-const CollectionVisualizer = ({ collection, remove }) => {
+const Collection = ({ collection, remove }) => {
     const [toDelete, setToDelete] = useState(false);
 
     const handleRemove = e => {
@@ -35,4 +35,4 @@ const CollectionVisualizer = ({ collection, remove }) => {
     );
 };
 
-export default CollectionVisualizer;
+export default Collection;

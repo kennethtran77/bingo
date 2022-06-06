@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import CollectionVisualizer from './CollectionVisualizer';
+import Collection from './Collection';
 
 import SearchBox from '../../widgets/SearchBox';
-
-import '../../widgets/ConceptsDisplayer.css';
 
 import { createCollection, deleteCollection } from '../../../actions/collections';
 import Paginate from '../../widgets/Paginate';
@@ -43,7 +41,7 @@ const CollectionsDisplayer = ({ userId }) => {
                 <ul className="remove-bullet">
                     { collectionsToDisplay.length ? collectionsToDisplay.map((collection) => (
                         <li key={collection._id}>
-                            <CollectionVisualizer
+                            <Collection
                                 collection={collection}
                                 remove={() => remove(collection)}
                             />

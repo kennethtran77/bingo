@@ -9,7 +9,7 @@ import ConfirmDelete from './ConfirmDelete';
 import { dislikeConcept, likeConcept } from '../../actions/concepts';
 import DeleteButton from './DeleteButton';
 
-const ConceptVisualizer = ({ concept, remove, userId, showCreator, collection }) => {
+const Concept = ({ concept, remove, userId, showCreator, collection }) => {
     const { users } = useSelector(state => state.usersSlice);
     const creator = users.find(u => u._id === concept.creator);
 
@@ -83,4 +83,4 @@ const ConceptVisualizer = ({ concept, remove, userId, showCreator, collection })
     )
 };
 
-export default ConceptVisualizer;
+export default Concept;

@@ -6,7 +6,7 @@ import InfoIcon from '@mui/icons-material/Info';
 
 import { useSelector } from 'react-redux';
 
-import PracticeQuestionVisualizer from './Practice/PracticeQuestionVisualizer';
+import PracticeQuestion from './Practice/PracticeQuestion';
 
 import { fetchPracticeQuestionChanged } from '../../api';
 import LoadingSpinner from '../widgets/LoadingSpinner';
@@ -92,7 +92,7 @@ const PracticeResults = ({ userId }) => {
                             )}
                             <tr>
                                 <td>
-                                    <PracticeQuestionVisualizer
+                                    <PracticeQuestion
                                         question={question}
                                         index={index}
                                         disabled={true}
@@ -101,7 +101,7 @@ const PracticeResults = ({ userId }) => {
                                     />
                                 </td>
                                 <td>
-                                    <PracticeQuestionVisualizer
+                                    <PracticeQuestion
                                         question={question}
                                         index={index}
                                         disabled={true}

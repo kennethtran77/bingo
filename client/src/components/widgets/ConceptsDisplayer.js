@@ -4,14 +4,12 @@ import { useDispatch } from 'react-redux';
 import Paginate from './Paginate';
 
 import { createConcept, deleteConcept } from '../../actions/concepts';
-import ConceptVisualizer from './ConceptVisualizer';
+import Concept from './Concept';
 
 import SearchBox from './SearchBox';
 import LoadingSpinner from './LoadingSpinner';
 
 import NewButton from './NewButton';
-
-import './ConceptsDisplayer.css';
 
 /**
  * A component that displays a listing of the given concepts.
@@ -39,7 +37,7 @@ const ConceptsDisplayer = ({ title, concepts, isLoading, userId, showCreator, co
                 <ul className="remove-bullet">
                     { conceptsToDisplay.length ? conceptsToDisplay.map((concept) => (
                         <li key={concept._id}>
-                            <ConceptVisualizer
+                            <Concept
                                 concept={concept}
                                 remove={() => dispatch(deleteConcept(concept._id))}
                                 userId={userId}

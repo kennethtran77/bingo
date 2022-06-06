@@ -95,6 +95,18 @@ input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, inp
     margin: 0;
 }
 
+.tag {
+    border-radius: 5px;
+    margin-right: 5px;
+    padding: 5px;
+    background-color: rgb(255, 255, 255);
+    white-space: nowrap;
+}
+
+#tags {
+    flex-wrap: wrap;
+}
+
 .small-button {
     background-color: white;
     border: 2px solid #0057ba;

@@ -9,7 +9,7 @@ import Tooltip from '../../../widgets/Tooltip';
 
 import QuestionEditor from './editors/QuestionEditor';
 
-const QuestionVisualizer = ({ concept, question, remove }) => {
+const Question = ({ concept, question, remove }) => {
     const [showEditor, setShowEditor] = useState(false);
     const [toDelete, setToDelete] = useState(false);
 
@@ -65,4 +65,4 @@ const QuestionVisualizer = ({ concept, question, remove }) => {
     );
 }
 
-export default QuestionVisualizer;
+export default Question;
