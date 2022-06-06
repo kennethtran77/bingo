@@ -91,20 +91,28 @@ export const updateComment = (concept, commentId, updatedComment) => async (disp
 export const deleteComment = (concept, commentId) => async (dispatch) => {
     try {
         dispatch({ type: 'comments/startLoading' });
-        await api.deleteComment(concept._id, commentId);
-        dispatch({
-            type: 'comments/delete',
-            payload: commentId
-        });
+        const { data } = await api.deleteComment(concept._id, commentId);
+        
+        if (data.completelyDeleted) {
+            dispatch({
+                type: 'comments/delete',
+                payload: commentId
+            });
 
-        // --- update concept
-        dispatch({ type: 'concepts/startLoading' });
-        dispatch({
-            type: 'concepts/update',
-            payload: { ...concept, comments: concept.comments.filter(comment => comment !== commentId) }
-        });
-        dispatch({ type: 'concepts/stopLoading' });
-        // ---
+            // --- update concept
+            dispatch({ type: 'concepts/startLoading' });
+            dispatch({
+                type: 'concepts/update',
+                payload: { ...concept, comments: concept.comments.filter(comment => comment !== commentId) }
+            });
+            dispatch({ type: 'concepts/stopLoading' });
+            // ---
+        } else {
+            dispatch({
+                type: 'comments/update',
+                payload: data.updatedComment
+            });
+        }
 
         dispatch({ type: 'comments/stopLoading' });
     } catch (error) {
