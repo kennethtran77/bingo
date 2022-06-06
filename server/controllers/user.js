@@ -71,7 +71,6 @@ export const login = async (req, res) => {
 
 export const signUp = async (req, res) => {
     const { email, password, confirmPassword, username } = req.body;
-    const lowercaseEmail = email.toString().toLowerCase();
 
     try {
         // check inputs
