@@ -3,18 +3,6 @@
     margin-bottom: 15px;
 }
 
-.at-comment {
-    color: dodgerblue;
-}
-
-.at-comment:hover {
-    color: rgb(27, 113, 199);
-}
-
-.at-comment:active {
-    color: rgb(22, 93, 164);
-}
-
 .comment-button {
     background-color: transparent;
     color: black;

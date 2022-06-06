@@ -20,6 +20,19 @@ img {
     -webkit-user-drag: none;
 }
 
+.coloured-link {
+    color: dodgerblue;
+    cursor: pointer;
+}
+
+.coloured-link:hover {
+    color: rgb(27, 113, 199);
+}
+
+.coloured-link:active {
+    color: rgb(22, 93, 164);
+}
+
 textarea {
     width: 100%;
     resize: vertical;

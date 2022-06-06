@@ -1,5 +1,7 @@
 #title {
     text-align: center;
+    user-select: none;
+    -webkit-user-drag: none;
 }
 
 #auth {

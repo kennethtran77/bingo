@@ -102,7 +102,7 @@ const Comment = ({ comment, userId, concept, replies, replyTo, replyToAuthor }) 
                     placeholder={comment.text}
                     value={input}
                     onChange={handleChange}
-                /> : <p>{replyTo && <a className="at-comment" href={`#${replyTo._id}`}>{`@${replyToAuthor.username}`}</a> } {comment.text}</p> }
+                /> : <p>{replyTo && <a className="coloured-link" href={`#${replyTo._id}`}>{`@${replyToAuthor.username}`}</a> } {comment.text}</p> }
             { mode === 'reply' && <textarea placeholder="Enter a reply" value={input} onChange={handleChange}/> }
             <div className="space-between">
                 <LikeDislike

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -12,7 +12,6 @@ const Signup = () => {
     const [input, setInput] = useState({ email: '', username: '', password: '', confirmPassword: '' });
 
     const dispatch = useDispatch();
-    const navigate = useNavigate();
 
     const { isLoading, message } = useSelector(state => state.authSlice);
 
@@ -20,8 +19,7 @@ const Signup = () => {
 
     const handleSubmit = e => {
         e.preventDefault();
-        dispatch(signUp(input))
-        .then(res => console.log(res));
+        dispatch(signUp(input));
     }
 
     return (
@@ -71,7 +69,7 @@ const Signup = () => {
                         />
                     </label>
                     <input className="small-button" type="submit" value="Sign Up" />
-                    <p>Already have an account? <Link to="/login">Log In</Link></p>
+                    <p>Already have an account? <Link to="/login" className="coloured-link">Log In</Link></p>
                     { isLoading && <LoadingSpinner /> }
                     { message.content && <span style={{color: message.colour}} id="message">{message.content}</span> }
                 </form>
