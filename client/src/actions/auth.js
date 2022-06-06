@@ -1,7 +1,6 @@
 import decode from 'jwt-decode';
 
 import * as api from '../api/index.js';
-import { fetchPracticeSessions } from './practice.js';
 
 const setTimedMessage = (message, colour, interval) => (dispatch, getState) => {
     dispatch({ type: 'auth/setMessage', payload: { content: message, colour }});
