@@ -45,11 +45,11 @@ export const updateConcept = async (req, res) => {
     const { conceptId } = req.params;
     const { title, text, tags, questions } = req.body;
 
+    const concept = await ConceptModel.findById(conceptId);
+
     // Check to see if the concept with given id exists
     if (!concept)
         return res.status(404).json({ message: `No concept found with id ${conceptId}`});
-
-    const concept = await ConceptModel.findById(conceptId);
 
     if (req.user.id !== concept.creator.toString())
         return res.status(403).json({ message: 'Unauthorized action' });
