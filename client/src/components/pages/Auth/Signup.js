@@ -20,7 +20,8 @@ const Signup = () => {
 
     const handleSubmit = e => {
         e.preventDefault();
-        dispatch(signUp(input, navigate));
+        dispatch(signUp(input))
+        .then(res => console.log(res));
     }
 
     return (
