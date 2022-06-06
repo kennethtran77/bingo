@@ -163,7 +163,7 @@ const InputCloze = ({ input, setInput }) => {
                     let currContainer = ref.current;
                     let nextContainer = nextRef.parentElement.parentElement;
 
-                    if (currContainer.offsetTop != nextContainer.offsetTop) {
+                    if (currContainer.offsetTop !== nextContainer.offsetTop) {
                         currContainer.style.flexGrow = 1;
                     } else {
                         currContainer.style.flexGrow = 0;
@@ -171,7 +171,7 @@ const InputCloze = ({ input, setInput }) => {
                 }
             }
         })
-    }, [fieldRefs, input.answer]);
+    }, [fieldRefs]);
 
     return (
         <div className={styling}>
