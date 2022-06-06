@@ -179,7 +179,7 @@ export const getUsernames = async (req, res) => {
 }
 
 export const getSettings = async (req, res) => {
-    // const { username } = req.params;
+    const { userId } = req.params;
 
     try {
         const user = await UserModel.findById(req.user.id);
@@ -187,8 +187,8 @@ export const getSettings = async (req, res) => {
         if (!user)
             return res.status(404).json({ message: 'No account with this username was found' });
 
-        // if (req.user.id !== userId)
-        //     return res.status(403).json({ message: 'Unauthorized action' });
+        if (req.user.id !== userId)
+            return res.status(403).json({ message: 'Unauthorized action' });
 
         res.status(200).json(user.settings);
     } catch (error) {
