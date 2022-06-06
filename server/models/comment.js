@@ -3,13 +3,16 @@ import mongoose from 'mongoose';
 const commentSchema = mongoose.Schema({
     concept: { type: mongoose.Types.ObjectId, ref: 'Concept' },
     author: { type: mongoose.Types.ObjectId, ref: 'User' },
-    text: { type: String }
+    likes: [{ type: mongoose.Types.ObjectId, ref: 'User' }],
+    dislikes: [{ type: mongoose.Types.ObjectId, ref: 'User' }],
+    replyTo: { type: mongoose.Types.ObjectId, ref: 'Comment' },
+    rootComment: { type: mongoose.Types.ObjectId, ref: 'Comment' },
+    deleted: { type: Boolean, default: false },
+    text: { type: String },
+    createdAt: { type: Date },
+    editedAt: { type: Date }
 }, {
-    versionKey: false,
-    timestamps: {
-        createdAt: 'created_at',
-        updatedAt: 'updated_at'
-    }
+    versionKey: false
 });
 
 const CommentModel = mongoose.model('Comment', commentSchema);

@@ -75,7 +75,7 @@ export const addToCollection = async (req, res) => {
             return res.status(404).send(`No collection found with id ${collectionId}`);
 
         // Check to see if the concept with given id exists
-        if (!await ConceptModel.exists(conceptId))
+        if (!await ConceptModel.findById(conceptId))
             return res.status(404).send(`No concept found with id ${conceptId}`);
 
         if (req.user.id !== collection.creator.toString())
@@ -102,7 +102,7 @@ export const removeFromCollection = async (req, res) => {
             return res.status(404).send(`No collection found with id ${collectionId}`);
 
         // Check to see if the concept with given id exists
-        if (!await ConceptModel.exists(conceptId))
+        if (!await ConceptModel.findById(conceptId))
             return res.status(404).send(`No concept found with id ${conceptId}`);
 
         if (req.user.id !== collection.creator.toString())

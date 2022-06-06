@@ -14,5 +14,7 @@ router.get('/', controller.getComments);
 router.post('/', auth, controller.createComment);
 router.patch('/:commentId', auth, controller.updateComment);
 router.delete('/:commentId', auth, controller.deleteComment);
+router.post('/like/:commentId', auth, controller.likeComment);
+router.post('/dislike/:commentId', auth, controller.dislikeComment);
 
 export default router;
