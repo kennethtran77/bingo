@@ -69,10 +69,12 @@ Desktop
 
     #navbar-menu {
         display: none;
+        visibility: hidden;
     }
 
     #mobile-navbar-options {
         display: none;
+        visibility: hidden;
     }
 }
 

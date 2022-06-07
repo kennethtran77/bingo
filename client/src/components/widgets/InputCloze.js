@@ -11,14 +11,39 @@ import LoadingSpinner from './LoadingSpinner';
 // Answer is an array containing strings and arrays of strings
 const InputCloze = ({ input, setInput }) => {
     const [fieldRefs, setFieldRefs] = useState([]);
+    const [fieldState, setFieldState] = useState('');
 
     // Set up refs for the fields
     useEffect(() => {
         setFieldRefs(fieldRefs => Array(input.answer.length).fill().map((_, i) => fieldRefs[i] || createRef()));
-    }, [input.answer.length]);
+    }, [input.answer]);
 
-    const [fieldState, setFieldState] = useState('');
+    // update flex growth of non-blank fields
+    useEffect(() => {
+        updateFlexGrowth();
+    }, [fieldRefs]);
 
+    const updateFlexGrowth = () => {
+        fieldRefs.forEach((ref, index) => {
+            if (!isBlank(index)) {
+                if (index === fieldRefs.length - 1) {  // the last field is not a blank
+                    ref.current.style.flexGrow = 1;
+                } else if (index + 1 < fieldRefs.length) {
+                    // if the current field is not a blank, then the next field must be a blank
+                    const nextRef = fieldRefs[index + 1].current;
+
+                    let currContainer = ref.current;
+                    let nextContainer = nextRef.parentElement.parentElement.parentElement;
+
+                    if (currContainer.offsetTop !== nextContainer.offsetTop) {
+                        currContainer.style.flexGrow = 1;
+                    } else {
+                        currContainer.style.flexGrow = 0;
+                    }
+                }
+            }
+        })
+    };
     /**
      * Focus on the field to the left of inputIndex
      * @param {Number} inputIndex
@@ -150,35 +175,12 @@ const InputCloze = ({ input, setInput }) => {
 
     const isBlank = index => Array.isArray(input.answer[index]);
 
-    // update flex growth of non-blank fields
-    useEffect(() => {
-        fieldRefs.forEach((ref, index) => {
-            if (!isBlank(index)) {
-                if (index === fieldRefs.length - 1) {  // the last field is not a blank
-                    ref.current.style.flexGrow = 1;
-                } else if (index + 1 < fieldRefs.length) {
-                    // if the current field is not a blank, then the next field must be a blank
-                    const nextRef = fieldRefs[index + 1].current;
-
-                    let currContainer = ref.current;
-                    let nextContainer = nextRef.parentElement.parentElement;
-
-                    if (currContainer.offsetTop !== nextContainer.offsetTop) {
-                        currContainer.style.flexGrow = 1;
-                    } else {
-                        currContainer.style.flexGrow = 0;
-                    }
-                }
-            }
-        })
-    }, [fieldRefs]);
-
     return (
         <div className={styling}>
             { input.answer && input.answer.map((ans, index) => {
                 return !isBlank(index) ? (
                     <AutosizingInput
-                        value={input.answer[index] || ''}
+                        value={ans || ''}
                         key={index}
                         ref={fieldRefs[index]}
                         inputstyle={{
@@ -200,29 +202,31 @@ const InputCloze = ({ input, setInput }) => {
                         })}
                     />
                 ) : (
-                    <div key={index} className='blanks'>
-                        <InputTags
-                            tags={input.answer[index]}
-                            ref={fieldRefs[index]}
-                            addTag={blank => setInput(prevState => {
-                                let newAnswer = [ ...prevState.answer ]
-                                newAnswer[index] = [ ...newAnswer[index], blank ];
-                                return { ...prevState, answer: newAnswer }
-                            })}
-                            removeTag={blank => setInput(prevState => {
-                                let newAnswer = [ ...prevState.answer ];
-                                newAnswer[index] = newAnswer[index].filter(b => b !== blank);
-                                return { ...prevState, answer: newAnswer }
-                            })}
-                            onKeyDown={(e) => {
-                                if (e.key === 'ArrowLeft') {
-                                    focusLeftField(index, e);
-                                } else if (e.key === 'ArrowRight') {
-                                    focusRightField(index, e);
-                                }
-                            }}
-                            placeholder="Blanks"
-                        />
+                    <div key={index} className="blank-wrapper">
+                        <div className='blanks'>
+                            <InputTags
+                                tags={input.answer[index]}
+                                ref={fieldRefs[index]}
+                                addTag={blank => setInput(prevState => {
+                                    let newAnswer = [ ...prevState.answer ]
+                                    newAnswer[index] = [ ...newAnswer[index], blank ];
+                                    return { ...prevState, answer: newAnswer }
+                                })}
+                                removeTag={blank => setInput(prevState => {
+                                    let newAnswer = [ ...prevState.answer ];
+                                    newAnswer[index] = newAnswer[index].filter(b => b !== blank);
+                                    return { ...prevState, answer: newAnswer }
+                                })}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'ArrowLeft') {
+                                        focusLeftField(index, e);
+                                    } else if (e.key === 'ArrowRight') {
+                                        focusRightField(index, e);
+                                    }
+                                }}
+                                placeholder="Blanks"
+                            />
+                        </div>
                         <DeleteButton className="delete-blank" aria-label="Delete Blanks" tooltip="Delete Blanks" onClick={() => removeBlank(index)} />
                     </div>
                 )

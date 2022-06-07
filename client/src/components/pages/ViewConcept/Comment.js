@@ -28,17 +28,23 @@ const Comment = ({ comment, userId, concept, replies, replyTo, replyToAuthor }) 
     const handleUpdate = e => {
         e.preventDefault();
 
-        if (!input.length)
+        if (!input.length || comment.disabled)
             return;
 
         dispatch(updateComment(concept, comment._id, { text: input }));
         clearInputSetMode('none');
     };
 
+    const handleDelete = e => {
+        e.preventDefault();
+        dispatch(deleteComment(concept, comment._id));
+        clearInputSetMode('none');
+    }
+
     const handleCreateReply = e => {
         e.preventDefault();
 
-        if (!input.length)
+        if (!input.length || comment.disabled)
             return;
 
         const newComment = {
@@ -53,6 +59,9 @@ const Comment = ({ comment, userId, concept, replies, replyTo, replyToAuthor }) 
     }
 
     const clearInputSetMode = newMode => {
+        if (comment.deleted)
+            return;
+
         setInput('');
         setMode(newMode);
     }
@@ -76,11 +85,11 @@ const Comment = ({ comment, userId, concept, replies, replyTo, replyToAuthor }) 
             default:
                 return (
                     <>
-                        <li role="button" tabIndex={0} className="comment-button" onClick={() => clearInputSetMode('reply')}>Reply</li>
+                        <li role="button" tabIndex={0} className={`comment-button ${comment.deleted ? 'disabled' : ''}`} onClick={() => clearInputSetMode('reply')}>Reply</li>
                         { userId === comment.author ?
                             <>
-                                <li role="button" tabIndex={0} className="comment-button" onClick={() => clearInputSetMode('edit')}>Edit</li>
-                                <li role="button" tabIndex={0} className="comment-button" onClick={() => clearInputSetMode('delete')}>Delete</li>
+                                <li role="button" tabIndex={0} className={`comment-button ${comment.deleted ? 'disabled' : ''}`} onClick={() => clearInputSetMode('edit')}>Edit</li>
+                                <li role="button" tabIndex={0} className={`comment-button ${comment.deleted ? 'disabled' : ''}`} onClick={() => clearInputSetMode('delete')}>Delete</li>
                             </>
                         : null }
                     </>
@@ -88,7 +97,7 @@ const Comment = ({ comment, userId, concept, replies, replyTo, replyToAuthor }) 
         }
     };
 
-    return mode === 'delete' ? <ConfirmDelete title={'this comment'} undo={() => clearInputSetMode('none')} confirm={() => dispatch(deleteComment(concept, comment._id))} /> : (
+    return mode === 'delete' ? <ConfirmDelete title={'this comment'} undo={() => clearInputSetMode('none')} confirm={handleDelete} /> : (
         <div className="comment" id={comment._id}>
             <div className="space-between">
                 <span><strong>{author.username}</strong></span>
@@ -102,7 +111,7 @@ const Comment = ({ comment, userId, concept, replies, replyTo, replyToAuthor }) 
                     placeholder={comment.text}
                     value={input}
                     onChange={handleChange}
-                /> : <p>{replyTo && <a className="coloured-link" href={`#${replyTo._id}`}>{`@${replyToAuthor.username}`}</a> } {comment.text}</p> }
+                /> : <p style={{ fontStyle: comment.deleted ? 'italic' : 'normal' }}>{replyTo && <a className="coloured-link" href={`#${replyTo._id}`}>{`@${replyToAuthor.username}`}</a> } {comment.text}</p> }
             { mode === 'reply' && <textarea placeholder="Enter a reply" value={input} onChange={handleChange}/> }
             <div className="space-between">
                 <LikeDislike
@@ -111,6 +120,7 @@ const Comment = ({ comment, userId, concept, replies, replyTo, replyToAuthor }) 
                     dislikes={comment.dislikes}
                     like={() => dispatch(likeComment(concept._id, comment._id))}
                     dislike={() => dispatch(dislikeComment(concept._id, comment._id))}
+                    disabled={comment.deleted}
                 />
                 <ul className="remove-bullet h-list">
                     {renderOptions()}
