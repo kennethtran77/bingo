@@ -1,7 +1,6 @@
 import decode from 'jwt-decode';
 
 import * as api from '../api/index.js';
-import { fetchPracticeSessions } from './practice.js';
 
 const setTimedMessage = (message, colour, interval) => (dispatch, getState) => {
     dispatch({ type: 'auth/setMessage', payload: { content: message, colour }});
@@ -27,11 +26,9 @@ export const login = (loginInput) => async (dispatch) => {
         dispatch({ type: 'auth/startLoading' });
         const { data } = await api.login(loginInput);
 
-        // load practice sessions
         if (data && data.token) {
             localStorage.setItem('profile', JSON.stringify(data));
             window.dispatchEvent(new Event('storage')); // force storage event to occur
-            dispatch(fetchPracticeSessions());
         }
 
         dispatch({ type: 'auth/stopLoading' });
@@ -41,7 +38,7 @@ export const login = (loginInput) => async (dispatch) => {
     }
 };
 
-export const signUp = (signUpInput, navigate) => async (dispatch) => {
+export const signUp = (signUpInput) => async (dispatch) => {
     try {
         // signup
         dispatch({ type: 'auth/startLoading' });
@@ -56,10 +53,12 @@ export const signUp = (signUpInput, navigate) => async (dispatch) => {
             payload: { _id: userId, username: signUpInput.username }
         });
 
-        localStorage.setItem('profile', JSON.stringify(data));
-        dispatch({ type: 'auth/stopLoading' });
+        if (data && data.token) {
+            localStorage.setItem('profile', JSON.stringify(data));
+            window.dispatchEvent(new Event('storage')); // force storage event to occur
+        }
 
-        navigate('/', { replace: true });
+        dispatch({ type: 'auth/stopLoading' });
     } catch (error) {
         dispatch(setTimedMessage(error.response.data.message, 'red', 2500));
         dispatch({ type: 'auth/stopLoading' });

@@ -12,11 +12,11 @@ const LikeDislike = ({ userId, likes, dislikes, like, dislike }) => {
                 <span
                     className={styles['button']}
                     role='button'
+                    tabIndex={0}
                     aria-label="Like Concept"
                     title="Like Concept"
                     >
                     <ThumbUpIcon
-                        tabIndex={0}
                         style={{ color: likes.includes(userId) ? 'dodgerblue' : 'black' }}
                         onClick={like}
                     />
@@ -27,11 +27,11 @@ const LikeDislike = ({ userId, likes, dislikes, like, dislike }) => {
                 <span
                     className={styles['button']}
                     role='button'
+                    tabIndex={0}
                     aria-label="Dislike Concept"
                     title="Dislike Concept"
                     >
                     <ThumbDownIcon
-                        tabIndex={0}
                         style={{ color: dislikes.includes(userId) ? '#D22B2B' : 'black' }}
                         onClick={dislike}
                     />

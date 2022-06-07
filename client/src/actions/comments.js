@@ -112,3 +112,23 @@ export const deleteComment = (concept, commentId) => async (dispatch) => {
         dispatch({ type: 'comments/stopLoading' });
     }
 };
+
+export const likeComment = (conceptId, commentId) => async (dispatch) => {
+    try {
+        // data is the concept object with the updated likes
+        const { data } = await api.likeComment(conceptId, commentId);
+        dispatch({ type: 'comments/update', payload: data });
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+
+export const dislikeComment = (conceptId, commentId) => async (dispatch) => {
+    try {
+        // data is the concept object with the updated dislikes
+        const { data } = await api.dislikeComment(conceptId, commentId);
+        dispatch({ type: 'comments/update', payload: data });
+    } catch (error) {
+        console.log(error.message);
+    }
+}

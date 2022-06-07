@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
 import CollectionModel from '../models/collection.js';
+import ConceptModel from '../models/concept.js';
 
 export const getCollections = async (req, res) => {
     try {
@@ -35,11 +35,11 @@ export const updateCollection = async (req, res) => {
     const { title, tags } = req.body;
 
     try {
-        // Check to see if the collection with given id exists
-        if (!mongoose.Types.ObjectId.isValid(collectionId))
-            return res.status(404).send(`No collection found with id ${collectionId}`);
-
         const collection = await CollectionModel.findById(collectionId);
+
+        // Check to see if the collection with given id exists
+        if (!collection)
+            return res.status(404).send(`No collection found with id ${collectionId}`);
 
         if (req.user.id !== collection.creator.toString())
             return res.status(403).json({ message: 'Unauthorized action' });
@@ -68,15 +68,15 @@ export const addToCollection = async (req, res) => {
     const { conceptId } = req.body;
 
     try {
+        const collection = await CollectionModel.findById(collectionId);
+
         // Check to see if the collection with given id exists
-        if (!mongoose.Types.ObjectId.isValid(collectionId))
+        if (!collection)
             return res.status(404).send(`No collection found with id ${collectionId}`);
 
         // Check to see if the concept with given id exists
-        if (!mongoose.Types.ObjectId.isValid(conceptId))
+        if (!await ConceptModel.findById(conceptId))
             return res.status(404).send(`No concept found with id ${conceptId}`);
-
-        const collection = await CollectionModel.findById(collectionId);
 
         if (req.user.id !== collection.creator.toString())
             return res.status(403).json({ message: 'Unauthorized action' });
@@ -95,15 +95,15 @@ export const removeFromCollection = async (req, res) => {
     const { conceptId } = req.body;
 
     try {
+        const collection = await CollectionModel.findById(collectionId);
+
         // Check to see if the collection with given id exists
-        if (!mongoose.Types.ObjectId.isValid(collectionId))
+        if (!collection)
             return res.status(404).send(`No collection found with id ${collectionId}`);
 
         // Check to see if the concept with given id exists
-        if (!mongoose.Types.ObjectId.isValid(conceptId))
+        if (!await ConceptModel.findById(conceptId))
             return res.status(404).send(`No concept found with id ${conceptId}`);
-
-        const collection = await CollectionModel.findById(collectionId);
 
         if (req.user.id !== collection.creator.toString())
             return res.status(403).json({ message: 'Unauthorized action' });
@@ -127,7 +127,7 @@ export const deleteCollection = async (req, res) => {
         const collection = await CollectionModel.findById(collectionId);
         
         // Check to see if the collection with given id exists
-        if (!mongoose.Types.ObjectId.isValid(collectionId))
+        if (!collection)
             return res.status(404).send(`No collection found with id ${collectionId}`);
 
         if (req.user.id !== collection.creator.toString())

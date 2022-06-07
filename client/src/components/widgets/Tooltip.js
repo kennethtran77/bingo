@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, Children } from "react";
 import ExternalListener from "./ExternalListener";
 
 import styles from "./Tooltip.module.css";
@@ -16,7 +16,7 @@ const Tooltip = ({
         <div
             className={styles.tooltip}
             role='tooltip'
-            tabIndex={0}
+            tabIndex={active ? 0 : -1}
             aria-hidden={active}
             aria-live='polite'
             onMouseEnter={!showOnClick ? () => setActive(true) : null}
@@ -25,7 +25,9 @@ const Tooltip = ({
                 if (e.key === "Escape") setActive(false);
             }}
         >
-            <span onClick={showOnClick ? () => setActive(prev => !prev) : null} >{children}</span>
+            <span onClick={showOnClick ? () => setActive(true) : null} >
+                {children}
+            </span>
             {active && (
                 <div
                     className={`${styles["tooltip-content"]} ${styles[direction]}`}

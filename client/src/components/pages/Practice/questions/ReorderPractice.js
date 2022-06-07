@@ -5,7 +5,7 @@ import Reorder from '../../../widgets/Reorder';
 import { correctColour, incorrectColour } from '../../../../util';
 
 const ReorderPractice = ({ question, showCorrectAnswer = false, disabled = false, input, setInput }) => {
-    let itemStyles;
+    let itemStyles = Array(input.length).fill({});
     const inputOrderingIsCorrect = question.answer.some(ordering => JSON.stringify(ordering) === JSON.stringify(input));
 
     if (showCorrectAnswer) {
@@ -14,8 +14,6 @@ const ReorderPractice = ({ question, showCorrectAnswer = false, disabled = false
             borderStyle: 'solid',
             borderWidth: '2px'
         });
-    } else {
-        itemStyles = Array(input.length).fill({});
     }
 
     return (

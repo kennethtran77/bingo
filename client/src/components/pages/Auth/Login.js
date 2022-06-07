@@ -48,7 +48,7 @@ const Login = () => {
                         />
                     </label>
                     <input className="small-button" type="submit" value="Log In" />
-                    <p>Don't have an account? <Link to="/signup">Sign Up</Link></p>
+                    <p>Don't have an account? <Link to="/signup" className="coloured-link">Sign Up</Link></p>
                     { isLoading && <LoadingSpinner /> }
                     { message.content && <p style={{color: message.colour}} id="message">{message.content}</p> }
                 </form>

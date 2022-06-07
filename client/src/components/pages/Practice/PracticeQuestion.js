@@ -8,7 +8,7 @@ import MultipleAnswersPractice from './questions/MultipleAnswersPractice';
 import ReorderPractice from './questions/ReorderPractice';
 import SingleAnswerPractice from './questions/SingleAnswerPractice';
 
-const PracticeQuestionVisualizer = ({ question, showCorrectAnswer, disabled, input, setInput, style = {} }) => {
+const PracticeQuestion = ({ question, showCorrectAnswer, disabled, input, setInput, style = {} }) => {
     const fetchQuestion = type => {
         switch (type) {
             case 'FillInTheBlank':
@@ -57,4 +57,4 @@ const PracticeQuestionVisualizer = ({ question, showCorrectAnswer, disabled, inp
     );
 }
 
-export default PracticeQuestionVisualizer;
+export default PracticeQuestion;

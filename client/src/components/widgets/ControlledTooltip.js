@@ -18,7 +18,7 @@ const ControlledTooltip = ({
             className={styles.tooltip}
             onKeyDown={(e) => onKeyDown(e)}
             role='tooltip'
-            tabIndex={0}
+            tabIndex={active ? 0 : -1}
             aria-hidden={active}
             aria-live='polite'
         >

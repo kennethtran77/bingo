@@ -9,7 +9,7 @@ import Tooltip from '../../../widgets/Tooltip';
 
 import QuestionEditor from './editors/QuestionEditor';
 
-const QuestionVisualizer = ({ concept, question, remove }) => {
+const Question = ({ concept, question, remove }) => {
     const [showEditor, setShowEditor] = useState(false);
     const [toDelete, setToDelete] = useState(false);
 
@@ -20,7 +20,7 @@ const QuestionVisualizer = ({ concept, question, remove }) => {
 
     return toDelete ? (<ConfirmDelete title={question.title} confirm={remove} undo={() => setToDelete(false)} />)
     : (
-        <div className="container secondary">
+        <div className="container secondary" tabIndex={0}>
             <div className="flex space-between">
                 { question.title ? <h2>{question.title}</h2> : (
                     <div className="center-flex gap">
@@ -39,9 +39,30 @@ const QuestionVisualizer = ({ concept, question, remove }) => {
                     <DeleteButton onClick={() => setToDelete(true)} className="h-margin" aria-label="Delete Question" tooltip="Delete Question" />
                 </div>
             </div>
-            { showEditor && <QuestionEditor concept={concept} question={question} /> }
+            <div aria-expanded={showEditor} style={showEditor ? {
+                // from closed to open
+                maxHeight: '100vh',
+                visibilty: 'visible',
+                opacity: 1,
+                transitionProperty: 'max-height, opacity',
+                transitionDuration: '0.2s, 0.2s',
+                transitionDelay: '0s, 0.2s',
+                transitionTimingFunction: 'ease-in',
+            } : {
+                // from open to closed
+                maxHeight: 0,
+                visibility: 'hidden',
+                opacity: 0,
+                overflow: 'hidden',
+                transitionProperty: 'opacity, visibility, max-height',
+                transitionDuration: '0.2s, 0s, 0.2s',
+                transitionDelay: '0s, 0.2s, 0.2s',
+                transitionTimingFunction: 'ease-out',
+            }}>
+                <QuestionEditor concept={concept} question={question} />
+            </div>
         </div>
     );
 }
 
-export default QuestionVisualizer;
+export default Question;

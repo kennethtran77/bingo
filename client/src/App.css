@@ -20,6 +20,19 @@ img {
     -webkit-user-drag: none;
 }
 
+.coloured-link {
+    color: dodgerblue;
+    cursor: pointer;
+}
+
+.coloured-link:hover {
+    color: rgb(27, 113, 199);
+}
+
+.coloured-link:active {
+    color: rgb(22, 93, 164);
+}
+
 textarea {
     width: 100%;
     resize: vertical;
@@ -95,6 +108,18 @@ input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, inp
     margin: 0;
 }
 
+.tag {
+    border-radius: 5px;
+    margin-right: 5px;
+    padding: 5px;
+    background-color: rgb(255, 255, 255);
+    white-space: nowrap;
+}
+
+#tags {
+    flex-wrap: wrap;
+}
+
 .small-button {
     background-color: white;
     border: 2px solid #0057ba;
@@ -109,7 +134,9 @@ input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, inp
 }
 
 .small-button:disabled {
-    background-color: rgb(200, 200, 200);
+    background-color: rgb(200, 200, 200) !important;
+    color: black !important;
+    cursor: not-allowed;
 }
 
 .small-button:visited {
@@ -159,6 +186,11 @@ input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, inp
 .remove-bullet {
     list-style-type: none;
     padding: 0;
+}
+
+.h-list > li {
+    display: inline-block;
+    margin-right: 5px;
 }
 
 /*

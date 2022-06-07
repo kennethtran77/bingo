@@ -16,13 +16,15 @@ import Modal from '../../../../widgets/Modal';
 import Tooltip from '../../../../widgets/Tooltip';
 import Dropdown from '../../../../widgets/Dropdown';
 import MenuButton from '../../../../widgets/MenuButton';
+import LoadingSpinner from '../../../../widgets/LoadingSpinner';
 
 const QuestionEditor = ({ concept, question }) => {
-    const [input, setInput] = useState({ type: FILL_IN_THE_BLANK, title: 'New Question', text: "Enter some text for this question.", answer: [''], options: [] });
+    const [input, setInput] = useState(null);
     const [displayPreview, setDisplayPreview] = useState(false);
 
     const [alertOpen, setAlertOpen] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
+    const [saveMessage, setSaveMessage] = useState('');
 
     const dispatch = useDispatch();
 
@@ -31,6 +33,9 @@ const QuestionEditor = ({ concept, question }) => {
             setInput(question);
         }
     }, [question]);
+
+    if (!input || !question)
+        return <LoadingSpinner />;
 
     // True if the question was edited and not saved, False otherwise
     const madeChanges = input.type !== question.type || input.title !== question.title || input.text !== question.text || input.answer !== question.answer || (input.type !== 'FillInTheBlank' && input.options !== question.options);
@@ -79,11 +84,17 @@ const QuestionEditor = ({ concept, question }) => {
 
         const updatedConcept = { ...input, concept: concept._id };
 
+        setSaveMessage('Saving...');
+
         // dispatch the update question action and check response for alert message
         dispatch(updateQuestion(concept, question._id, updatedConcept))
         .then(res => {
             if (res.data.message) {
-                setAlertMessage(res.data.message);
+                setSaveMessage(res.data.message);
+            }
+
+            if (res.data.alert) {
+                setAlertMessage(res.data.alert);
                 setAlertOpen(true);
             }
         });
@@ -178,7 +189,7 @@ const QuestionEditor = ({ concept, question }) => {
                 <div className="flex">
                     <Tooltip
                         showOnClick={true}
-                        content={"Saved question."}
+                        content={saveMessage}
                         direction={"right"}
                     >
                         <input

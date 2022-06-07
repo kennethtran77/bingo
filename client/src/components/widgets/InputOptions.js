@@ -7,7 +7,7 @@ import ControlledTooltip from './ControlledTooltip';
 import NewButton from './NewButton';
 import DeleteButton from './DeleteButton';
 
-const InputOptions = ({ options, addOption, editOption, removeOption, placeholder }) => {
+const InputOptions = ({ options, addOption, editOption, removeOption, placeholder, tabIndex = 0 }) => {
     const [inputs, setInputs] = useState(options);
 
     // store message and popup open status for each option in component state
@@ -64,7 +64,7 @@ const InputOptions = ({ options, addOption, editOption, removeOption, placeholde
     }
 
     /**
-     * 
+     * Sets the option at index `index` to be `newOption`
      * @param {Integer} index 
      * @param {String} newOption 
      */
@@ -106,6 +106,7 @@ const InputOptions = ({ options, addOption, editOption, removeOption, placeholde
                     return (
                         <li key={option} className="padding center-flex">
                             <input
+                                tabIndex={tabIndex}
                                 type="text"
                                 value={inputs[index]}
                                 onChange={e => setInputs(prevInputs => {
@@ -125,6 +126,7 @@ const InputOptions = ({ options, addOption, editOption, removeOption, placeholde
                             >
                                 <SaveButton
                                     className="h-margin"
+                                    tabIndex={tabIndex}
                                     aria-label="Save Option"
                                     tooltip="Save Option"
                                     onClick={e => {
@@ -135,13 +137,14 @@ const InputOptions = ({ options, addOption, editOption, removeOption, placeholde
                             </ControlledTooltip>
                             <DeleteButton
                                 onClick={() => handleRemoveOption(index)}
+                                tabIndex={tabIndex}
                                 aria-label="Delete Option"
                                 tooltip="Delete Option"
                             />
                         </li>
                     );
                 })}
-                { <NewButton onClick={handleAddOption} aria-label="Create New Option" tooltip="Create New Option" /> }
+                { <NewButton onClick={handleAddOption} aria-label="Create New Option" tooltip="Create New Option" tabIndex={tabIndex} /> }
             </ul>
         </div>
     );

@@ -18,7 +18,9 @@ const CommentBox = ({ concept }) => {
 
         const newComment = {
             concept: concept._id,
-            text: value
+            text: value,
+            replyTo: null,
+            rootComment: null
         };
 
         dispatch(createComment(concept, newComment));

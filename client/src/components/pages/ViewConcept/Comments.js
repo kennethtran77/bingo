@@ -10,11 +10,14 @@ import CommentBox from './CommentBox';
 const Comments = ({ concept, userId }) => {
     const { comments, isLoading, message } = useSelector(state => state.commentsSlice);
     const [conceptComments, setConceptComments] = useState([]);
+    const [conceptCommentsNoReplies, setConceptCommentsNoReplies] = useState([]);
 
     // load concept comments into state once comments fetched from store
     useEffect(() => {
         if (comments) {
-            setConceptComments(comments.filter(comment => comment.concept === concept._id));
+            const conceptComments = comments.filter(comment => comment.concept === concept._id);
+            setConceptComments(conceptComments);
+            setConceptCommentsNoReplies(conceptComments.filter(comment => !comment.replyTo));
         }
     }, [comments, concept._id]);
 
@@ -27,17 +30,21 @@ const Comments = ({ concept, userId }) => {
             <CommentBox concept={concept} />
             { message.content && <p style={{color: message.colour}} id="message">{message.content}</p> }
             <ul className="remove-bullet">
-                { commentsToDisplay.length ? commentsToDisplay.map((comment) => (
-                    <li key={comment._id}>
-                        <Comment comment={comment} userId={userId} concept={concept} />
-                    </li>
-                )) :
+                { commentsToDisplay.length ? commentsToDisplay.map((comment) => {
+                    const commentReplies = conceptComments.filter(c => c.rootComment === comment._id && c._id !== comment._id);
+
+                    return (
+                        <li key={comment._id} tabIndex={0} >
+                            <Comment comment={comment} userId={userId} concept={concept} replies={commentReplies} />
+                        </li>
+                    );
+                }) :
                     <span>No comments yet.</span>
                 }
             </ul>
             { isLoading && <LoadingSpinner /> }
             <Paginate 
-                items={conceptComments}
+                items={conceptCommentsNoReplies}
                 itemsPerPage={10}
                 setItemsToDisplay={setCommentsToDisplay}
             />
