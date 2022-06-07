@@ -33,18 +33,18 @@
 }
 
 /* Position delete tag button in top right */
-.input-tag .delete {
+.input-tag .delete-button {
     align-self: flex-start;
     position: absolute;
     top: 5px;
     right: 0;
 }
 
-#input-tags-field {
-    flex-grow: 1;
-    width: 1px;
-    outline: none;
-    border: none;
+.input-tags > input {
+    flex-grow: 1 !important;
+    width: 1px !important;
+    outline: none !important;
+    border: none !important;
 }
 
 .input-tags:focus, .focus {
@@ -54,8 +54,4 @@
 
 .input-tags:hover, .hover {
     border: rgb(36, 36, 36) 1px solid;
-}
-
-.full-width {
-    max-width: 100%;
 }

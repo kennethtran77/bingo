@@ -31,6 +31,8 @@ nav h1 {
     font-family: 'Montserrat', serif;
     font-size: 16px;
     cursor: pointer;
+    user-select: none;
+    -webkit-user-drag: none;
 }
 
 .nav-button:visited {
@@ -53,6 +55,7 @@ nav h1 {
 #mobile-navbar-options {
     display: flex;
     flex-direction: column;
+    visibility: visible;
 }
 
 #navbar-menu {

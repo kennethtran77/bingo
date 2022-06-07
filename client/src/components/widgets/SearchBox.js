@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import InputTags from './InputTags';
 
-import './SearchBox.css';
+import styles from './SearchBox.module.css';
 
 // searchables needs a title and tags field
 const SearchBox = ({ searchables, setResults, reset }) => {
@@ -36,12 +36,12 @@ const SearchBox = ({ searchables, setResults, reset }) => {
     const removeTag = tag => setTags(prevTags => prevTags.filter(t => t !== tag));
 
     return (
-        <div id="search-box">
+        <div id={styles['search-box']}>
             <form onSubmit={handleSubmit}>
                 <label>
                     Title
                     <input
-                        id="search-title"
+                        id={styles["search-title"]}
                         type="text"
                         name="query"
                         autoComplete="off"
@@ -52,7 +52,7 @@ const SearchBox = ({ searchables, setResults, reset }) => {
                 <label>
                     Tags
                     <InputTags
-                        id="search-tags"
+                        id={styles["search-tags"]}
                         tags={tags}
                         addTag={addTag}
                         removeTag={removeTag}

@@ -1,12 +1,11 @@
 import React, { useState, useEffect, createRef } from 'react';
 
 import InputTags from './InputTags';
-
-import './InputTags.css';
-import './InputCloze.css';
 import DeleteButton from './DeleteButton';
 import AutosizingInput from './AutosizingInput';
 import LoadingSpinner from './LoadingSpinner';
+
+import styles from './InputCloze.module.css';
 
 // Answer is an array containing strings and arrays of strings
 const InputCloze = ({ input, setInput }) => {
@@ -33,7 +32,7 @@ const InputCloze = ({ input, setInput }) => {
                     const nextRef = fieldRefs[index + 1].current;
 
                     let currContainer = ref.current;
-                    let nextContainer = nextRef.parentElement.parentElement.parentElement;
+                    let nextContainer = nextRef.parentElement.parentElement;
 
                     if (currContainer.offsetTop !== nextContainer.offsetTop) {
                         currContainer.style.flexGrow = 1;
@@ -162,21 +161,13 @@ const InputCloze = ({ input, setInput }) => {
         setInput(prevState => ({ ...prevState, answer: newAnswer }));
     }
 
-    let styling = "input-tags input-cloze";
-
-    if (fieldState === 'hover') {
-        styling += ' hover';
-    } else if (fieldState === 'focused') {
-        styling += ' focus';
-    }
-
     if (!fieldRefs)
         return <LoadingSpinner />;
 
     const isBlank = index => Array.isArray(input.answer[index]);
 
     return (
-        <div className={styling}>
+        <div className={`${styles['input-cloze']} ${styles[fieldState]}`}>
             { input.answer && input.answer.map((ans, index) => {
                 return !isBlank(index) ? (
                     <AutosizingInput
@@ -190,9 +181,9 @@ const InputCloze = ({ input, setInput }) => {
                             minHeight: '45px',
                         }}
                         onKeyDown={(e) => handleKeyDown(index, e)}
-                        onMouseEnter={() => { if (fieldState !== 'focused') setFieldState('hover') }}
+                        onMouseEnter={() => { if (fieldState !== 'focus') setFieldState('hover') }}
                         onMouseLeave={() => { if (fieldState === 'hover') setFieldState('') }}
-                        onFocus={() => setFieldState('focused')}
+                        onFocus={() => setFieldState('focus')}
                         onBlur={() => setFieldState('')}
                         onChange={e => setInput(prevState => {
                             e.preventDefault();
@@ -202,32 +193,33 @@ const InputCloze = ({ input, setInput }) => {
                         })}
                     />
                 ) : (
-                    <div key={index} className="blank-wrapper">
-                        <div className='blanks'>
-                            <InputTags
-                                tags={input.answer[index]}
-                                ref={fieldRefs[index]}
-                                addTag={blank => setInput(prevState => {
-                                    let newAnswer = [ ...prevState.answer ]
-                                    newAnswer[index] = [ ...newAnswer[index], blank ];
-                                    return { ...prevState, answer: newAnswer }
-                                })}
-                                removeTag={blank => setInput(prevState => {
-                                    let newAnswer = [ ...prevState.answer ];
-                                    newAnswer[index] = newAnswer[index].filter(b => b !== blank);
-                                    return { ...prevState, answer: newAnswer }
-                                })}
-                                onKeyDown={(e) => {
-                                    if (e.key === 'ArrowLeft') {
-                                        focusLeftField(index, e);
-                                    } else if (e.key === 'ArrowRight') {
-                                        focusRightField(index, e);
-                                    }
-                                }}
-                                placeholder="Blanks"
-                            />
-                        </div>
-                        <DeleteButton className="delete-blank" aria-label="Delete Blanks" tooltip="Delete Blanks" onClick={() => removeBlank(index)} />
+                    <div className={styles['blanks']}>
+                        <InputTags
+                            inputClassName={styles['input-field']}
+                            tagClassName={styles['input-tag']}
+                            tags={input.answer[index]}
+                            ref={fieldRefs[index]}
+                            addTag={blank => setInput(prevState => {
+                                let newAnswer = [ ...prevState.answer ]
+                                newAnswer[index] = [ ...newAnswer[index], blank ];
+                                return { ...prevState, answer: newAnswer }
+                            })}
+                            removeTag={blank => setInput(prevState => {
+                                let newAnswer = [ ...prevState.answer ];
+                                newAnswer[index] = newAnswer[index].filter(b => b !== blank);
+                                return { ...prevState, answer: newAnswer }
+                            })}
+                            onKeyDown={(e) => {
+                                if (e.key === 'ArrowLeft') {
+                                    focusLeftField(index, e);
+                                } else if (e.key === 'ArrowRight') {
+                                    focusRightField(index, e);
+                                }
+                            }}
+                            wordBreak={true}
+                            placeholder="Blanks"
+                        />
+                        <DeleteButton className={styles['delete-blank']} aria-label="Delete Blanks" tooltip="Delete Blanks" onClick={() => removeBlank(index)} />
                     </div>
                 )
              }) }

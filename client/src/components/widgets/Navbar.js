@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 
 import { useDispatch, useSelector } from 'react-redux';
 
-import './Navbar.css';
+import styles from './Navbar.module.css';
 import LoadingSpinner from './LoadingSpinner';
 import MenuButton from './MenuButton';
 import Tooltip from './Tooltip';
@@ -33,28 +33,28 @@ const Navbar = ({ decodedToken }) => {
 
     return (
         <nav>
-            <div id="navbar-wrapper" className="space-between">
+            <div id={styles["navbar-wrapper"]} className="space-between">
                 <h1>bingo</h1>
-                <div id="navbar-options">
-                    <Link className="nav-button link" to="/">Home</Link>
-                    <Link className="nav-button link" to="/settings">Settings</Link>
-                    <Link className="nav-button link" to="/collections">Collections</Link>
-                    <Link className="nav-button link" to="/browse">Browse Concepts</Link>
+                <div id={styles["navbar-options"]}>
+                    <Link className={styles["nav-button"]} to="/">Home</Link>
+                    <Link className={styles["nav-button"]} to="/settings">Settings</Link>
+                    <Link className={styles["nav-button"]} to="/collections">Collections</Link>
+                    <Link className={styles["nav-button"]} to="/browse">Browse Concepts</Link>
                     <div className="center-flex">
                         <strong className="h-margin">{user ? user.username : <LoadingSpinner />}</strong>
-                        <button className="nav-button h-margin" onClick={logout}>Log Out</button>
+                        <button className={`${styles['nav-button']} h-margin`} onClick={logout}>Log Out</button>
                     </div>
                 </div>
                 <Tooltip
                     showOnClick={true}
                     direction={'below-left'}
                     content={
-                        <div id="mobile-navbar-options">
-                            <Link className="nav-button link" to="/">Home</Link>
-                            <Link className="nav-button link" to="/settings">Settings</Link>
-                            <Link className="nav-button link" to="/collections">Collections</Link>
-                            <Link className="nav-button link" to="/browse">Browse Concepts</Link>
-                            <div className="container">
+                        <div id={styles["mobile-navbar-options"]}>
+                            <Link className={styles["nav-button"]} to="/">Home</Link>
+                            <Link className={styles["nav-button"]} to="/settings">Settings</Link>
+                            <Link className={styles["nav-button"]} to="/collections">Collections</Link>
+                            <Link className={styles["nav-button"]} to="/browse">Browse Concepts</Link>
+                            <div className="container" tabIndex={0}>
                                 { user ? (
                                     <>
                                         <div className="h-margin">Logged in as</div>
@@ -62,11 +62,11 @@ const Navbar = ({ decodedToken }) => {
                                     </>
                                 ) : <LoadingSpinner /> }
                             </div>
-                            <span className="nav-button" onClick={logout}>Log Out</span>
+                            <button className={styles["nav-button"]} onClick={logout} tabIndex={0}>Log Out</button>
                         </div>
                     }
                 >
-                    <MenuButton id='navbar-menu' tooltip="Open Menu" />
+                    <MenuButton id={styles['navbar-menu']} tooltip="Open Menu" />
                 </Tooltip>
             </div>
         </nav>
