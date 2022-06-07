@@ -1,4 +1,4 @@
-import React, { useState, Children } from "react";
+import React, { useState } from "react";
 import ExternalListener from "./ExternalListener";
 
 import styles from "./Tooltip.module.css";
