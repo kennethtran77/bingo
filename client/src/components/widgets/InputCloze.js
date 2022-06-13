@@ -15,9 +15,9 @@ const InputCloze = ({ input, setInput }) => {
     // Set up refs for the fields
     useEffect(() => {
         setFieldRefs(fieldRefs => Array(input.answer.length).fill().map((_, i) => fieldRefs[i] || createRef()));
-    }, [input.answer]);
+    }, [input.answer.length]);
 
-    // update flex growth of non-blank fields
+    // update flex growth of non-blank fields when field refs are set
     useEffect(() => {
         updateFlexGrowth();
     }, [fieldRefs]);
@@ -43,6 +43,7 @@ const InputCloze = ({ input, setInput }) => {
             }
         })
     };
+
     /**
      * Focus on the field to the left of inputIndex
      * @param {Number} inputIndex
@@ -172,7 +173,7 @@ const InputCloze = ({ input, setInput }) => {
                 return !isBlank(index) ? (
                     <AutosizingInput
                         value={ans || ''}
-                        key={index}
+                        key={ans}
                         ref={fieldRefs[index]}
                         inputstyle={{
                             border: 'none',
@@ -193,7 +194,7 @@ const InputCloze = ({ input, setInput }) => {
                         })}
                     />
                 ) : (
-                    <div className={styles['blanks']}>
+                    <div className={styles['blanks']} key={ans}>
                         <InputTags
                             inputClassName={styles['input-field']}
                             tagClassName={styles['input-tag']}
