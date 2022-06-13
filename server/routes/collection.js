@@ -1,7 +1,7 @@
 import express from 'express';
 
 import * as controller from '../controllers/collections.js';
-import auth from '../middleware/auth.js';
+import { authHeader } from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -9,11 +9,11 @@ router.use(express.static('public'));
 router.use(express.urlencoded({ extended: true }));
 router.use(express.json());
 
-router.get('/', auth, controller.getCollections);
-router.patch('/add/:collectionId', auth, controller.addToCollection);
-router.patch('/remove/:collectionId', auth, controller.removeFromCollection);
-router.patch('/:collectionId', auth, controller.updateCollection)
-router.post('/', auth, controller.createCollection);
-router.delete('/:collectionId', auth, controller.deleteCollection);
+router.get('/', authHeader, controller.getCollections);
+router.patch('/add/:collectionId', authHeader, controller.addToCollection);
+router.patch('/remove/:collectionId', authHeader, controller.removeFromCollection);
+router.patch('/:collectionId', authHeader, controller.updateCollection)
+router.post('/', authHeader, controller.createCollection);
+router.delete('/:collectionId', authHeader, controller.deleteCollection);
 
 export default router;

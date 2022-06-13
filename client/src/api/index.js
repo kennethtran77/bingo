@@ -1,15 +1,19 @@
 import axios from 'axios';
 
+axios.defaults.withCredentials = true;
+
 const api = axios.create({ baseURL: 'http://localhost:5000' });
 
-// attach the JWT token to ea2ch request
-api.interceptors.request.use(req => {
-    if (localStorage.getItem('profile')) {
-        req.headers.authorization = `Bearer ${JSON.parse(localStorage.getItem('profile')).token}`;
-    }
-    
-    return req;
-});
+/**
+ * Sets the bearer token in the Authorization field in header to be `token`
+ * @param {String} token 
+ */
+export const setAuthHeader = token => {
+    api.interceptors.request.use(req => {
+        req.headers.Authorization = `Bearer ${token}`;
+        return req;
+    });
+};
 
 // concepts
 export const fetchConcepts = () => api.get(`/concepts`);
@@ -51,6 +55,8 @@ export const fetchPracticeSessions = () => api.get(`/practice/sessions`);
 export const fetchPracticeQuestionChanged = (sessionId, questionId) => api.get(`/practice/checkChanged?sessionId=${sessionId}&questionId=${questionId}`);
 
 // auth
+export const generateToken = () => api.get(`/users/token`);
+export const clearSession = () => api.post(`/users/clearsession`);
 export const login = (loginInput) => api.post(`/users/login`, loginInput);
 export const signUp = (signUpInput) => api.post(`/users/signup`, signUpInput);
 export const updatePassword = (password, newPassword, confirmNewPassword) => api.post(`/users/password`, { password, newPassword, confirmNewPassword });

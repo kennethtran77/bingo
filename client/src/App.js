@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Route, Routes, Navigate } from 'react-router';
 
 import decode from 'jwt-decode';
@@ -8,6 +8,8 @@ import { fetchConcepts } from './actions/concepts.js';
 import { fetchCollections } from './actions/collections.js';
 import { fetchPracticeSessions } from './actions/practice.js';
 import { fetchSettings, fetchUsernames } from './actions/user.js';
+import { generateToken } from './actions/auth.js';
+import { setAuthHeader } from './api/index.js';
 
 import './App.css';
 
@@ -29,63 +31,34 @@ import EditCollection from './components/pages/Collections/EditCollection';
 import PracticeCollection from './components/pages/Practice/PracticeCollection.js';
 
 const App = () => {
-    // decodedToken should be an object with key `id` representing the user's id
-    const [decodedToken, setDecodedToken] = useState('');
-    
-    // force refresh
-    useSelector(state => state.authSlice);
-
+    const token = useToken(); 
     const dispatch = useDispatch();
-
-    // Try to decode token whenever `session` changes
-    useEffect(() => {
-        const checkForToken = () => {
-            // fetch json token from localStorage
-            const sessionToken = localStorage.getItem('profile');
-
-            if (sessionToken) {
-                const parsedToken = JSON.parse(sessionToken);
-
-                if (parsedToken && parsedToken.token) {
-                    const decoded = decode(parsedToken.token);
-                    setDecodedToken(decoded);
-                }
-            }
-        };
-
-        checkForToken(); // check for token upon App component mounting
-
-        // add window event listener to check localStorage
-        window.addEventListener('storage', checkForToken);
-
-        // cleanup function, remove window event listener
-        return () => window.removeEventListener('storage', checkForToken);
-    }, []);
 
     // Load data once user ID loads
     useEffect(() => {
-        if (decodedToken) {
+        if (token) {
             dispatch({ type: 'questions/clear' });
-            dispatch(fetchConcepts(decodedToken.id));
+            dispatch(fetchConcepts(token.id));
             dispatch(fetchCollections());
             dispatch(fetchPracticeSessions());
             dispatch(fetchSettings());
             dispatch(fetchUsernames());
         }
-    }, [dispatch, decodedToken]);
+    }, [dispatch, token]);
 
     // wrap the component in a fragment containing the navbar with the decoded
     // token, and passing userId as props into the component
     const wrap = (Component) => (
         <>
-            <Navbar decodedToken={decodedToken} />
+            <Navbar decodedToken={token} />
             <div className="main">
-                { <Component userId={decodedToken.id} /> }
+                { <Component userId={token.id} /> }
             </div>
         </>
     );
 
-    if (!decodedToken)
+    // limit routes when no jwt token is present
+    if (!token)
         return (
             <Routes>
                 <Route path='*' element={<Navigate to="/" />}></Route>
@@ -116,5 +89,34 @@ const App = () => {
         </>
     );
 };
+
+export const useToken = () => {
+    // decodedToken should be an object with key `id` representing the user's id
+    const [decodedToken, setDecodedToken] = useState(null);
+
+    const dispatch = useDispatch();
+
+    const refreshToken = () => {
+        dispatch(generateToken())
+        .then(token => {
+            if (token) {
+                const decoded = decode(token);
+                setDecodedToken(decoded);
+                setAuthHeader(token);
+
+                // generate a new access token immediately before expiration
+                setTimeout(() => {
+                    refreshToken();
+                }, ((decoded.exp * 1000) - Date.now()) - 500);
+            }
+        });
+    };
+
+    useEffect(() => {
+        refreshToken();
+    }, []);
+
+    return decodedToken;
+}
 
 export default App;

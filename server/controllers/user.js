@@ -38,34 +38,52 @@ const validatePassword = password => {
     return { success: true };
 }
 
+// Generates a new jwt token using refresh token in httpOnly cookie 
+export const generateToken = async (req, res) => {
+    const token = jwt.sign({ id: req.user.id }, secret, { expiresIn: '0.25h' });
+    return res.status(200).json(token);
+}
+
+// Remove the refresh token cookie
+export const clearSession = async (req, res) => {
+    res.clearCookie('refreshToken');
+    res.status(200).send({ message: "Logged out"} );
+}
+
 export const login = async (req, res) => {
     const { email, password } = req.body;
 
     try {
         // check inputs
         if (!email || !password)
-        return res.status(400).json({ message: 'Please fill in all inputs.' });
+        return res.status(400).json({ success: false, message: 'Please fill in all inputs.' });
 
         // check if account exists
         const user = await UserModel.findOne({ email: email.toLowerCase() });
 
         if (!user) {
-            return res.status(404).json({ message: 'No account with this email was found.' });
+            return res.status(404).json({ success: false, message: 'No account with this email was found.' });
         }
 
         // check if password is correct
         if (!await bcrypt.compare(password, user.password)) {
-            return res.status(400).json({ message: 'Incorrect password.' });
+            return res.status(400).json({ success: false, message: 'Incorrect password.' });
         }
 
-        // sign a token
-        const token = jwt.sign({ id: user._id }, secret, { expiresIn: '6h' });
+        // sign a token and send it through cookies
+        const hours = 6;
+        const token = jwt.sign({ id: user._id }, secret, { expiresIn: `${hours}h` });
 
-        res.status(200).json({ token });
+        res.cookie('refreshToken', token, {
+            expires: new Date(Date.now() + (hours * 60 * 60 * 1000)),
+            secure: false,
+            httpOnly: true
+        });
+        res.status(200).send({ success: true, token });
     } catch (error) {
         console.log(error);
 
-        res.status(500).json({ message: 'Something went wrong...' });
+        res.status(500).json({ success: false, message: 'Something went wrong...' });
     }
 }
 
@@ -81,22 +99,22 @@ export const signUp = async (req, res) => {
         const validPassword = validatePassword(password);
 
         if (!validPassword.success)
-            return res.status(400).json({ message: validPassword.message });
+            return res.status(400).json({ success: false, message: validPassword.message });
 
         if (password !== confirmPassword)
-            return res.status(400).json({ message: 'The two passwords do not match.' });
+            return res.status(400).json({ success: false, message: 'The two passwords do not match.' });
 
         // validate username
         const validUsername = validateUsername(username);
 
         if (!validUsername.success)
-            return res.status(400).json({ message: validUsername.message });
+            return res.status(400).json({ success: false, message: validUsername.message });
 
         // check if account exists
         const user = await UserModel.findOne({ email: email.toLowerCase() });
 
         if (user)
-            return res.status(400).json({ message: 'An account with this email already exists.' });
+            return res.status(400).json({ success: false, message: 'An account with this email already exists.' });
         
         const hashedPassword = await bcrypt.hash(password, 12);
 
@@ -110,11 +128,17 @@ export const signUp = async (req, res) => {
             sessionsCompleted: []
         });
 
-        const token = jwt.sign({ id: newUser._id }, secret, { expiresIn: '6h' });
+        const hours = 6;
+        const token = jwt.sign({ id: user._id }, secret, { expiresIn: `${hours}h` });
 
-        res.status(201).json({ token });
+        res.cookie('refreshToken', token, {
+            expires: new Date(Date.now() + (hours * 60 * 60 * 1000)),
+            secure: false,
+            httpOnly: true
+        });
+        res.status(200).send({ success: true, token });
     } catch (error) {
-        res.status(500).json({ message: 'Something went wrong...' });
+        res.status(500).json({ success: false, message: 'Something went wrong...' });
     }
 }
 
@@ -179,16 +203,11 @@ export const getUsernames = async (req, res) => {
 }
 
 export const getSettings = async (req, res) => {
-    const { userId } = req.params;
-
     try {
         const user = await UserModel.findById(req.user.id);
 
         if (!user)
             return res.status(404).json({ message: 'No account with this username was found' });
-
-        if (req.user.id !== userId)
-            return res.status(403).json({ message: 'Unauthorized action' });
 
         res.status(200).json(user.settings);
     } catch (error) {

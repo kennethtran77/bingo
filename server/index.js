@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
 
 // import routers
 import conceptsRouter from './routes/concept.js';
@@ -18,10 +19,16 @@ dotenv.config();
 
 const PORT = process.env.PORT || 5000;
 const CONNECTION_URL = process.env.CONNECTION_URL;
+const FRONTEND_URL = process.env.FRONTEND_URL;
 
+// use services
 app.use(express.json({ extended: true }));
 app.use(express.urlencoded({ extended: true }));
-app.use(cors());
+app.use(cookieParser());
+app.use(cors({
+    credentials: true,
+    origin: FRONTEND_URL
+}));
 
 console.log(CONNECTION_URL);
 

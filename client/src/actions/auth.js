@@ -20,18 +20,32 @@ const setTimedMessage = (message, colour, interval) => (dispatch, getState) => {
     dispatch({ type: 'auth/setMessageTimer', payload: newTimer });
 }
 
+export const generateToken = () => async (dispatch) => {
+    try {
+        dispatch({ type: 'auth/startLoading' });
+        const { data } = await api.generateToken();
+        dispatch({ type: 'auth/stopLoading' });
+        return data;
+    } catch (error) {
+        console.log(error);
+        dispatch({ type: 'auth/stopLoading' });
+    }
+}
+
 export const login = (loginInput) => async (dispatch) => {
     try {
         // login
         dispatch({ type: 'auth/startLoading' });
         const { data } = await api.login(loginInput);
+        dispatch({ type: 'auth/stopLoading' });
 
-        if (data && data.token) {
-            localStorage.setItem('profile', JSON.stringify(data));
-            window.dispatchEvent(new Event('storage')); // force storage event to occur
+        if (!data.success) {
+            dispatch(setTimedMessage(data.message, 'red', 2500));
+            return;
         }
 
-        dispatch({ type: 'auth/stopLoading' });
+        window.location.reload();
+        return data.token;
     } catch (error) {
         dispatch(setTimedMessage(error.response.data.message, 'red', 2500));
         dispatch({ type: 'auth/stopLoading' });
@@ -44,6 +58,12 @@ export const signUp = (signUpInput) => async (dispatch) => {
         dispatch({ type: 'auth/startLoading' });
         // data is an object with key `token`
         const { data } = await api.signUp(signUpInput);
+        dispatch({ type: 'auth/stopLoading' });
+
+        if (!data.success) {
+            dispatch(setTimedMessage(data.message, 'red', 2500));
+            return;
+        }
 
         // userId is the id of the newly created user account
         const userId = decode(data.token).id;
@@ -53,14 +73,21 @@ export const signUp = (signUpInput) => async (dispatch) => {
             payload: { _id: userId, username: signUpInput.username }
         });
 
-        if (data && data.token) {
-            localStorage.setItem('profile', JSON.stringify(data));
-            window.dispatchEvent(new Event('storage')); // force storage event to occur
-        }
-
         dispatch({ type: 'auth/stopLoading' });
+        window.location.reload();
     } catch (error) {
         dispatch(setTimedMessage(error.response.data.message, 'red', 2500));
+        dispatch({ type: 'auth/stopLoading' });
+    }
+}
+
+export const logout = () => async (dispatch) => {
+    try {
+        dispatch({ type: 'auth/startLoading' });
+        await api.clearSession();
+        dispatch({ type: 'auth/stopLoading' });
+    } catch (error) {
+        console.log(error);
         dispatch({ type: 'auth/stopLoading' });
     }
 }

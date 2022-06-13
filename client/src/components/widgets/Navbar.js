@@ -1,7 +1,9 @@
-import React, { useEffect, useCallback } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useCallback } from 'react';
+import { Link } from 'react-router-dom';
 
 import { useDispatch, useSelector } from 'react-redux';
+
+import { logout } from '../../actions/auth';
 
 import styles from './Navbar.module.css';
 import LoadingSpinner from './LoadingSpinner';
@@ -14,22 +16,12 @@ const Navbar = ({ decodedToken }) => {
     const user = users.find(u => u._id === decodedToken.id);
 
     const dispatch = useDispatch();
-    const location = useLocation();
 
-    const logout = useCallback(() => {
-        dispatch({ type: 'auth/startLoading' });
-        localStorage.removeItem('profile');
-        dispatch({ type: 'auth/stopLoading' });
+    const signout = useCallback(() => {
+        dispatch(logout());
         dispatch({ type: 'practice/clear' }); // clear practice sessions
         window.location.reload();
     }, [dispatch]);
-
-    // automatically logout once token expires
-    useEffect(() => {
-        if (decodedToken.exp * 1000 < new Date().getTime()) {
-            logout();
-        }
-    }, [location, logout, decodedToken]);
 
     return (
         <nav>
@@ -42,7 +34,7 @@ const Navbar = ({ decodedToken }) => {
                     <Link className={styles["nav-button"]} to="/browse">Browse Concepts</Link>
                     <div className="center-flex">
                         <strong className="h-margin">{user ? user.username : <LoadingSpinner />}</strong>
-                        <button className={`${styles['nav-button']} h-margin`} onClick={logout}>Log Out</button>
+                        <button className={`${styles['nav-button']} h-margin`} onClick={signout}>Log Out</button>
                     </div>
                 </div>
                 <Tooltip
@@ -62,7 +54,7 @@ const Navbar = ({ decodedToken }) => {
                                     </>
                                 ) : <LoadingSpinner /> }
                             </div>
-                            <button className={styles["nav-button"]} onClick={logout} tabIndex={0}>Log Out</button>
+                            <button className={styles["nav-button"]} onClick={signout} tabIndex={0}>Log Out</button>
                         </div>
                     }
                 >
