@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, Navigate, useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 
 import WarningIcon from '@mui/icons-material/Warning';
 import InfoIcon from '@mui/icons-material/Info';
@@ -7,6 +7,8 @@ import InfoIcon from '@mui/icons-material/Info';
 import { useSelector } from 'react-redux';
 
 import PracticeQuestion from './Practice/PracticeQuestion';
+
+import Button from '../widgets/Button';
 
 import { fetchPracticeQuestionChanged } from '../../api';
 import LoadingSpinner from '../widgets/LoadingSpinner';
@@ -54,7 +56,7 @@ const PracticeResults = ({ userId }) => {
             <div className="container">
                 <h3>Score: { practiceSession.score } / { practiceSession.practiceQuestions.length }</h3>
                 <div className="left-flex">
-                    <Link className="small-button link" to="/">Go Home</Link>
+                    <Button link="/" text="Go Home" background />
                 </div>
             </div>
             <table style={{

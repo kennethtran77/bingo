@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateSettings, updateUsername, updatePassword } from '../../../actions/user';
+import Button from '../../widgets/Button';
 import LoadingSpinner from '../../widgets/LoadingSpinner';
 
 import './Settings.css';
@@ -55,7 +56,7 @@ const Settings = ({ userId }) => {
                                 onChange={handleChange}
                             />
                         </label>
-                        <button className="small-button" onClick={handleSaveSettings}>Save</button>
+                        <Button onClick={handleSaveSettings} text="Save" background />
                     </div>
                     <div>
                         <h3>Change Username</h3>
@@ -69,7 +70,7 @@ const Settings = ({ userId }) => {
                                 onChange={handleChange}
                             />
                         </label>
-                        <button className="small-button" onClick={handleSaveUsername}>Save</button>
+                        <Button onClick={handleSaveUsername} text="Save" background />
                     </div>
                     <div>
                         <h3>Change Password</h3>
@@ -103,7 +104,7 @@ const Settings = ({ userId }) => {
                                 onChange={handleChange}
                             />
                         </label>
-                        <button className="small-button" onClick={handleSavePassword}>Save</button>
+                        <Button onClick={handleSavePassword} text="Save" background />
                     </div>
                 </div>
             </div>

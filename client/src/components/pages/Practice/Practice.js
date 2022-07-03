@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import PracticeQuestion from './PracticeQuestion';
 import { processSession } from '../../../actions/practice';
+import Button from '../../widgets/Button';
 
 const Practice = ({ questions, title }) => {
     // State hooks
@@ -66,7 +67,7 @@ const Practice = ({ questions, title }) => {
                     </li>
                 ))}
             </ul>
-            <button className="small-button" onClick={handleSubmit}>Submit</button>
+            <Button onClick={handleSubmit} text="Submit" background />
         </>
     );
 }

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Navigate, useParams, Link } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 
 import { generateCollectionQuestions } from '../../../api';
+import Button from '../../widgets/Button';
 import LoadingSpinner from '../../widgets/LoadingSpinner';
 
 import Practice from './Practice';
@@ -45,18 +46,13 @@ const PracticeCollection = ({ userId }) => {
         return (
             <>
                 <p>This collection has no concepts!</p>
-                <Link to="/" className="small-button link">Go Home</Link>
+                <Button link="/" text="Go Home" background />
             </>
         );
     
     // If the questions loaded and are empty, display error message
     if (questions && !questions.length)
-        return (
-            <>
-                <p>This collection has no practicable questions!</p>
-                <Link to="/" className="small-button link">Go Home</Link>
-            </>
-        );
+        return <p>This collection has no practicable questions!</p>;
     
     return <Practice questions={questions} title={collection.title} />;
 }

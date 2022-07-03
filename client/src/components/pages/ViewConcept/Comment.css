@@ -3,25 +3,6 @@
     margin-bottom: 15px;
 }
 
-.comment-button {
-    background-color: transparent;
-    color: black;
-    text-decoration: none;
-    box-sizing: border-box;
-    border-radius: 5px;
-    padding: 5px;
-    transition: 200ms;
-    cursor: pointer;
-}
-
-.comment-button:hover {
-    background-color: #80acdf;
-}
-
-.comment-button:active {
-    background-color: #5392db;
-}
-
 .disabled {
     background-color: rgb(172, 172, 172) !important;
     color: white !important;

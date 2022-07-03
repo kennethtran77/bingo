@@ -7,6 +7,7 @@ import { signUp } from '../../../actions/auth.js';
 
 import './Auth.css';
 import LoadingSpinner from '../../widgets/LoadingSpinner.js';
+import Button from '../../widgets/Button.js';
 
 const Signup = () => {
     const [input, setInput] = useState({ email: '', username: '', password: '', confirmPassword: '' });
@@ -17,16 +18,18 @@ const Signup = () => {
 
     const handleChange = e => setInput({ ...input, [e.target.name]: e.target.value });
 
-    const handleSubmit = e => {
-        e.preventDefault();
-        dispatch(signUp(input));
+    const handleSubmit = () => dispatch(signUp(input));
+
+    const handleKeyDown = e => {
+        if (e.key === 'Enter')
+            handleSubmit()
     }
 
     return (
         <>
             <h1 id="title">bingo</h1>
             <div id="auth">
-                <form className="container" onSubmit={handleSubmit}>
+                <form className="container">
                     <label>
                         Email
                         <input
@@ -35,6 +38,7 @@ const Signup = () => {
                             name="email"
                             value={input.email}
                             onChange={handleChange}
+                            onKeyDown={handleKeyDown}
                         />
                     </label>
                     <label>
@@ -46,6 +50,7 @@ const Signup = () => {
                             autoComplete="off"
                             value={input.username}
                             onChange={handleChange}
+                            onKeyDown={handleKeyDown}
                         />
                     </label>
                     <label>
@@ -56,6 +61,7 @@ const Signup = () => {
                             name="password"
                             value={input.password}
                             onChange={handleChange}
+                            onKeyDown={handleKeyDown}
                         />
                     </label>
                     <label>
@@ -66,9 +72,10 @@ const Signup = () => {
                             name="confirmPassword"
                             value={input.confirmPassword}
                             onChange={handleChange}
+                            onKeyDown={handleKeyDown}
                         />
                     </label>
-                    <input className="small-button" type="submit" value="Sign Up" />
+                    <Button text="Sign Up" onClick={handleSubmit} background />
                     <p>Already have an account? <Link to="/login" className="coloured-link">Log In</Link></p>
                     { isLoading && <LoadingSpinner /> }
                     { message.content && <span style={{color: message.colour}} id="message">{message.content}</span> }

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Navigate, useParams, Link } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 
 import { generateConceptQuestions } from '../../../api';
 import LoadingSpinner from '../../widgets/LoadingSpinner';
 
+import Button from '../../widgets/Button';
 import Practice from './Practice';
 
 const PracticeConcept = ({ userId }) => {
@@ -45,7 +46,7 @@ const PracticeConcept = ({ userId }) => {
         return (
             <>
                 <p>This concept has no practicable questions!</p>
-                <Link to="/" className="small-button link">Go Home</Link>
+                <Button link="/" text="Go Home" background />
             </>
         );
     

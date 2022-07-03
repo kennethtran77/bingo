@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -8,10 +8,14 @@ import LikeDislike from '../../widgets/LikeDislike';
 import Comments from './Comments';
 import LoadingSpinner from '../../widgets/LoadingSpinner';
 
-import { likeConcept, dislikeConcept } from '../../../actions/concepts';
+import { likeConcept, dislikeConcept, deleteConcept } from '../../../actions/concepts';
+import Modal from '../../widgets/Modal';
+import ConceptOptions from '../../widgets/ConceptOptions';
+import Button from '../../widgets/Button';
 
 const ViewConcept = ({ userId }) => {
     const { conceptId } = useParams();
+    const [alertOpen, setAlertOpen] = useState(false);
 
     const dispatch = useDispatch();
 
@@ -32,6 +36,17 @@ const ViewConcept = ({ userId }) => {
 
     return (
         <>
+            <Modal
+                active={alertOpen}
+                setActive={setAlertOpen}
+            >
+                <p>Are you sure want to delete <strong>{concept.title}</strong>?</p>
+                <div className="right-flex gap">
+                    <Button text="Delete" onClick={() => dispatch(deleteConcept(concept._id))} background />
+                    <Button text="Cancel" onClick={() => setAlertOpen(false)} />
+                </div>
+            </Modal>
+
             <div className="container">
                 <h1>{ concept.title }</h1>
                 <h3>by <strong>{user.username}</strong></h3>
@@ -39,13 +54,16 @@ const ViewConcept = ({ userId }) => {
                 <Latex>{concept.text}</Latex>
             </div>
             <div className="container">
-                <LikeDislike
-                    userId={userId}
-                    likes={concept.likes}
-                    dislikes={concept.dislikes}
-                    like={() => dispatch(likeConcept(concept._id))}
-                    dislike={() => dispatch(dislikeConcept(concept._id))}
-                />
+                <div className="space-between">
+                    <LikeDislike
+                        userId={userId}
+                        likes={concept.likes}
+                        dislikes={concept.dislikes}
+                        like={() => dispatch(likeConcept(concept._id))}
+                        dislike={() => dispatch(dislikeConcept(concept._id))}
+                    />
+                    <ConceptOptions userId={userId} concept={concept} setToDelete={() => setAlertOpen(true)} />
+                </div>
                 <hr />
                 <Comments concept={concept} userId={userId} />
             </div>

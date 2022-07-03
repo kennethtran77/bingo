@@ -7,6 +7,7 @@ import { login } from '../../../actions/auth.js';
 
 import './Auth.css';
 import LoadingSpinner from '../../widgets/LoadingSpinner.js';
+import Button from '../../widgets/Button.js';
 
 const Login = () => {
     const [input, setInput] = useState({ email: '', password: '' })
@@ -22,6 +23,11 @@ const Login = () => {
         dispatch(login(input));
     }, [input, dispatch]);
 
+    const handleKeyDown = useCallback(e => {
+        if (e.key === 'Enter')
+            handleSubmit(e);
+    });
+
     return (
         <>
             <h1 id="title">bingo</h1>
@@ -35,6 +41,7 @@ const Login = () => {
                             name="email"
                             value={input.email}
                             onChange={handleChange}
+                            onKeyDown={handleKeyDown}
                         />
                     </label>
                     <label>
@@ -45,9 +52,10 @@ const Login = () => {
                             name="password"
                             value={input.password}
                             onChange={handleChange}
+                            onKeyDown={handleKeyDown}
                         />
                     </label>
-                    <input className="small-button" type="submit" value="Log In" />
+                    <Button onClick={handleSubmit} text="Log In" background />
                     <p>Don't have an account? <Link to="/signup" className="coloured-link">Sign Up</Link></p>
                     { isLoading && <LoadingSpinner /> }
                     { message.content && <p style={{color: message.colour}} id="message">{message.content}</p> }

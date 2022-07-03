@@ -17,6 +17,7 @@ import Tooltip from '../../../../widgets/Tooltip';
 import Dropdown from '../../../../widgets/Dropdown';
 import MenuButton from '../../../../widgets/MenuButton';
 import LoadingSpinner from '../../../../widgets/LoadingSpinner';
+import Button from '../../../../widgets/Button';
 
 const QuestionEditor = ({ concept, question }) => {
     const [input, setInput] = useState(null);
@@ -79,9 +80,7 @@ const QuestionEditor = ({ concept, question }) => {
         }
     };
 
-    const handleSubmit = e => {
-        e.preventDefault();
-
+    const handleSubmit = () => {
         const updatedConcept = { ...input, concept: concept._id };
 
         setSaveMessage('Saving...');
@@ -107,11 +106,11 @@ const QuestionEditor = ({ concept, question }) => {
                 message='You have unsaved changes. Are you sure you want to leave?'
             /> */}
             <Modal
-                content={alertMessage}
                 active={alertOpen}
                 setActive={setAlertOpen}
-                type={'warning'}
-            />
+            >
+                {alertMessage}
+            </Modal>
             <form>
                 <label>
                     Title
@@ -192,11 +191,12 @@ const QuestionEditor = ({ concept, question }) => {
                         content={saveMessage}
                         direction={"right"}
                     >
-                        <input
-                            className="small-button v-margin"
-                            type="button"
-                            value="Save"
+                        <Button
+                            text="Save"
+                            background
+                            vMargin
                             onClick={handleSubmit}
+                            stopPropogation={false}
                         />
                     </Tooltip>
                 </div>
