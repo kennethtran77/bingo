@@ -1,4 +1,3 @@
-import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
@@ -9,8 +8,12 @@ dotenv.config();
 
 const secret = process.env.SECRET;
 
-
-const validateUsername = username => {
+/**
+ * Returns whether the the username password is valid
+ * @param {String} username 
+ * @returns an object with keys: boolean success, string message
+ */
+ const validateUsername = username => {
     // test for length
     if (username.length < 3)
         return { success: false, message: 'Username must contain at least 3 characters.' };
@@ -22,10 +25,15 @@ const validateUsername = username => {
     if (/\s/.test(username))
         return { success: false, message: 'Username cannot contain whitespace.' };
     
-    return { success: true };
+    return { success: true, message: "Valid username." };
 }
 
-const validatePassword = password => {
+/**
+ * Returns whether the the given password is strong enough
+ * @param {String} password 
+ * @returns an object with keys: boolean success, string message
+ */
+ const validatePassword = password => {
     if (password.length < 6)
         return { success: false, message: 'Password must contain at least 6 characters.' };
     
@@ -35,19 +43,19 @@ const validatePassword = password => {
     if (password.search(/[0-9]/) < 0)
         return { success: false, message: 'Password must contain at least one digit.' };
     
-    return { success: true };
+    return { success: true, message: "Valid password." };
 }
 
 // Generates a new jwt token using refresh token in httpOnly cookie 
 export const generateToken = async (req, res) => {
     const token = jwt.sign({ id: req.user.id }, secret, { expiresIn: '0.25h' });
-    return res.status(200).json(token);
+    return res.status(200).json({ token, success: true });
 }
 
 // Remove the refresh token cookie
 export const clearSession = async (req, res) => {
     res.clearCookie('refreshToken');
-    res.status(200).send({ message: "Logged out"} );
+    res.status(200).json({ success: true, message: "Logged out"} );
 }
 
 export const login = async (req, res) => {
@@ -129,7 +137,7 @@ export const signUp = async (req, res) => {
         });
 
         const hours = 6;
-        const token = jwt.sign({ id: user._id }, secret, { expiresIn: `${hours}h` });
+        const token = jwt.sign({ id: newUser._id }, secret, { expiresIn: `${hours}h` });
 
         res.cookie('refreshToken', token, {
             expires: new Date(Date.now() + (hours * 60 * 60 * 1000)),
