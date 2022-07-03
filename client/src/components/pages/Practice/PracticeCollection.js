@@ -52,7 +52,12 @@ const PracticeCollection = ({ userId }) => {
     
     // If the questions loaded and are empty, display error message
     if (questions && !questions.length)
-        return <p>This collection has no practicable questions!</p>;
+        return (
+            <>
+                <p>This collection has no practicable questions!</p>
+                <Button link="/" text="Go Home" background />
+            </>
+        );
     
     return <Practice questions={questions} title={collection.title} />;
 }

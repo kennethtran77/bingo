@@ -37,14 +37,14 @@ const Navbar = ({ userId }) => {
     const getNavOptions = useCallback(() => {
         return (
             <div id={mobileNav ? styles["mobile-navbar-options"] : styles["wide-navbar-options"]}>
-                <Button link="/" tooltip="Home" text={mobileNav && "Home"} Icon={<HomeIcon />} stretch={mobileNav} />
-                <Button link="/settings" tooltip="Settings" text={mobileNav && "Settings"} Icon={<SettingsIcon />} stretch={mobileNav} />
-                <Button link="/collections" tooltip="Collections" text={mobileNav && "Collections"} Icon={<BookmarksIcon />} stretch={mobileNav} />
-                <Button link="/browse" tooltip="Browse Concepts" text={mobileNav && "Browse Concepts"} Icon={<ExploreIcon />} stretch={mobileNav} />
+                <Button link="/" tooltip="Home" text={mobileNav && "Home"} Icon={<HomeIcon />} width={mobileNav ? '100%' : ''} />
+                <Button link="/settings" tooltip="Settings" text={mobileNav && "Settings"} Icon={<SettingsIcon />} width={mobileNav ? '100%' : ''} />
+                <Button link="/collections" tooltip="Collections" text={mobileNav && "Collections"} Icon={<BookmarksIcon />} width={mobileNav ? '100%' : ''} />
+                <Button link="/browse" tooltip="Browse Concepts" text={mobileNav && "Browse Concepts"} Icon={<ExploreIcon />} width={mobileNav ? '100%' : ''} />
                 { user ? (
                     <div className="center-flex" style={{ marginLeft: !mobileNav ? '15px' : '' }}>
                         <div className="h-margin"><strong>{user.username}</strong></div>
-                        <Button onClick={signout} tooltip="Log Out" Icon={<LogoutIcon />} stretch={mobileNav} />
+                        <Button onClick={signout} tooltip="Log Out" Icon={<LogoutIcon />} width={mobileNav ? '100%' : ''} />
                     </div>
                 ) : <LoadingSpinner /> }
             </div>

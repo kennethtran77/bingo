@@ -32,12 +32,7 @@ const Concept = ({ concept, remove, userId, showCreator, collection, handleTagCl
         return showAllTags ? concept.tags : concept.tags.slice(0, 10);
     }
 
-    const handleRemove = e => {
-        e.preventDefault();
-        remove();
-    }
-
-    return toDelete ? <ConfirmDelete title={concept.title} undo={() => setToDelete(false)} confirm={handleRemove} /> : (
+    return toDelete ? <ConfirmDelete title={concept.title} undo={() => setToDelete(false)} confirm={remove} /> : (
         <div
             className="container"
             tabIndex={0}
