@@ -27,7 +27,7 @@ export const fetchComments = (concept) => async (dispatch, getState) => {
 
         dispatch({
             type: 'comments/fetchAll',
-            payload: data.concat(getState().commentsSlice.comments)
+            payload: data.concat(getState().commentsSlice.comments)  // concatenate concept comments with existing comments
         });
 
         // --- update concepts
