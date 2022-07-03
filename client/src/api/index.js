@@ -4,16 +4,20 @@ axios.defaults.withCredentials = true;
 
 const api = axios.create({ baseURL: 'http://localhost:5000' });
 
+let token = '';
+
 /**
  * Sets the bearer token in the Authorization field in header to be `token`
  * @param {String} token 
  */
-export const setAuthHeader = token => {
-    api.interceptors.request.use(req => {
+export const setBearerToken = newToken => token = newToken;
+
+api.interceptors.request.use(req => {
+    if (token) {
         req.headers.Authorization = `Bearer ${token}`;
-        return req;
-    });
-};
+    }
+    return req;
+});
 
 // concepts
 export const fetchConcepts = () => api.get(`/concepts`);
