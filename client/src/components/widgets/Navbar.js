@@ -1,7 +1,12 @@
-import React, { useCallback } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useCallback, useLayoutEffect } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
+
+import HomeIcon from '@mui/icons-material/Home';
+import SettingsIcon from '@mui/icons-material/Settings';
+import BookmarksIcon from '@mui/icons-material/Bookmarks';
+import ExploreIcon from '@mui/icons-material/Explore';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 import { logout } from '../../actions/auth';
 
@@ -9,57 +14,58 @@ import styles from './Navbar.module.css';
 import LoadingSpinner from './LoadingSpinner';
 import MenuButton from './MenuButton';
 import Tooltip from './Tooltip';
+import Button from './Button';
 
-const Navbar = ({ decodedToken }) => {
+const Navbar = ({ userId }) => {
     // fetch user object from store
     const { users } = useSelector(state => state.usersSlice);
-    const user = users.find(u => u._id === decodedToken.id);
+    const user = users.find(u => u._id === userId);
 
     const dispatch = useDispatch();
 
-    const signout = useCallback(() => {
-        dispatch(logout());
-        dispatch({ type: 'practice/clear' }); // clear practice sessions
-        window.location.reload();
-    }, [dispatch]);
+    const signout = useCallback(() => dispatch(logout()), [dispatch]);
+
+    const [mobileNav, setMobileNav] = useState(false);
+
+    // trigger mobile navigation on width breakpoint
+    useLayoutEffect(() => {
+        const query = window.matchMedia("(max-width: 728px");
+        setMobileNav(query.matches);
+        query.addEventListener('change', e => setMobileNav(e.matches));
+    }, [])
+
+    const getNavOptions = useCallback(() => {
+        return (
+            <div id={mobileNav ? styles["mobile-navbar-options"] : styles["wide-navbar-options"]}>
+                <Button link="/" tooltip="Home" text={mobileNav && "Home"} Icon={<HomeIcon />} stretch={mobileNav} />
+                <Button link="/settings" tooltip="Settings" text={mobileNav && "Settings"} Icon={<SettingsIcon />} stretch={mobileNav} />
+                <Button link="/collections" tooltip="Collections" text={mobileNav && "Collections"} Icon={<BookmarksIcon />} stretch={mobileNav} />
+                <Button link="/browse" tooltip="Browse Concepts" text={mobileNav && "Browse Concepts"} Icon={<ExploreIcon />} stretch={mobileNav} />
+                { user ? (
+                    <div className="center-flex" style={{ marginLeft: !mobileNav ? '15px' : '' }}>
+                        <div className="h-margin"><strong>{user.username}</strong></div>
+                        <Button onClick={signout} tooltip="Log Out" Icon={<LogoutIcon />} stretch={mobileNav} />
+                    </div>
+                ) : <LoadingSpinner /> }
+            </div>
+        );
+    }, [mobileNav, user]);
 
     return (
         <nav>
             <div id={styles["navbar-wrapper"]} className="space-between">
                 <h1>bingo</h1>
-                <div id={styles["navbar-options"]}>
-                    <Link className={styles["nav-button"]} to="/">Home</Link>
-                    <Link className={styles["nav-button"]} to="/settings">Settings</Link>
-                    <Link className={styles["nav-button"]} to="/collections">Collections</Link>
-                    <Link className={styles["nav-button"]} to="/browse">Browse Concepts</Link>
-                    <div className="center-flex">
-                        <strong className="h-margin">{user ? user.username : <LoadingSpinner />}</strong>
-                        <button className={`${styles['nav-button']} h-margin`} onClick={signout}>Log Out</button>
-                    </div>
-                </div>
-                <Tooltip
-                    showOnClick={true}
-                    direction={'below-left'}
-                    content={
-                        <div id={styles["mobile-navbar-options"]}>
-                            <Link className={styles["nav-button"]} to="/">Home</Link>
-                            <Link className={styles["nav-button"]} to="/settings">Settings</Link>
-                            <Link className={styles["nav-button"]} to="/collections">Collections</Link>
-                            <Link className={styles["nav-button"]} to="/browse">Browse Concepts</Link>
-                            <div className="container" tabIndex={0}>
-                                { user ? (
-                                    <>
-                                        <div className="h-margin">Logged in as</div>
-                                        <div className="h-margin"><strong>{user.username}</strong></div>
-                                    </>
-                                ) : <LoadingSpinner /> }
-                            </div>
-                            <button className={styles["nav-button"]} onClick={signout} tabIndex={0}>Log Out</button>
-                        </div>
-                    }
-                >
-                    <MenuButton id={styles['navbar-menu']} tooltip="Open Menu" />
-                </Tooltip>
+                { mobileNav ?
+                    <Tooltip
+                        showOnClick={true}
+                        direction={'below-left'}
+                        content={getNavOptions()}
+                    >
+                        <MenuButton id={styles['navbar-menu']} tooltip="Open Menu" />
+                    </Tooltip>
+                :
+                    getNavOptions()
+                }
             </div>
         </nav>
     );
