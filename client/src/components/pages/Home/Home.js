@@ -6,6 +6,7 @@ import PracticeSessionsDisplayer from './PracticeSessionsDisplayer';
 import ConceptsDisplayer from '../../widgets/ConceptsDisplayer';
 import SearchBox from '../../widgets/SearchBox';
 import useTags from '../../widgets/TagsHook';
+import LoadingSpinner from '../../widgets/LoadingSpinner';
 
 const Home = ({ userId }) => {
     const { concepts, isLoading } = useSelector(state => state.conceptsSlice);
@@ -18,6 +19,9 @@ const Home = ({ userId }) => {
             setConceptsToDisplay(concepts.filter(concept => concept.creator === String(userId)));
         }
     }, [concepts]);
+
+    if (isLoading)
+        return <LoadingSpinner />;
 
     return (
         <>

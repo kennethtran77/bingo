@@ -21,6 +21,9 @@ const PracticeSessionsDisplayer = ({ userId }) => {
         }
     }, [practiceSessions]);
 
+    if (isLoading)
+        return <LoadingSpinner />;
+
     return !userId ? <LoadingSpinner /> : (
         <div className="container" id="practice-sessions-displayer">
             <table>
