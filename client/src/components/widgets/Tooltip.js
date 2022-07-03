@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import ExternalListener from "./ExternalListener";
+import React, { useState, useRef, useCallback } from "react";
+import useExternalListener from "./ExternalListener";
 
 import styles from "./Tooltip.module.css";
 
@@ -8,12 +8,24 @@ const Tooltip = ({
     direction = "top",
     style,
     showOnClick = false,
+    toggleOnClick = true,
     children
 }) => {
+    const childRef = useRef(null);
     const [active, setActive] = useState(false);
 
-    const tooltip = (
+    // Alert clicks outside of element
+    useExternalListener(() => setActive(false), childRef, active);
+
+    const handleClick = useCallback(() => {
+        if (showOnClick) {
+            setActive(prev => toggleOnClick ? !prev : true);
+        }
+    });
+
+    return (
         <div
+            ref={childRef}
             className={styles.tooltip}
             role='tooltip'
             tabIndex={active ? 0 : -1}
@@ -25,7 +37,7 @@ const Tooltip = ({
                 if (e.key === "Escape") setActive(false);
             }}
         >
-            <span onClick={showOnClick ? () => setActive(true) : null} >
+            <span onClick={handleClick} >
                 {children}
             </span>
             {active && (
@@ -38,16 +50,6 @@ const Tooltip = ({
                 </div>
             )}
         </div>
-    );
-
-    // Wrap tooltip component inside an ExternalListener if it is set
-    // to show on click
-    return showOnClick ? (
-        <ExternalListener onClick={() => setActive(false)}>
-            {tooltip}
-        </ExternalListener>
-    ) : (
-        tooltip
     );
 };
 
