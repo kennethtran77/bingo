@@ -8,7 +8,7 @@ import CollectionsDisplayer from './CollectionsDisplayer';
 const Collections = ({ userId }) => {
     const { collections, isLoading } = useSelector(state => state.collectionsSlice);
     const [collectionsToDisplay, setCollectionsToDisplay] = useState([]);
-    const [tags, addTag, removeTag, handleTagClick] = useTags();
+    const [tags, addTag, removeTag, toggleTag] = useTags();
 
     useEffect(() => {
         if (collections) {
@@ -25,7 +25,7 @@ const Collections = ({ userId }) => {
                         userId={userId}
                         collections={collectionsToDisplay}
                         isLoading={isLoading}
-                        handleTagClick={handleTagClick}
+                        handleTagClick={toggleTag}
                     />
                 </div>
                 <div className="min">

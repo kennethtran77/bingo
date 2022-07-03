@@ -28,7 +28,7 @@ const EditCollection = ({ userId }) => {
         }
     }, [allConcepts]);
 
-    const [tags, addTag, removeTag, handleTagClick] = useTags();
+    const [tags, addTag, removeTag, toggleTag] = useTags();
 
     if (isLoading && !collection)
         return <LoadingSpinner />;
@@ -53,7 +53,7 @@ const EditCollection = ({ userId }) => {
                 showCreator={true}
                 collection={collection}
                 enableCreating={false}
-                handleTagClick={handleTagClick}
+                handleTagClick={toggleTag}
             />
             <h2>All Concepts</h2>
             <div className="row">
