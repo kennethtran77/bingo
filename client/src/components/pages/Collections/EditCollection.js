@@ -65,7 +65,7 @@ const EditCollection = ({ userId }) => {
                         showCreator={true}
                         collection={collection}
                         enableCreating={false}
-                        handleTagClick={handleTagClick}
+                        handleTagClick={toggleTag}
                     />
                 </div>
                 <div className="min">
