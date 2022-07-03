@@ -4,7 +4,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 
 import styles from './DeleteButton.module.css';
 
-const DeleteButton = ({ onClick, ariaLabel, tooltip, disabled = false, className, fontSize = '20px' }) => {
+const DeleteButton = ({ onClick, ariaLabel, tooltip, disabled = false, className, fontSize = '20px', background = false }) => {
     return (
         <span
             title={tooltip}
@@ -19,7 +19,7 @@ const DeleteButton = ({ onClick, ariaLabel, tooltip, disabled = false, className
         >
             <ClearIcon
                 tabIndex={0}
-                className={`${styles['delete-button']} ${disabled ? styles.disabled : null} ${className}`}
+                className={`${styles['delete-button']} ${disabled && styles.disabled} ${background && styles.background} ${className}`}
                 onClick={onClick}
                 style={{
                     fontSize

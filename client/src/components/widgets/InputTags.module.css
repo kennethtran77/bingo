@@ -17,27 +17,14 @@
 
 .input-tag {
     display: flex;
-    align-items: center;
+    align-items: stretch;
     justify-content: center;
-    padding: 5px;
+    padding: 3px;
     margin: 3px;
-    border: rgb(59, 59, 59) 1px solid;
     border-radius: 3px;
     background-color: rgb(209, 234, 255);
     cursor: pointer;
     position: relative;
-}
-
-.input-tag .text {
-    margin-right: 20px;
-}
-
-/* Position delete tag button in top right */
-.input-tag .delete-button {
-    align-self: flex-start;
-    position: absolute;
-    top: 5px;
-    right: 0;
 }
 
 .input-tags > input {

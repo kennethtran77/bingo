@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
-import styles from './Paginate.module.css';
+import Button from './Button';
 
 const Paginate = ({ items, itemsPerPage, setItemsToDisplay }) => {
     const [currentPage, setCurrentPage] = useState(0);
@@ -37,24 +37,20 @@ const Paginate = ({ items, itemsPerPage, setItemsToDisplay }) => {
     };
 
     return (
-        <div className={`${styles['pagination-buttons']} v-margin`}>
-            <button
-                className={styles['pagination-button']}
+        <div className="center-flex gap v-margin">
+            <Button
                 onClick={prevPage}
                 disabled={currentPage <= 0}
-                aria-label="Previous Page"
-            >
-                <ArrowBackIosIcon />
-            </button>
-            { pageCount > 0 && <button className={styles['pagination-button']}>{currentPage + 1}</button> }
-            <button
-                className={styles['pagination-button']}
+                tooltip="Previous Page"
+                Icon={<NavigateBeforeIcon />}
+            />
+            { pageCount > 0 && <Button text={currentPage + 1} /> }
+            <Button
                 onClick={nextPage}
                 disabled={currentPage >= pageCount - 1}
-                aria-label="Next Page"
-            >
-                <ArrowForwardIosIcon />
-            </button>
+                tooltip="Next Page"
+                Icon={<NavigateNextIcon />}
+            />
         </div>
     );
 };
