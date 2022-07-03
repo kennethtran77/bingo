@@ -5,8 +5,7 @@
   }
   
   .dropdown .header {
-    min-height: 23px;
-    padding: 5px;
+    padding: 2.5px 0 2.5px 2.5px;
     border: rgb(59, 59, 59) 1px solid;
     border-radius: 2px;
     display: flex;
@@ -32,8 +31,6 @@
   .dropdown .chevron {
     align-self: flex-end;
     transition: transform 0.3s;
-    padding-left: 5px;
-    padding-right: 5px;
   }
   
   .dropdown .list {

@@ -15,10 +15,15 @@ const LikeDislike = ({ userId, likes, dislikes, like, dislike, disabled = false 
                     tabIndex={0}
                     aria-label="Like Concept"
                     title="Like Concept"
-                    >
+                >
                     <ThumbUpIcon
                         style={{ color: likes.includes(userId) ? 'dodgerblue' : 'black' }}
-                        onClick={disabled ? null : like}
+                        onClick={e => {
+                            e.stopPropagation();
+                            if (!disabled) {
+                                like();
+                            }
+                        }}
                     />
                 </span>
                 <span>{likes.length}</span>
@@ -33,7 +38,12 @@ const LikeDislike = ({ userId, likes, dislikes, like, dislike, disabled = false 
                     >
                     <ThumbDownIcon
                         style={{ color: dislikes.includes(userId) ? '#D22B2B' : 'black' }}
-                        onClick={disabled ? null : dislike}
+                        onClick={e => {
+                            e.stopPropagation();
+                            if (!disabled) {
+                                dislike();
+                            }
+                        }}
                     />
                 </span>
                 <span>{dislikes.length}</span>

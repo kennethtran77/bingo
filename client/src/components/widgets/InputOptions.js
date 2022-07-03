@@ -140,6 +140,7 @@ const InputOptions = ({ options, addOption, editOption, removeOption, placeholde
                                 tabIndex={tabIndex}
                                 aria-label="Delete Option"
                                 tooltip="Delete Option"
+                                background
                             />
                         </li>
                     );

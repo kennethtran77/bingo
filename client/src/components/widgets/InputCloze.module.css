@@ -19,8 +19,8 @@
 
 .input-cloze .blanks {
     display: flex;
-    min-height: 40px;
     position: relative;
+    padding: 10px;
 }
 
 .input-cloze .blanks .delete-blank {
@@ -39,7 +39,8 @@
 }
 
 .input-field {
-    min-width: 100px !important;
+    min-width: 200px !important;
+    line-height: 40px;
 }
 
 .input-tag {

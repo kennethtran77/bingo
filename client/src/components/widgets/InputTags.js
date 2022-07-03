@@ -33,9 +33,9 @@ const InputTags = ({ className = '', inputClassName = '', tagClassName = '', id 
     return (
         <div className={`${styles['input-tags']} ${styles[fieldState]} ${className}`} id={id}>
             { tags && tags.map((tag, index) => (
-                <span className={`${styles['input-tag']} ${tagClassName}`} tabIndex={0} key={index} >
-                    <span className={styles.text}>{tag}</span>
-                    <DeleteButton className={`${styles['delete-button']} h-margin`} onClick={() => removeTag(tag)} fontSize={'15px'} />
+                <span className={`${styles['input-tag']}`} tabIndex={0} key={index} >
+                    <span className={`${styles.text} ${tagClassName}`}>{tag}</span>
+                    <DeleteButton onClick={() => removeTag(tag)} fontSize={'15px'} />
                 </span>
             )) }
             <input

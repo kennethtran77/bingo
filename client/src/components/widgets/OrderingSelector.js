@@ -20,6 +20,7 @@ const OrderingSelector = ({ currOrdering, selectOrdering, orderings, addOrdering
                     aria-label="Delete Current Ordering"
                     tooltip="Delete Current Ordering"
                     disabled={orderings.length <= 1}
+                    background
                     onClick={() => {
                         if (orderings.length > 1) {
                             // Decrement currOrdering

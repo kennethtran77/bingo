@@ -10,75 +10,26 @@ nav {
     z-index: 3;
 }
 
-#navbar-wrapper {
-    margin-left: 15px;
-}
-
 nav h1 {
     user-select: none;
 }
 
-.nav-button {
-    background-color: white;
-    border-radius: 5px;
-    margin: 5px;
-    padding: 10px;
-    color: black;
-    text-decoration: none;
-    box-sizing: border-box;
-    transition: 200ms;
-    border: 0;
-    font-family: 'Montserrat', serif;
-    font-size: 16px;
-    cursor: pointer;
-    user-select: none;
-    -webkit-user-drag: none;
-}
-
-.nav-button:visited {
-    color: black;
-}
-
-.nav-button:hover {
-    background-color: #80acdf;
-    color: white;
-}
-
-.nav-button:active {
-    background-color: #5392db;
-}
-
-#navbar-options {
-    display: none;
+#wide-navbar-options {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 5px;
 }
 
 #mobile-navbar-options {
     display: flex;
     flex-direction: column;
     visibility: visible;
+    gap: 5px;
 }
 
 #navbar-menu {
     margin-right: 15px;
-}
-
-/*
-Desktop
-*/
-@media only screen and (min-width: 1024px) {
-    #navbar-options {
-        display: flex;
-    }
-
-    #navbar-menu {
-        display: none;
-        visibility: hidden;
-    }
-
-    #mobile-navbar-options {
-        display: none;
-        visibility: hidden;
-    }
 }
 
 @media only screen and (min-width: 620px) {

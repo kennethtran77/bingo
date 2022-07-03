@@ -1,9 +1,8 @@
-import React, { useState, useEffect, createRef } from 'react';
+import React, { useState, createRef, useRef, useCallback, useLayoutEffect } from 'react';
 
 import InputTags from './InputTags';
 import DeleteButton from './DeleteButton';
 import AutosizingInput from './AutosizingInput';
-import LoadingSpinner from './LoadingSpinner';
 
 import styles from './InputCloze.module.css';
 
@@ -11,18 +10,42 @@ import styles from './InputCloze.module.css';
 const InputCloze = ({ input, setInput }) => {
     const [fieldRefs, setFieldRefs] = useState([]);
     const [fieldState, setFieldState] = useState('');
+    const ref = useRef();
 
     // Set up refs for the fields
-    useEffect(() => {
+    useLayoutEffect(() => {
         setFieldRefs(fieldRefs => Array(input.answer.length).fill().map((_, i) => fieldRefs[i] || createRef()));
-    }, [input.answer.length]);
+    }, [input.answer]);
 
-    // update flex growth of non-blank fields when field refs are set
-    useEffect(() => {
+    // update flex growth of text fields when field refs are set
+    useLayoutEffect(() => {
         updateFlexGrowth();
     }, [fieldRefs]);
 
-    const updateFlexGrowth = () => {
+    // Set up ResizeObserver on component wrapper to update flex growth of text fields on resize
+    useLayoutEffect(() => {
+        if (!ref.current)
+            return;
+        
+        const observer = new ResizeObserver(entries => {
+            updateFlexGrowth();
+        })
+        observer.observe(ref.current);
+
+        return () => {
+            observer.disconnect();
+        };
+    }, [ref, fieldRefs]);
+
+    /**
+     * Return whether the element input.answer[index] is a blank or a text field
+     */
+     const isBlank = useCallback(index => Array.isArray(input.answer[index]), [input]);
+
+    /**
+     * Updates all text fields on the last column of each row to take up remaining space inside component
+     */
+    const updateFlexGrowth = useCallback(() => {
         fieldRefs.forEach((ref, index) => {
             if (!isBlank(index)) {
                 if (index === fieldRefs.length - 1) {  // the last field is not a blank
@@ -42,7 +65,7 @@ const InputCloze = ({ input, setInput }) => {
                 }
             }
         })
-    };
+    }, [fieldRefs]);
 
     /**
      * Focus on the field to the left of inputIndex
@@ -162,18 +185,13 @@ const InputCloze = ({ input, setInput }) => {
         setInput(prevState => ({ ...prevState, answer: newAnswer }));
     }
 
-    if (!fieldRefs)
-        return <LoadingSpinner />;
-
-    const isBlank = index => Array.isArray(input.answer[index]);
-
     return (
-        <div className={`${styles['input-cloze']} ${styles[fieldState]}`}>
+        <div className={`${styles['input-cloze']} ${styles[fieldState]}`} ref={ref}>
             { input.answer && input.answer.map((ans, index) => {
                 return !isBlank(index) ? (
                     <AutosizingInput
                         value={ans || ''}
-                        key={ans}
+                        key={index}
                         ref={fieldRefs[index]}
                         inputstyle={{
                             border: 'none',
@@ -194,7 +212,7 @@ const InputCloze = ({ input, setInput }) => {
                         })}
                     />
                 ) : (
-                    <div className={styles['blanks']} key={ans}>
+                    <div className={styles['blanks']} key={index}>
                         <InputTags
                             inputClassName={styles['input-field']}
                             tagClassName={styles['input-tag']}
@@ -220,7 +238,7 @@ const InputCloze = ({ input, setInput }) => {
                             wordBreak={true}
                             placeholder="Blanks"
                         />
-                        <DeleteButton className={styles['delete-blank']} aria-label="Delete Blanks" tooltip="Delete Blanks" onClick={() => removeBlank(index)} />
+                        <DeleteButton className={styles['delete-blank']} background aria-label="Delete Blanks" tooltip="Delete Blanks" onClick={() => removeBlank(index)} />
                     </div>
                 )
              }) }
