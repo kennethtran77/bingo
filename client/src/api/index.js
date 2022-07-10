@@ -23,6 +23,7 @@ const getApi = () => {
          * @param {String} token 
          */
         setBearerToken: newToken => token = newToken,
+        fetchSignupKeyEnabled: () => api.get(`/signupkeyenabled`),
 
         // concepts
         fetchConcepts: () => api.get(`/concepts`),

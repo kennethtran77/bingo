@@ -69,6 +69,15 @@ export const generateToken = () => async (dispatch, getState, api) => {
     refreshToken();
 }
 
+export const fetchSignupKeyEnabled = () => async (dispatch, getState, api) => {
+    try {
+        const { data } = await api.fetchSignupKeyEnabled();
+        dispatch({ type: 'auth/setSignupKeyEnabled', payload: data });
+        return data;
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 export const login = (loginInput) => async (dispatch, getState, api) => {
     try {

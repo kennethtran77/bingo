@@ -20,6 +20,7 @@ dotenv.config();
 const PORT = process.env.PORT || 5000;
 const CONNECTION_URL = process.env.CONNECTION_URL;
 const FRONTEND_URL = process.env.FRONTEND_URL;
+const signupKeyEnabled = process.env.SIGNUP_KEY_ENABLED;
 
 // use services
 app.use(express.json({ extended: true }));
@@ -46,6 +47,10 @@ app.use('/collections', collectionsRouter);
 app.get('/', (req, res) => {
     res.send("Connected to API");
 });
+
+app.get('/signupkeyenabled', (req, res) => {
+    res.send(signupKeyEnabled === 'true');
+})
 
 // Connect to database
 mongoose.connect(CONNECTION_URL, { useNewUrlParser: true, useUnifiedTopology: true })

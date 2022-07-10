@@ -7,6 +7,8 @@ import UserModel from '../models/user.js';
 dotenv.config();
 
 const secret = process.env.SECRET;
+const signupKeyEnabled = process.env.SIGNUP_KEY_ENABLED;
+const signupKey = process.env.SIGNUP_KEY;
 
 /**
  * Returns whether the the email is valid
@@ -108,13 +110,20 @@ export const login = async (req, res) => {
     }
 }
 
+export const fetchSignupKeyEnabled = async (req, res) => {
+    return res.status(200).json()
+}
+
 export const signUp = async (req, res) => {
-    const { email, password, confirmPassword, username } = req.body;
+    const { email, password, confirmPassword, username, key } = req.body;
 
     try {
         // check inputs
         if (!email || !password || !confirmPassword || !username)
             return res.status(400).json({ message: 'Please fill in all inputs.' });
+
+        if (signupKeyEnabled && (!key || key !== signupKey))
+            return res.status(400).json({ success: false, message: 'Incorrect signup key.' });
 
         // validate email
         const validEmail = validateEmail(email);

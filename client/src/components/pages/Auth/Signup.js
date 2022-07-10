@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import { useSelector, useDispatch } from 'react-redux';
 
-import { signUp } from '../../../actions/auth.js';
+import { fetchSignupKeyEnabled, signUp } from '../../../actions/auth.js';
 
 import styles from './Auth.module.css';
 import LoadingSpinner from '../../widgets/LoadingSpinner.js';
@@ -11,11 +11,12 @@ import Button from '../../widgets/Button.js';
 
 import { validateEmail, validateUsername, validatePassword, validateConfirmPassword } from '../../../util';
 import WarningInput from '../../widgets/WarningInput.js';
-
+import Input from '../../widgets/Input.js';
 
 const Signup = () => {
-    const [input, setInput] = useState({ email: '', username: '', password: '', confirmPassword: '' });
+    const [input, setInput] = useState({ email: '', username: '', password: '', confirmPassword: '', key: '' });
 
+    const { isLoading, message, signupKeyEnabled } = useSelector(state => state.authSlice);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -23,7 +24,11 @@ const Signup = () => {
         dispatch({ type: 'auth/setMessageTimer', payload: null });
     }, []);
 
-    const { isLoading, message } = useSelector(state => state.authSlice);
+    useEffect(() => {
+        if (!signupKeyEnabled) {
+            dispatch(fetchSignupKeyEnabled());
+        }
+    }, [signupKeyEnabled]);
 
     const handleChange = e => setInput({ ...input, [e.target.name]: e.target.value });
 
@@ -39,8 +44,10 @@ const Signup = () => {
             <div id={styles.auth}>
                 <form className="container">
                     <WarningInput
+                        className={styles.input}
                         label="Email"
                         validate={validateEmail}
+                        autoComplete="new-password"
                         required
                         type="email"
                         name="email"
@@ -49,8 +56,10 @@ const Signup = () => {
                         onKeyDown={handleKeyDown}
                     />
                     <WarningInput
+                        className={styles.input}
                         label="Username"
                         validate={validateUsername}
+                        autoComplete="new-password"
                         required
                         type="text"
                         name="username"
@@ -59,8 +68,10 @@ const Signup = () => {
                         onKeyDown={handleKeyDown}
                     />
                     <WarningInput
+                        className={styles.input}
                         label="Password"
                         validate={validatePassword}
+                        autoComplete="new-password"
                         required
                         type="password"
                         name="password"
@@ -69,8 +80,10 @@ const Signup = () => {
                         onKeyDown={handleKeyDown}
                     />
                     <WarningInput
+                        className={styles.input}
                         label="Confirm Password"
                         validate={() => validateConfirmPassword(input.password, input.confirmPassword)}
+                        autoComplete="new-password"
                         required
                         type="password"
                         name="confirmPassword"
@@ -79,6 +92,21 @@ const Signup = () => {
                         onKeyDown={handleKeyDown}
                         subscriptions={[input.password]}
                     />
+                    { signupKeyEnabled &&
+                        <label>
+                            Sign-Up Key
+                            <Input
+                                className={styles.input}
+                                required
+                                autoComplete="new-password"
+                                type="password"
+                                name="key"
+                                value={input.key}
+                                onChange={handleChange}
+                                onKeyDown={handleKeyDown}
+                            />
+                        </label>
+                    }
                     <Button text="Sign Up" onClick={handleSubmit} background />
                     <p>Already have an account? <Link to="/login" className="coloured-link">Log In</Link></p>
                     { isLoading && <LoadingSpinner /> }
