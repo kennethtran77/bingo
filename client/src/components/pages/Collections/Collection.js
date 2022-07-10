@@ -23,12 +23,7 @@ const Collection = ({ collection, remove, handleTagClick }) => {
         return showAllTags ? collection.tags : collection.tags.slice(0, 10);
     }
 
-    const handleRemove = e => {
-        e.preventDefault();
-        remove();
-    }
-
-    return toDelete ? <ConfirmDelete title={collection.title} undo={() => setToDelete(false)} confirm={handleRemove} /> : (
+    return toDelete ? <ConfirmDelete title={collection.title} undo={() => setToDelete(false)} confirm={remove} /> : (
         <div
             className="container"
             tabIndex={0}

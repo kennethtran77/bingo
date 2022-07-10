@@ -26,9 +26,7 @@ const Comment = ({ comment, userId, concept, replies, replyTo, replyToAuthor }) 
         setInput(e.target.value);
     };
 
-    const handleUpdate = e => {
-        e.preventDefault();
-
+    const handleUpdate = () => {
         if (!input.length || comment.disabled)
             return;
 
@@ -36,15 +34,12 @@ const Comment = ({ comment, userId, concept, replies, replyTo, replyToAuthor }) 
         clearInputSetMode('none');
     };
 
-    const handleDelete = e => {
-        e.preventDefault();
+    const handleDelete = () => {
         dispatch(deleteComment(concept, comment._id));
         clearInputSetMode('none');
     }
 
-    const handleCreateReply = e => {
-        e.preventDefault();
-
+    const handleCreateReply = () => {
         if (!input.length || comment.disabled)
             return;
 
