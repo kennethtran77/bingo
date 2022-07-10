@@ -10,7 +10,9 @@ const ControlledTooltip = ({
     active,
     setActive,
     onKeyDown = e => { },
-    onClick = () => { },
+    onClick = () => {},
+    onFocus = () => {},
+    onBlur = () => {},
     children
 }) => {
     const childRef = useRef(null);
@@ -24,11 +26,12 @@ const ControlledTooltip = ({
             className={styles.tooltip}
             onKeyDown={(e) => onKeyDown(e)}
             role='tooltip'
-            tabIndex={active ? 0 : -1}
+            tabIndex="-1"
             aria-hidden={active}
             aria-live='polite'
+            style={{width: '100%', height: '100%'}}
         >
-            <span onClick={onClick}>{children}</span>
+            <div onClick={onClick} onFocus={onFocus} onBlur={onBlur}>{children}</div>
             {Boolean(active) && (
                 <div
                     className={`${styles["tooltip-content"]} ${styles[direction]}`}
