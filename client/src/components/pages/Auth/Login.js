@@ -1,11 +1,11 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 
 import { useSelector, useDispatch } from 'react-redux';
 
 import { login } from '../../../actions/auth.js';
 
-import './Auth.css';
+import style from './Auth.module.css';
 import LoadingSpinner from '../../widgets/LoadingSpinner.js';
 import Button from '../../widgets/Button.js';
 
@@ -16,10 +16,14 @@ const Login = () => {
 
     const dispatch = useDispatch();
 
+    useEffect(() => {
+        dispatch({ type: 'auth/setMessage', payload: '' });
+        dispatch({ type: 'auth/setMessageTimer', payload: null });
+    }, []);
+
     const handleChange = useCallback(e => setInput({ ...input, [e.target.name]: e.target.value }), [input]);
 
-    const handleSubmit = useCallback(e => {
-        e.preventDefault();
+    const handleSubmit = useCallback(() => {
         dispatch(login(input));
     }, [input, dispatch]);
 
@@ -30,8 +34,8 @@ const Login = () => {
 
     return (
         <>
-            <h1 id="title">bingo</h1>
-            <div id="auth">
+            <h1 id={style.title}>bingo</h1>
+            <div id={style.auth}>
                 <form className="container" onSubmit={handleSubmit}>
                     <label>
                         Email
