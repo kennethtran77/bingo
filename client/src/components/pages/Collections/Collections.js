@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import LoadingSpinner from '../../widgets/LoadingSpinner';
 import SearchBox from '../../widgets/SearchBox';
 import useTags from '../../widgets/TagsHook';
 
@@ -16,9 +15,6 @@ const Collections = ({ userId }) => {
             setCollectionsToDisplay(collections);
         }
     }, [collections]);
-
-    if (isLoading)
-        return <LoadingSpinner />;
 
     return (
         <div>
