@@ -1,0 +1,50 @@
+.input-cloze {
+    border: rgb(95, 95, 95) 1px solid;
+    cursor: text;
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+    height: 100%;
+    border-radius: 2px;
+    list-style-type: none;
+    justify-content: flex-start;
+    width: 100%;
+    background-color: white;
+    box-sizing: border-box;
+}
+
+.input-cloze:hover {
+    cursor: text;
+}
+
+.input-cloze .blanks {
+    display: flex;
+    position: relative;
+    padding: 10px;
+}
+
+.input-cloze .blanks .delete-blank {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+}
+
+.input-cloze:focus, .focus {
+    outline: black 1px solid;
+    border-radius: 0;
+}
+
+.input-cloze:hover, .hover {
+    border: rgb(36, 36, 36) 1px solid;
+}
+
+.input-field {
+    min-width: 200px !important;
+    line-height: 40px;
+}
+
+.input-tag {
+    max-width: 200px;
+    word-wrap: break-word;
+    display: inline-block;
+}

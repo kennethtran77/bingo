@@ -10,18 +10,18 @@ img {
     max-height:100%;
 }
 
-.main {
+main {
     margin-top: 100px;
 }
 
 .link {
     cursor: pointer;
-    user-select: none;
-    -webkit-user-drag: none;
+    /* user-select: none;
+    -webkit-user-drag: none; */
 }
 
 .coloured-link {
-    color: dodgerblue;
+    color: rgb(0, 128, 255);
     cursor: pointer;
 }
 
@@ -33,11 +33,17 @@ img {
     color: rgb(22, 93, 164);
 }
 
+input:-webkit-autofill {
+    background-color: transparent !important;
+    -webkit-box-shadow: 0 0 0 50px white inset;
+}
+
 textarea {
     width: 100%;
     resize: vertical;
     min-height: 60px;
     /* max-height: 200px; */
+    border-radius: 2px;
     font-size: 16px;
     box-sizing: border-box;
     font-family: 'Montserrat', serif;
@@ -45,18 +51,15 @@ textarea {
     border: rgb(95, 95, 95) 1px solid;
 }
 
+textarea:focus {
+    outline: black 1px solid;
+}
+
 input[type=text], input[type=password], input[type=email], input[type=number] {
     height: 35px;
     font-size: 16px;
     box-sizing: border-box;
     font-family: 'Montserrat', serif;
-    border: rgb(95, 95, 95) 1px solid;
-    border-radius: 2px;
-}
-
-input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, input[type=number]:focus, textarea:focus {
-    outline: black 1px solid;
-    border-radius: 0;
 }
 
 .container {
@@ -73,9 +76,21 @@ input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, inp
     box-shadow: 0px 0px 6px -3px rgba(0,0,0,0.64);
 }
 
+.primary {
+    /* border: 1px solid rgb(183, 222, 255); */
+    border: none;
+    /* background-color: rgb(228, 243, 255); */
+    background-color: rgb(247, 247, 247);
+    border-color: rgb(204, 204, 204);
+    border-style: solid;
+    border-width: 1px 1px 3px 1px;
+}
+
 .secondary {
     background-color: rgb(228, 243, 255);
-    border: 1px solid rgb(183, 222, 255);
+    background-color: rgb(231, 244, 255);
+    /* border: 1px solid rgb(183, 222, 255); */
+    border: 1px solid transparent;
 }
 
 .flex {
@@ -108,51 +123,13 @@ input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, inp
     margin: 0;
 }
 
-.tag {
-    border-radius: 5px;
-    margin-right: 5px;
-    padding: 5px;
-    background-color: rgb(255, 255, 255);
-    white-space: nowrap;
+.max-width {
+    width: 100%;
+    max-width: 100%;
 }
 
 #tags {
     flex-wrap: wrap;
-}
-
-.small-button {
-    background-color: white;
-    border: 2px solid #0057ba;
-    border-radius: 5px;
-    padding: 10px;
-    color: black;
-    text-decoration: none;
-    transition: 200ms;
-    font-family: 'Montserrat', serif;
-    font-size: 16px;
-    cursor: default;
-}
-
-.small-button:disabled {
-    background-color: rgb(200, 200, 200) !important;
-    color: black !important;
-    cursor: not-allowed;
-}
-
-.small-button:visited {
-    color: black;
-}
-
-.small-button:hover {
-    background-color: #80acdf;
-    border: 2px solid #004594;
-    color: white;
-}
-
-.small-button:active {
-    background-color: #5392db;
-    border: 2px solid #004594;
-    color: white;
 }
 
 .flex-wrap {
@@ -183,9 +160,16 @@ input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, inp
     justify-content: space-between;
 }
 
+.space-around {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
 .remove-bullet {
     list-style-type: none;
     padding: 0;
+    margin: 0;
 }
 
 .h-list > li {
@@ -193,11 +177,17 @@ input[type=text]:focus, input[type=password]:focus, input[type=email]:focus, inp
     margin-right: 5px;
 }
 
+main {
+    margin-left: 1%;
+    margin-right: 1%;
+    margin-bottom: 1px;
+}
+
 /*
 Responsive
 */
 @media only screen and (min-width: 620px) {
-    .main {
+    main {
         margin-left: 15%;
         margin-right: 15%;
         margin-bottom: 15px;
@@ -210,10 +200,10 @@ Responsive
     }
 
     .maj {
-        flex-grow: 2;
+        flex-basis: 60%;
     }
     
     .min {
-        flex-grow: 1;
+        flex-basis: 40%;
     }
 }

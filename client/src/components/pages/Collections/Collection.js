@@ -1,36 +1,55 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+
+import { Link, useNavigate } from 'react-router-dom';
+
+import EditIcon from '@mui/icons-material/Edit';
+import LightbulbIcon from '@mui/icons-material/Lightbulb';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 import ConfirmDelete from '../../widgets/ConfirmDelete';
-import DeleteButton from '../../widgets/DeleteButton';
+import Tag from '../../widgets/Tag';
+import Button from '../../widgets/Button';
 
-const Collection = ({ collection, remove }) => {
+const Collection = ({ collection, remove, handleTagClick }) => {
     const [toDelete, setToDelete] = useState(false);
 
-    const handleRemove = e => {
-        e.preventDefault();
-        remove();
+    const [state, setState] = useState('');
+
+    const [showAllTags, setShowAllTags] = useState(false);
+
+    const navigate = useNavigate();
+
+    const getRenderedTags = () => {
+        return showAllTags ? collection.tags : collection.tags.slice(0, 10);
     }
 
-    return toDelete ? <ConfirmDelete title={collection.title} undo={() => setToDelete(false)} confirm={handleRemove} /> : (
-        <div className="container secondary">
-            <div className="flex space-between">
-                <div className="center-flex">
-                    <strong>{collection.title}</strong>
-                </div>
-                <div className="center-flex">
-                    <Link className="small-button margin" to={`/collection/edit/${collection._id}`} aria-label="Edit Collection">Edit</Link>
-                    <Link className="small-button margin" to={`/practice/collection/${collection._id}`} aria-label="Practice Collection">Practice</Link>
-                    <DeleteButton onClick={() => setToDelete(true)} className="x" aria-label="Delete Collection" tooltip="Delete Collection" />
-                </div>
-            </div>
+    return toDelete ? <ConfirmDelete title={collection.title} undo={() => setToDelete(false)} confirm={remove} /> : (
+        <div
+            className="container"
+            tabIndex={0}
+            onMouseEnter={() => setState('hover')}
+            onMouseLeave={() => setState('')}
+            style={{ outline: state === 'hover' ? '1px solid darkgrey' : '', cursor: state === 'hover' ? 'pointer' : '' }}
+            onClick={e => {
+                navigate(`/collection/edit/${collection._id}`);
+            }}
+        >
+            <Link className="link" style={{ textDecoration: 'none', color: 'black', fontWeight: 'bold' }} to={`/collection/edit/${collection._id}`}>{collection.title}</Link>
             <ul id="tags" className="remove-bullet left-flex ">
-                { collection.tags.map((tag, index) => (
+                { getRenderedTags().map((tag, index) => (
                     <li key={index}>
-                        <div className="tag">{ tag }</div>
+                        <Tag tag={tag} onClick={handleTagClick} />
                     </li>
                 )) }
+                { collection.tags.length > 10 && (
+                    <span className="coloured-link" onClick={() => setShowAllTags(curr => !curr)}>{showAllTags ? '...Show Less Tags' : 'Show More Tags...'}</span>
+                )}
             </ul>
+            <div className="right-flex gap">
+                <Button link={`/practice/collection/${collection._id}`} Icon={<LightbulbIcon />} text="Practice" />
+                <Button link={`/collection/edit/${collection._id}`} Icon={<EditIcon />} tooltip="Edit" />
+                <Button onClick={() => setToDelete(true)} Icon={<DeleteIcon />} tooltip="Delete" />
+            </div>
         </div>
     );
 };

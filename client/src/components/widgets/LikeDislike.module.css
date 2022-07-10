@@ -17,3 +17,8 @@
     transform: scale(1.25); 
     cursor: pointer;
 }
+
+.disabled {
+    cursor: not-allowed !important;
+    transform: scale(1) !important;
+}

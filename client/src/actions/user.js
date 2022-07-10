@@ -1,6 +1,4 @@
-import * as api from '../api/index.js';
-
-const setTimedMessage = (message, colour, interval) => (dispatch, getState) => {
+const setTimedMessage = (message, colour, interval) => (dispatch, getState, api) => {
     dispatch({ type: 'settings/setMessage', payload: { content: message, colour }});
 
     let timer = getState().settingsSlice.messageTimer;
@@ -16,7 +14,7 @@ const setTimedMessage = (message, colour, interval) => (dispatch, getState) => {
     dispatch({ type: 'settings/setMessageTimer', payload: newTimer });
 }
 
-export const fetchUsernames = () => async (dispatch) => {
+export const fetchUsernames = () => async (dispatch, getState, api) => {
     try {
         dispatch({ type: 'users/startLoading' });
         const { data } = await api.fetchUsernames();
@@ -28,7 +26,7 @@ export const fetchUsernames = () => async (dispatch) => {
     }
 }
 
-export const fetchSettings = () => async (dispatch) => {
+export const fetchSettings = () => async (dispatch, getState, api) => {
     try {
         dispatch({ type: 'settings/startLoading' });
         const { data } = await api.fetchSettings();
@@ -40,7 +38,7 @@ export const fetchSettings = () => async (dispatch) => {
     }
 }
 
-export const updateUsername = (newUsername, userId) => async (dispatch) => {
+export const updateUsername = (newUsername, userId) => async (dispatch, getState, api) => {
     try {
         dispatch({ type: 'settings/startLoading' });
         const { data } = await api.updateUsername(newUsername);
@@ -56,7 +54,7 @@ export const updateUsername = (newUsername, userId) => async (dispatch) => {
     }
 }
 
-export const updateSettings = (newSettings) => async (dispatch) => {
+export const updateSettings = (newSettings) => async (dispatch, getState, api) => {
     try {
         dispatch({ type: 'settings/startLoading' });
         const { data } = await api.updateSettings(newSettings);
@@ -72,7 +70,7 @@ export const updateSettings = (newSettings) => async (dispatch) => {
     }
 }
 
-export const updatePassword = (password, newPassword, confirmNewPassword) => async (dispatch) => {
+export const updatePassword = (password, newPassword, confirmNewPassword) => async (dispatch, getState, api) => {
     try {
         dispatch({ type: 'settings/startLoading' });
         const { data } = await api.updatePassword(password, newPassword, confirmNewPassword);

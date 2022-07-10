@@ -47,6 +47,9 @@ export const createComment = async (req, res) => {
             if (!replyTo)
                 return res.status(404).send(`No comment found with id ${comment.replyTo}`);
 
+            if (replyTo.deleted)
+                return res.status(403).send({ message: 'Cannot reply to a deleted comment.' });
+
             // get the root comment
             rootComment = replyTo.rootComment;
         }
@@ -94,15 +97,15 @@ export const deleteComment = async (req, res) => {
     if (req.user.id !== comment.author.toString())
         return res.status(403).json({ message: 'Unauthorized action' });
     
-    if (!CommentModel.findOne({ "replyTo": comment })) {
+    if (!await CommentModel.findOne({ replyTo: comment }).exec()) {
         await comment.delete();
+        res.status(200).json({ message: 'Comment completely deleted', completelyDeleted: true });
     } else {
         comment.text = 'This comment was deleted.';
         comment.deleted = true;
         await comment.save();
+        res.status(200).json({ message: 'Comment deleted, but document still exists due to replies ', completelyDeleted: false, updatedComment: comment });
     }
-
-    res.json({ message: 'Comment deleted successfully' });
 };
 
 export const updateComment = async (req, res) => {
@@ -122,10 +125,13 @@ export const updateComment = async (req, res) => {
     if (req.user.id !== comment.author.toString())
         return res.status(403).json({ message: 'Unauthorized action' });
 
+    // prevent editing deleted comments
+    if (comment.deleted)
+        return res.status(403).json({ message: 'Cannot edit a deleted comment.' })
+
     // input validation
-    if (text.length === 0) {
+    if (!text.length)
         return res.status(400).send({ message: 'Comment must not be empty.' });
-    }
 
     // Update comment text
     comment.text = text;
@@ -144,6 +150,9 @@ export const likeComment = async (req, res) => {
 
     if (!comment)
         return res.status(404).json({ message: `No comment found with id ${commentId}` });
+
+    if (comment.deleted)
+        return res.status(403).json({ message: 'Cannot like a deleted comment.' });
 
     const userId = req.user.id;
 
@@ -171,6 +180,9 @@ export const dislikeComment = async (req, res) => {
 
     if (!comment)
         return res.status(404).json({ message: `No comment found with id ${commentId}` });
+
+        if (comment.deleted)
+        return res.status(403).json({ message: 'Cannot dislike a deleted comment.' });
 
     const userId = req.user.id;
 

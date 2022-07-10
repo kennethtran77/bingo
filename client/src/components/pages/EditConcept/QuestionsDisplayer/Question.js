@@ -24,7 +24,7 @@ const Question = ({ concept, question, remove }) => {
             <div className="flex space-between">
                 { question.title ? <h2>{question.title}</h2> : (
                     <div className="center-flex gap">
-                        <h2>{'<Untitled>'}</h2>
+                        <h2><i>Untitled</i></h2>
                         <Tooltip
                             direction='right'
                             content='This question will have a blank title during practice.'
@@ -36,7 +36,7 @@ const Question = ({ concept, question, remove }) => {
                 )}
                 <div className="center-flex">
                     <AccordionButton open={showEditor} onClick={handleToggleEditor} tooltip={showEditor ? 'Hide Editor' : 'Show Editor'} />
-                    <DeleteButton onClick={() => setToDelete(true)} className="h-margin" aria-label="Delete Question" tooltip="Delete Question" />
+                    <DeleteButton onClick={() => setToDelete(true)} className="h-margin" aria-label="Delete Question" tooltip="Delete Question" background />
                 </div>
             </div>
             <div aria-expanded={showEditor} style={showEditor ? {

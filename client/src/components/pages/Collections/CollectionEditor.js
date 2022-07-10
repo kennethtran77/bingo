@@ -7,6 +7,8 @@ import { updateCollection } from '../../../actions/collections';
 import Tooltip from '../../widgets/Tooltip';
 import InputTags from '../../widgets/InputTags';
 import LoadingSpinner from '../../widgets/LoadingSpinner';
+import Button from '../../widgets/Button';
+import Input from '../../widgets/Input';
 
 const CollectionEditor = ({ collection, isLoading }) => {
     const [input, setInput] = useState({ title: '', tags: [] });
@@ -20,8 +22,7 @@ const CollectionEditor = ({ collection, isLoading }) => {
         }
     }, [collection]);
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
+    const handleSubmit = () => {
         setSaveMessage('Saving...');
         dispatch(updateCollection(collection._id, { ...collection, title: input.title, tags: input.tags }))
         .then(res => {
@@ -37,8 +38,7 @@ const CollectionEditor = ({ collection, isLoading }) => {
             <form className="form">
                 <label>
                     Title
-                    <input
-                        className="input"
+                    <Input
                         type="text"
                         name="text"
                         autoComplete="off"
@@ -62,11 +62,12 @@ const CollectionEditor = ({ collection, isLoading }) => {
                         content={saveMessage}
                         direction={"right"}
                     >
-                        <input
-                            className="small-button v-margin"
-                            type="button"
-                            value="Save"
+                        <Button
+                            text="Save"
                             onClick={handleSubmit}
+                            background
+                            vMargin
+                            stopPropogation={false}
                         />
                     </Tooltip>
                 </div>

@@ -1,11 +1,9 @@
-import * as api from '../api/index.js';
-
 import { fetchQuestions } from '../actions/questions';
 import { fetchComments } from './comments.js';
 
 // Action handlers
 
-export const fetchConcepts = (userId) => async (dispatch) => {
+export const fetchConcepts = (userId) => async (dispatch, getState, api) => {
     try {
         dispatch({ type: 'concepts/startLoading' });
         const { data } = await api.fetchConcepts();
@@ -24,7 +22,7 @@ export const fetchConcepts = (userId) => async (dispatch) => {
     }
 };
 
-export const createConcept = () => async (dispatch) => {
+export const createConcept = () => async (dispatch, getState, api) => {
     try {
         dispatch({ type: 'concepts/startLoading' });
         const { data } = await api.createConcept();
@@ -35,7 +33,7 @@ export const createConcept = () => async (dispatch) => {
     }
 };
 
-export const updateConcept = (conceptId, concept) => async (dispatch) => {
+export const updateConcept = (conceptId, concept) => async (dispatch, getState, api) => {
     try {
         dispatch({ type: 'concepts/startLoading' });
         const res = await api.updateConcept(conceptId, concept);
@@ -50,7 +48,7 @@ export const updateConcept = (conceptId, concept) => async (dispatch) => {
     }
 };
 
-export const deleteConcept = (conceptId) => async (dispatch) => {
+export const deleteConcept = (conceptId) => async (dispatch, getState, api) => {
     try {
         dispatch({ type: 'concepts/startLoading' });
         await api.deleteConcept(conceptId);
@@ -61,7 +59,7 @@ export const deleteConcept = (conceptId) => async (dispatch) => {
     }
 };
 
-export const likeConcept = (conceptId) => async (dispatch) => {
+export const likeConcept = (conceptId) => async (dispatch, getState, api) => {
     try {
         // data is the concept object with the updated likes
         const { data } = await api.likeConcept(conceptId);
@@ -71,7 +69,7 @@ export const likeConcept = (conceptId) => async (dispatch) => {
     }
 }
 
-export const dislikeConcept = (conceptId) => async (dispatch) => {
+export const dislikeConcept = (conceptId) => async (dispatch, getState, api) => {
     try {
         // data is the concept object with the updated dislikes
         const { data } = await api.dislikeConcept(conceptId);

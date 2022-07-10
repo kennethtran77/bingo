@@ -1,8 +1,6 @@
-import * as api from '../api/index.js';
-
 // Action handlers
 
-export const fetchQuestions = (concept) => async (dispatch, getState) => {
+export const fetchQuestions = (concept) => async (dispatch, getState, api) => {
     try {
         dispatch({ type: 'questions/startLoading' });
         const { data } = await api.fetchQuestions(concept._id);
@@ -27,7 +25,7 @@ export const fetchQuestions = (concept) => async (dispatch, getState) => {
     }
 };
 
-export const createQuestion = (concept) => async (dispatch) => {
+export const createQuestion = (concept) => async (dispatch, getState, api) => {
     try {
         dispatch({ type: 'questions/startLoading' });
         const { data } = await api.createQuestion(concept._id);
@@ -51,7 +49,7 @@ export const createQuestion = (concept) => async (dispatch) => {
     }
 };
 
-export const updateQuestion = (concept, questionId, updatedQuestion) => async (dispatch) => {
+export const updateQuestion = (concept, questionId, updatedQuestion) => async (dispatch, getState, api) => {
     try {
         dispatch({ type: 'questions/startLoading' });
         const res = await api.updateQuestion(concept._id, questionId, updatedQuestion);
@@ -70,7 +68,7 @@ export const updateQuestion = (concept, questionId, updatedQuestion) => async (d
     }
 };
 
-export const deleteQuestion = (concept, questionId) => async (dispatch) => {
+export const deleteQuestion = (concept, questionId) => async (dispatch, getState, api) => {
     try {
         dispatch({ type: 'questions/startLoading' });
         await api.deleteQuestion(concept._id, questionId);

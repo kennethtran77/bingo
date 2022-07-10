@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import DeleteButton from './DeleteButton';
 
-import './InputTags.css';
+import styles from './InputTags.module.css';
 
-const InputTags = ({ className = '', id = '', tags, addTag, removeTag, placeholder, maxLength, onKeyDown = (e) => {} }, ref) => {
+const InputTags = ({ className = '', inputClassName = '', tagClassName = '', id = '', tags, addTag, removeTag, placeholder, maxLength, onKeyDown = (e) => {} }, ref) => {
     const [value, setValue] = useState('');
     const [fieldState, setFieldState] = useState('');
     
@@ -30,24 +30,16 @@ const InputTags = ({ className = '', id = '', tags, addTag, removeTag, placehold
         }
     }
 
-    let styling = "input-tags " + className;
-
-    if (fieldState === 'hover') {
-        styling += ' hover';
-    } else if (fieldState === 'focused') {
-        styling += ' focus';
-    }
-
     return (
-        <div className={styling} id={id}>
+        <div className={`${styles['input-tags']} ${styles[fieldState]} ${className}`} id={id}>
             { tags && tags.map((tag, index) => (
-                <span className="input-tag" tabIndex={0} key={index} >
-                    <span className="text">{tag}</span>
-                    <DeleteButton className="delete h-margin" onClick={() => removeTag(tag)} fontSize={'15px'} />
+                <span className={`${styles['input-tag']}`} tabIndex={0} key={index} >
+                    <span className={`${styles.text} ${tagClassName}`}>{tag}</span>
+                    <DeleteButton onClick={() => removeTag(tag)} fontSize={'15px'} />
                 </span>
             )) }
             <input
-                id="input-tags-field"
+                className={inputClassName}
                 type="text"
                 value={value}
                 ref={ref}
@@ -55,9 +47,9 @@ const InputTags = ({ className = '', id = '', tags, addTag, removeTag, placehold
                 autoComplete="off"
                 placeholder={placeholder ? placeholder : ""}
                 onKeyDown={handleKeyDown}
-                onMouseEnter={() => { if (fieldState !== 'focused') setFieldState('hover') }}
+                onMouseEnter={() => { if (fieldState !== 'focus') setFieldState('hover') }}
                 onMouseLeave={() => { if (fieldState === 'hover') setFieldState('') }}
-                onFocus={() => setFieldState('focused')}
+                onFocus={() => setFieldState('focus')}
                 onBlur={() => setFieldState('')}
                 onChange={e => setValue(e.target.value)}
             />

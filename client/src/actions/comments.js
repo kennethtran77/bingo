@@ -1,8 +1,6 @@
-import * as api from '../api/index.js';
-
 // Action handlers
 
-const setTimedMessage = (message, colour, interval) => (dispatch, getState) => {
+const setTimedMessage = (message, colour, interval) => (dispatch, getState, api) => {
     dispatch({ type: 'comments/setMessage', payload: { content: message, colour }});
 
     let timer = getState().commentsSlice.messageTimer;
@@ -20,14 +18,14 @@ const setTimedMessage = (message, colour, interval) => (dispatch, getState) => {
     dispatch({ type: 'comments/setMessageTimer', payload: newTimer });
 }
 
-export const fetchComments = (concept) => async (dispatch, getState) => {
+export const fetchComments = (concept) => async (dispatch, getState, api) => {
     try {
         dispatch({ type: 'comments/startLoading' });
         const { data } = await api.fetchComments(concept._id);
 
         dispatch({
             type: 'comments/fetchAll',
-            payload: data.concat(getState().commentsSlice.comments)
+            payload: data.concat(getState().commentsSlice.comments)  // concatenate concept comments with existing comments
         });
 
         // --- update concepts
@@ -46,7 +44,7 @@ export const fetchComments = (concept) => async (dispatch, getState) => {
     }
 };
 
-export const createComment = (concept, newComment) => async (dispatch) => {
+export const createComment = (concept, newComment) => async (dispatch, getState, api) => {
     try {
         dispatch({ type: 'comments/startLoading' });
         // data is the new concept object with author and id keys
@@ -72,7 +70,7 @@ export const createComment = (concept, newComment) => async (dispatch) => {
     }
 };
 
-export const updateComment = (concept, commentId, updatedComment) => async (dispatch) => {
+export const updateComment = (concept, commentId, updatedComment) => async (dispatch, getState, api) => {
     try {
         dispatch({ type: 'comments/startLoading' });
         const { data } = await api.updateComment(concept._id, commentId, updatedComment);
@@ -88,23 +86,31 @@ export const updateComment = (concept, commentId, updatedComment) => async (disp
     }
 };
 
-export const deleteComment = (concept, commentId) => async (dispatch) => {
+export const deleteComment = (concept, commentId) => async (dispatch, getState, api) => {
     try {
         dispatch({ type: 'comments/startLoading' });
-        await api.deleteComment(concept._id, commentId);
-        dispatch({
-            type: 'comments/delete',
-            payload: commentId
-        });
+        const { data } = await api.deleteComment(concept._id, commentId);
+        
+        if (data.completelyDeleted) {
+            dispatch({
+                type: 'comments/delete',
+                payload: commentId
+            });
 
-        // --- update concept
-        dispatch({ type: 'concepts/startLoading' });
-        dispatch({
-            type: 'concepts/update',
-            payload: { ...concept, comments: concept.comments.filter(comment => comment !== commentId) }
-        });
-        dispatch({ type: 'concepts/stopLoading' });
-        // ---
+            // --- update concept
+            dispatch({ type: 'concepts/startLoading' });
+            dispatch({
+                type: 'concepts/update',
+                payload: { ...concept, comments: concept.comments.filter(comment => comment !== commentId) }
+            });
+            dispatch({ type: 'concepts/stopLoading' });
+            // ---
+        } else {
+            dispatch({
+                type: 'comments/update',
+                payload: data.updatedComment
+            });
+        }
 
         dispatch({ type: 'comments/stopLoading' });
     } catch (error) {
@@ -113,7 +119,7 @@ export const deleteComment = (concept, commentId) => async (dispatch) => {
     }
 };
 
-export const likeComment = (conceptId, commentId) => async (dispatch) => {
+export const likeComment = (conceptId, commentId) => async (dispatch, getState, api) => {
     try {
         // data is the concept object with the updated likes
         const { data } = await api.likeComment(conceptId, commentId);
@@ -123,7 +129,7 @@ export const likeComment = (conceptId, commentId) => async (dispatch) => {
     }
 }
 
-export const dislikeComment = (conceptId, commentId) => async (dispatch) => {
+export const dislikeComment = (conceptId, commentId) => async (dispatch, getState, api) => {
     try {
         // data is the concept object with the updated dislikes
         const { data } = await api.dislikeComment(conceptId, commentId);

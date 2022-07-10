@@ -1,13 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Routes, Navigate } from 'react-router';
+import { BrowserRouter } from 'react-router-dom';
 
-import decode from 'jwt-decode';
-
-import { fetchConcepts } from './actions/concepts.js';
-import { fetchCollections } from './actions/collections.js';
-import { fetchPracticeSessions } from './actions/practice.js';
-import { fetchSettings, fetchUsernames } from './actions/user.js';
+import { generateToken } from './actions/auth.js';
 
 import './App.css';
 
@@ -25,78 +21,45 @@ import BrowseConcepts from './components/pages/BrowseConcepts';
 import ViewConcept from './components/pages/ViewConcept/ViewConcept';
 import Collections from './components/pages/Collections/Collections';
 import EditCollection from './components/pages/Collections/EditCollection';
-
 import PracticeCollection from './components/pages/Practice/PracticeCollection.js';
 
 const App = () => {
-    // decodedToken should be an object with key `id` representing the user's id
-    const [decodedToken, setDecodedToken] = useState('');
-    
-    // force refresh
-    useSelector(state => state.authSlice);
-
     const dispatch = useDispatch();
 
-    // Try to decode token whenever `session` changes
+    // try and generate an access token with cookie refresh token upon App component mount
     useEffect(() => {
-        const checkForToken = () => {
-            // fetch json token from localStorage
-            const sessionToken = localStorage.getItem('profile');
-
-            if (sessionToken) {
-                const parsedToken = JSON.parse(sessionToken);
-
-                if (parsedToken && parsedToken.token) {
-                    const decoded = decode(parsedToken.token);
-                    setDecodedToken(decoded);
-                }
-            }
-        };
-
-        checkForToken(); // check for token upon App component mounting
-
-        // add window event listener to check localStorage
-        window.addEventListener('storage', checkForToken);
-
-        // cleanup function, remove window event listener
-        return () => window.removeEventListener('storage', checkForToken);
+        dispatch(generateToken());
     }, []);
 
-    // Load data once user ID loads
-    useEffect(() => {
-        if (decodedToken) {
-            dispatch({ type: 'questions/clear' });
-            dispatch(fetchConcepts(decodedToken.id));
-            dispatch(fetchCollections());
-            dispatch(fetchPracticeSessions());
-            dispatch(fetchSettings());
-            dispatch(fetchUsernames());
-        }
-    }, [dispatch, decodedToken]);
+    const { token } = useSelector(state => state.authSlice);
+
+    // limit routes when no jwt token is present
+    if (!token) {
+        return (
+            <BrowserRouter>
+                <Routes>
+                    <Route path='*' element={<Navigate to="/" />}></Route>
+                    <Route path='/signup' element={<Signup />}></Route>
+                    <Route path='/login' element={<Login />}></Route>
+                    <Route path='/' element={<Login />}></Route>
+                </Routes>
+            </BrowserRouter>
+        );
+    }
 
     // wrap the component in a fragment containing the navbar with the decoded
     // token, and passing userId as props into the component
     const wrap = (Component) => (
         <>
-            <Navbar decodedToken={decodedToken} />
-            <div className="main">
-                { <Component userId={decodedToken.id} /> }
-            </div>
+            <Navbar userId={token.id} />
+            <main>
+                { <Component userId={token.id} /> }
+            </main>
         </>
     );
 
-    if (!decodedToken)
-        return (
-            <Routes>
-                <Route path='*' element={<Navigate to="/" />}></Route>
-                <Route path='/signup' element={<Signup />}></Route>
-                <Route path='/login' element={<Login />}></Route>
-                <Route path='/' element={<Login />}></Route>
-            </Routes>
-        );
-
     return (
-        <>
+        <BrowserRouter>
             <Routes>
                 <Route path='*' element={<Error />}></Route>
                 <Route exact path="/" element={ wrap(Home) }></Route>
@@ -113,7 +76,7 @@ const App = () => {
                 <Route exact path="/collections" element={ wrap(Collections) }></Route>
                 <Route exact path="/practice/results/:sessionId" element={ wrap(PracticeResults) }></Route>
             </Routes>
-        </>
+        </BrowserRouter>
     );
 };
 

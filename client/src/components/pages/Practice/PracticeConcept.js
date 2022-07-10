@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { Navigate, useParams, Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { Navigate, useParams } from 'react-router-dom';
 
-import { generateConceptQuestions } from '../../../api';
+import { generateConceptQuestions } from '../../../actions/practice';
 import LoadingSpinner from '../../widgets/LoadingSpinner';
 
+import Button from '../../widgets/Button';
 import Practice from './Practice';
 
 const PracticeConcept = ({ userId }) => {
     const { conceptId } = useParams();
+
+    const dispatch = useDispatch();
 
     const [questions, setQuestions] = useState(null);
 
@@ -23,12 +26,12 @@ const PracticeConcept = ({ userId }) => {
     useEffect(() => {
         if (concept) {
             // Fetch questions
-            generateConceptQuestions(concept._id, settings.questionsPerSession)
-                .then(res => {
-                    const questions = res.data;
-                    setQuestions(questions);
-                })
-                .catch(err => console.log(err));
+            const fetchConceptQuestions = async () => {
+                let questions = await dispatch(generateConceptQuestions(concept._id, settings.questionsPerSession));
+                setQuestions(questions);
+            };
+
+            fetchConceptQuestions();
         }
     }, [concept, settings.questionsPerSession]);
 
@@ -45,7 +48,7 @@ const PracticeConcept = ({ userId }) => {
         return (
             <>
                 <p>This concept has no practicable questions!</p>
-                <Link to="/" className="small-button link">Go Home</Link>
+                <Button link="/" text="Go Home" background />
             </>
         );
     

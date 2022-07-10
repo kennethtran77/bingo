@@ -1,5 +1,4 @@
 #search-title {
-    height: 37px;
     width: 100%;
     margin-bottom: 5px;
 }
@@ -8,6 +7,6 @@
     margin-bottom: 5px;
 }
 
-#search-box {
-    width: 100%;
+.search-box {
+    align-self: flex-start;
 }

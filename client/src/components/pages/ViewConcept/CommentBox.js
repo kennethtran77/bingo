@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { createComment } from '../../../actions/comments';
+import Button from '../../widgets/Button';
 
 const CommentBox = ({ concept }) => {
     const [value, setValue] = useState('');
@@ -33,16 +34,13 @@ const CommentBox = ({ concept }) => {
                 placeholder="Add a new comment"
                 value={value}
                 onChange={handleChange}>
-                
-                </textarea>
-            <button
-                className="small-button"
+            </textarea>
+            <Button
                 disabled={isValueEmpty}
-                title={isValueEmpty ? "Please enter some text before submitting." : ""}
+                tooltip={isValueEmpty ? "Please enter some text before submitting." : ""}
                 onClick={handleSubmit}
-            >
-                Submit
-            </button>
+                text="Submit"
+            />
         </>
     );
 };

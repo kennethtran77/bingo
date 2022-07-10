@@ -7,6 +7,10 @@
     text-align: left;
 }
 
+#practice-sessions-displayer td {
+    padding: 10px 0;
+}
+
 #practice-sessions-displayer table {
     border-collapse: collapse;
 }

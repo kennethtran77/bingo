@@ -8,6 +8,7 @@ import './Comment.css';
 import LikeDislike from '../../widgets/LikeDislike';
 import ConfirmDelete from '../../widgets/ConfirmDelete';
 import AccordionButton from '../../widgets/AccordionButton';
+import Button from '../../widgets/Button';
 
 const Comment = ({ comment, userId, concept, replies, replyTo, replyToAuthor }) => {
     const { users } = useSelector(state => state.usersSlice);
@@ -25,20 +26,21 @@ const Comment = ({ comment, userId, concept, replies, replyTo, replyToAuthor }) 
         setInput(e.target.value);
     };
 
-    const handleUpdate = e => {
-        e.preventDefault();
-
-        if (!input.length)
+    const handleUpdate = () => {
+        if (!input.length || comment.disabled)
             return;
 
         dispatch(updateComment(concept, comment._id, { text: input }));
         clearInputSetMode('none');
     };
 
-    const handleCreateReply = e => {
-        e.preventDefault();
+    const handleDelete = () => {
+        dispatch(deleteComment(concept, comment._id));
+        clearInputSetMode('none');
+    }
 
-        if (!input.length)
+    const handleCreateReply = () => {
+        if (!input.length || comment.disabled)
             return;
 
         const newComment = {
@@ -53,6 +55,9 @@ const Comment = ({ comment, userId, concept, replies, replyTo, replyToAuthor }) 
     }
 
     const clearInputSetMode = newMode => {
+        if (comment.deleted)
+            return;
+
         setInput('');
         setMode(newMode);
     }
@@ -62,25 +67,25 @@ const Comment = ({ comment, userId, concept, replies, replyTo, replyToAuthor }) 
             case 'edit':
                 return (
                     <>
-                        <li role="button" tabIndex={0} className={`comment-button ${!input.length ? 'disabled' : ''}`} title={!input.length ? 'Please enter a reply' : null} onClick={handleUpdate}>Save</li>
-                        <li role="button" tabIndex={0} className="comment-button" onClick={() => clearInputSetMode('none')}>Cancel</li>
+                        <Button disabled={!input.length} tooltip={!input.length ? 'Please enter a reply' : null} onClick={handleUpdate} text="Save"/>
+                        <Button onClick={() => clearInputSetMode('none')} text="Cancel"/>
                     </>
                 );
             case 'reply':
                 return (
                     <>
-                        <li role="button" tabIndex={0} className={`comment-button ${!input.length ? 'disabled' : ''}`} title={!input.length ? 'Please enter a reply' : null} onClick={handleCreateReply}>Submit</li>
-                        <li role="button" tabIndex={0} className="comment-button" onClick={() => clearInputSetMode('none')}>Cancel</li>
+                        <Button disabled={!input.length} tooltip={!input.length ? 'Please enter a reply' : null} onClick={handleCreateReply} text="Submit"/>
+                        <Button onClick={() => clearInputSetMode('none')} text="Cancel"/>
                     </>
                 );
             default:
                 return (
                     <>
-                        <li role="button" tabIndex={0} className="comment-button" onClick={() => clearInputSetMode('reply')}>Reply</li>
+                        <Button disabled={comment.deleted} onClick={() => clearInputSetMode('reply')} text="Reply"/>
                         { userId === comment.author ?
                             <>
-                                <li role="button" tabIndex={0} className="comment-button" onClick={() => clearInputSetMode('edit')}>Edit</li>
-                                <li role="button" tabIndex={0} className="comment-button" onClick={() => clearInputSetMode('delete')}>Delete</li>
+                            <Button disabled={comment.deleted} onClick={() => clearInputSetMode('edit')} text="Edit"/>
+                            <Button disabled={comment.deleted} onClick={() => clearInputSetMode('delete')} text="Delete"/>
                             </>
                         : null }
                     </>
@@ -88,7 +93,7 @@ const Comment = ({ comment, userId, concept, replies, replyTo, replyToAuthor }) 
         }
     };
 
-    return mode === 'delete' ? <ConfirmDelete title={'this comment'} undo={() => clearInputSetMode('none')} confirm={() => dispatch(deleteComment(concept, comment._id))} /> : (
+    return mode === 'delete' ? <ConfirmDelete title={'this comment'} undo={() => clearInputSetMode('none')} confirm={handleDelete} /> : (
         <div className="comment" id={comment._id}>
             <div className="space-between">
                 <span><strong>{author.username}</strong></span>
@@ -102,7 +107,7 @@ const Comment = ({ comment, userId, concept, replies, replyTo, replyToAuthor }) 
                     placeholder={comment.text}
                     value={input}
                     onChange={handleChange}
-                /> : <p>{replyTo && <a className="coloured-link" href={`#${replyTo._id}`}>{`@${replyToAuthor.username}`}</a> } {comment.text}</p> }
+                /> : <p style={{ fontStyle: comment.deleted ? 'italic' : 'normal' }}>{replyTo && <a className="coloured-link" href={`#${replyTo._id}`}>{`@${replyToAuthor.username}`}</a> } {comment.text}</p> }
             { mode === 'reply' && <textarea placeholder="Enter a reply" value={input} onChange={handleChange}/> }
             <div className="space-between">
                 <LikeDislike
@@ -111,14 +116,13 @@ const Comment = ({ comment, userId, concept, replies, replyTo, replyToAuthor }) 
                     dislikes={comment.dislikes}
                     like={() => dispatch(likeComment(concept._id, comment._id))}
                     dislike={() => dispatch(dislikeComment(concept._id, comment._id))}
+                    disabled={comment.deleted}
                 />
-                <ul className="remove-bullet h-list">
-                    {renderOptions()}
-                </ul>
+                <div className="flex gap">{renderOptions()}</div>
             </div>
             { (replies && replies.length > 0) ?
             <>
-            <span className="left-flex gap">{ replies.length === 1 ? '1 reply' : `${replies.length} replies` } <AccordionButton open={repliesOpen} onClick={() => setRepliesOpen(prev => !prev)} /></span>
+            <span className="left-flex gap">{ replies.length === 1 ? '1 reply' : `${replies.length} replies` } <AccordionButton open={repliesOpen} onClick={() => setRepliesOpen(prev => !prev)} tooltip={repliesOpen ? 'Hide Replies' : 'Show Replies'} /></span>
             <hr />
                 { repliesOpen && 
                 <ul style={{ listStyleType: 'none' }}>

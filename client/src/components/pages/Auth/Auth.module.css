@@ -17,12 +17,7 @@
     width: 300px;
 }
 
-#auth label {
-    display: block;
-}
-
-#auth input {
-    display: block;
+#auth .input {
     width: 100%;
     margin-bottom: 10px;
 }

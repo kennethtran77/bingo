@@ -1,23 +1,71 @@
-import React, { useState, useEffect, createRef } from 'react';
+import React, { useState, createRef, useRef, useCallback, useLayoutEffect } from 'react';
 
 import InputTags from './InputTags';
-
-import './InputTags.css';
-import './InputCloze.css';
 import DeleteButton from './DeleteButton';
 import AutosizingInput from './AutosizingInput';
-import LoadingSpinner from './LoadingSpinner';
+
+import styles from './InputCloze.module.css';
 
 // Answer is an array containing strings and arrays of strings
 const InputCloze = ({ input, setInput }) => {
     const [fieldRefs, setFieldRefs] = useState([]);
+    const [fieldState, setFieldState] = useState('');
+    const ref = useRef();
 
     // Set up refs for the fields
-    useEffect(() => {
+    useLayoutEffect(() => {
         setFieldRefs(fieldRefs => Array(input.answer.length).fill().map((_, i) => fieldRefs[i] || createRef()));
-    }, [input.answer.length]);
+    }, [input.answer]);
 
-    const [fieldState, setFieldState] = useState('');
+    // update flex growth of text fields when field refs are set
+    useLayoutEffect(() => {
+        updateFlexGrowth();
+    }, [fieldRefs]);
+
+    // Set up ResizeObserver on component wrapper to update flex growth of text fields on resize
+    useLayoutEffect(() => {
+        if (!ref.current)
+            return;
+        
+        const observer = new ResizeObserver(entries => {
+            updateFlexGrowth();
+        })
+        observer.observe(ref.current);
+
+        return () => {
+            observer.disconnect();
+        };
+    }, [ref, fieldRefs]);
+
+    /**
+     * Return whether the element input.answer[index] is a blank or a text field
+     */
+     const isBlank = useCallback(index => Array.isArray(input.answer[index]), [input]);
+
+    /**
+     * Updates all text fields on the last column of each row to take up remaining space inside component
+     */
+    const updateFlexGrowth = useCallback(() => {
+        fieldRefs.forEach((ref, index) => {
+            if (!isBlank(index)) {
+                if (index === fieldRefs.length - 1) {  // the last field is not a blank
+                    ref.current.style.flexGrow = 1;
+                } else if (index + 1 < fieldRefs.length) {
+                    // if the current field is not a blank, then the next field must be a blank
+                    const nextRef = fieldRefs[index + 1].current;
+
+                    let currContainer = ref.current;
+                    let nextContainer = nextRef.parentElement.parentElement;
+
+                    if (currContainer.offsetTop !== nextContainer.offsetTop) {
+                        currContainer.style.flexGrow = 1;
+                    } else {
+                        currContainer.style.flexGrow = 0;
+                    }
+                }
+            }
+        })
+    }, [fieldRefs]);
 
     /**
      * Focus on the field to the left of inputIndex
@@ -137,48 +185,12 @@ const InputCloze = ({ input, setInput }) => {
         setInput(prevState => ({ ...prevState, answer: newAnswer }));
     }
 
-    let styling = "input-tags input-cloze";
-
-    if (fieldState === 'hover') {
-        styling += ' hover';
-    } else if (fieldState === 'focused') {
-        styling += ' focus';
-    }
-
-    if (!fieldRefs)
-        return <LoadingSpinner />;
-
-    const isBlank = index => Array.isArray(input.answer[index]);
-
-    // update flex growth of non-blank fields
-    useEffect(() => {
-        fieldRefs.forEach((ref, index) => {
-            if (!isBlank(index)) {
-                if (index === fieldRefs.length - 1) {  // the last field is not a blank
-                    ref.current.style.flexGrow = 1;
-                } else if (index + 1 < fieldRefs.length) {
-                    // if the current field is not a blank, then the next field must be a blank
-                    const nextRef = fieldRefs[index + 1].current;
-
-                    let currContainer = ref.current;
-                    let nextContainer = nextRef.parentElement.parentElement;
-
-                    if (currContainer.offsetTop !== nextContainer.offsetTop) {
-                        currContainer.style.flexGrow = 1;
-                    } else {
-                        currContainer.style.flexGrow = 0;
-                    }
-                }
-            }
-        })
-    }, [fieldRefs]);
-
     return (
-        <div className={styling}>
+        <div className={`${styles['input-cloze']} ${styles[fieldState]}`} ref={ref}>
             { input.answer && input.answer.map((ans, index) => {
                 return !isBlank(index) ? (
                     <AutosizingInput
-                        value={input.answer[index] || ''}
+                        value={ans || ''}
                         key={index}
                         ref={fieldRefs[index]}
                         inputstyle={{
@@ -188,9 +200,9 @@ const InputCloze = ({ input, setInput }) => {
                             minHeight: '45px',
                         }}
                         onKeyDown={(e) => handleKeyDown(index, e)}
-                        onMouseEnter={() => { if (fieldState !== 'focused') setFieldState('hover') }}
+                        onMouseEnter={() => { if (fieldState !== 'focus') setFieldState('hover') }}
                         onMouseLeave={() => { if (fieldState === 'hover') setFieldState('') }}
-                        onFocus={() => setFieldState('focused')}
+                        onFocus={() => setFieldState('focus')}
                         onBlur={() => setFieldState('')}
                         onChange={e => setInput(prevState => {
                             e.preventDefault();
@@ -200,8 +212,10 @@ const InputCloze = ({ input, setInput }) => {
                         })}
                     />
                 ) : (
-                    <div key={index} className='blanks'>
+                    <div className={styles['blanks']} key={index}>
                         <InputTags
+                            inputClassName={styles['input-field']}
+                            tagClassName={styles['input-tag']}
                             tags={input.answer[index]}
                             ref={fieldRefs[index]}
                             addTag={blank => setInput(prevState => {
@@ -221,9 +235,10 @@ const InputCloze = ({ input, setInput }) => {
                                     focusRightField(index, e);
                                 }
                             }}
+                            wordBreak={true}
                             placeholder="Blanks"
                         />
-                        <DeleteButton className="delete-blank" aria-label="Delete Blanks" tooltip="Delete Blanks" onClick={() => removeBlank(index)} />
+                        <DeleteButton className={styles['delete-blank']} background aria-label="Delete Blanks" tooltip="Delete Blanks" onClick={() => removeBlank(index)} />
                     </div>
                 )
              }) }

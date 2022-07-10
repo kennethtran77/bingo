@@ -17,45 +17,27 @@
 
 .input-tag {
     display: flex;
-    align-items: center;
+    align-items: stretch;
     justify-content: center;
-    padding: 5px;
+    padding: 3px;
     margin: 3px;
-    border: rgb(59, 59, 59) 1px solid;
     border-radius: 3px;
     background-color: rgb(209, 234, 255);
     cursor: pointer;
     position: relative;
 }
 
-.input-tag .text {
-    margin-right: 20px;
-}
-
-/* Position delete tag button in top right */
-.input-tag .delete {
-    align-self: flex-start;
-    position: absolute;
-    top: 5px;
-    right: 0;
-}
-
-#input-tags-field {
-    flex-grow: 1;
-    width: 1px;
-    outline: none;
-    border: none;
+.input-tags > input {
+    flex-grow: 1 !important;
+    width: 1px !important;
+    outline: none !important;
+    border: none !important;
 }
 
 .input-tags:focus, .focus {
     outline: black 1px solid;
-    border-radius: 0;
 }
 
 .input-tags:hover, .hover {
     border: rgb(36, 36, 36) 1px solid;
-}
-
-.full-width {
-    max-width: 100%;
 }

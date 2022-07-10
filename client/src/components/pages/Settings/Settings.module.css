@@ -3,9 +3,8 @@
     margin: 0 auto;
 }
 
-#settings input {
+#settings .input {
     width: 100%;
-    display: block;
     margin-bottom: 10px;
 }
 

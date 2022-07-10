@@ -1,9 +1,15 @@
-const authReducer = (state = { isLoading: false, message: { content: '', colour: 'black' }, messageTimer: null }, action) => {
+const authReducer = (state = { isLoading: false, token: null, signupKeyEnabled: false, message: { content: '', colour: 'black' }, messageTimer: null }, action) => {
     switch (action.type) {
         case 'auth/startLoading':
             return { ...state, isLoading: true };
         case 'auth/stopLoading':
             return { ...state, isLoading: false };
+        case 'auth/setToken':
+            // payload is the access token
+            return { ...state, token: action.payload };
+        case 'auth/setSignupKeyEnabled':
+            // payload is the boolean value
+            return { ...state, signupKeyEnabled: action.payload };
         case 'auth/setMessage':
             // payload is the message
             return { ...state, message: action.payload };

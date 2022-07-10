@@ -1,5 +1,5 @@
-import React from "react";
-import ExternalListener from "./ExternalListener";
+import React, { useRef } from "react";
+import useExternalListener from "./ExternalListener";
 
 import styles from "./Tooltip.module.css";
 
@@ -10,20 +10,29 @@ const ControlledTooltip = ({
     active,
     setActive,
     onKeyDown = e => { },
-    onClick = () => { },
+    onClick = () => {},
+    onFocus = () => {},
+    onBlur = () => {},
     children
 }) => {
-    const tooltip = (
+    const childRef = useRef(null);
+
+    // Alert clicks outside of element
+    useExternalListener(() => setActive(false), childRef, active);
+
+    return (
         <div
+            ref={childRef}
             className={styles.tooltip}
             onKeyDown={(e) => onKeyDown(e)}
             role='tooltip'
-            tabIndex={active ? 0 : -1}
+            tabIndex="-1"
             aria-hidden={active}
             aria-live='polite'
+            style={{width: '100%', height: '100%'}}
         >
-            <span onClick={onClick} >{children}</span>
-            {active && (
+            <div onClick={onClick} onFocus={onFocus} onBlur={onBlur}>{children}</div>
+            {Boolean(active) && (
                 <div
                     className={`${styles["tooltip-content"]} ${styles[direction]}`}
                     style={style}
@@ -32,12 +41,6 @@ const ControlledTooltip = ({
                 </div>
             )}
         </div>
-    );
-
-    return (
-        <ExternalListener onClick={() => setActive(false)}>
-            {tooltip}
-        </ExternalListener>
     );
 };
 

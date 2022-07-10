@@ -6,7 +6,6 @@ import Paginate from './Paginate';
 import { createConcept, deleteConcept } from '../../actions/concepts';
 import Concept from './Concept';
 
-import SearchBox from './SearchBox';
 import LoadingSpinner from './LoadingSpinner';
 
 import NewButton from './NewButton';
@@ -14,10 +13,9 @@ import NewButton from './NewButton';
 /**
  * A component that displays a listing of the given concepts.
  */
-const ConceptsDisplayer = ({ title, concepts, isLoading, userId, showCreator, collection, showSearchBar = true, enableCreating = true}) => {
+const ConceptsDisplayer = ({ concepts, isLoading, userId, showCreator, collection, handleTagClick, enableCreating = true}) => {
     const [conceptsToDisplay, setConceptsToDisplay] = useState(concepts);
-    const [searched, setSearched] = useState(false);
-
+    
     const dispatch = useDispatch();
 
     const handleCreateConcept = e => {
@@ -28,58 +26,50 @@ const ConceptsDisplayer = ({ title, concepts, isLoading, userId, showCreator, co
         
         dispatch(createConcept());
     }
+
+    const getListOfConcepts = () => {
+        return (
+            <ul className="remove-bullet">
+                { conceptsToDisplay.map((concept) => (
+                    <li key={concept._id}>
+                        <Concept
+                            concept={concept}
+                            remove={() => dispatch(deleteConcept(concept._id))}
+                            userId={userId}
+                            showCreator={showCreator}
+                            collection={collection}
+                            handleTagClick={handleTagClick}
+                        />
+                    </li>
+                ))}
+            </ul>
+        );
+    };
     
     return !userId ? (<h2>Please log in to view concepts.</h2>) : (
-        <div className="row">
-            <div className="container maj">
-                { title && <h2>{title}</h2>}
-                { searched && <h2>Displaying search results:</h2> }
-                <ul className="remove-bullet">
-                    { conceptsToDisplay.length ? conceptsToDisplay.map((concept) => (
-                        <li key={concept._id}>
-                            <Concept
-                                concept={concept}
-                                remove={() => dispatch(deleteConcept(concept._id))}
-                                userId={userId}
-                                showCreator={showCreator}
-                                collection={collection}
-                            />
-                        </li>
-                    )) :
-                        <span>There are no concepts to display.</span>
+        <>
+            { isLoading && <LoadingSpinner/> }
+            { !isLoading && !conceptsToDisplay.length && <div className="container">There are no concepts to display.</div> }
+            { Boolean(conceptsToDisplay.length) && getListOfConcepts() }
+            <div className="container">
+                <div className="left-flex">
+                    { enableCreating &&
+                        <NewButton
+                            onClick={handleCreateConcept}
+                            aria-label="create new concept"
+                            tooltip="Create New Concept"
+                        />
                     }
-                </ul>
-                { isLoading && <LoadingSpinner/> }
-                { enableCreating &&
-                    <NewButton
-                        onClick={handleCreateConcept}
-                        aria-label="create new concept"
-                        tooltip="Create New Concept"
-                    />
-                }
-                <Paginate
-                    items={concepts}
-                    itemsPerPage={5}
-                    setItemsToDisplay={setConceptsToDisplay}
-                />
-            </div>
-            { showSearchBar && (
-                <div className="container min search-box">
-                    <h2>Search</h2>
-                    <SearchBox
-                        searchables={concepts}
-                        setResults={results => {
-                            setConceptsToDisplay(results);
-                            setSearched(true);
-                        }}
-                        reset={() => {
-                            setConceptsToDisplay(concepts);
-                            setSearched(false);
-                        }}
+                </div>
+                <div className="center-flex">
+                    <Paginate
+                        items={concepts}
+                        itemsPerPage={5}
+                        setItemsToDisplay={setConceptsToDisplay}
                     />
                 </div>
-            )}
-        </div>
+            </div>
+        </>
     );
 }
 

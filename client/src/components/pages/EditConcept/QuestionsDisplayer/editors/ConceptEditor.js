@@ -10,13 +10,13 @@ import htmlToDraft from 'html-to-draftjs';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './TextEditor.css';
 
-import './ConceptEditor.css';
-
 import { updateConcept } from '../../../../../actions/concepts';
 
-import Tooltip from '../../../../widgets/Tooltip';
 import InputTags from '../../../../widgets/InputTags';
 import LoadingSpinner from '../../../../widgets/LoadingSpinner';
+import Button from '../../../../widgets/Button';
+import Tooltip from '../../../../widgets/Tooltip';
+import Input from '../../../../widgets/Input';
 
 const ConceptEditor = ({ concept, isLoading }) => {
     const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
@@ -42,8 +42,7 @@ const ConceptEditor = ({ concept, isLoading }) => {
         }
     }, [concept]);
 
-    const handleSubmit = e => {
-        e.preventDefault();
+    const handleSubmit = () => {
         setSaveMessage('Saving...');
         dispatch(updateConcept(concept._id, input))
         .then(res => {
@@ -60,11 +59,10 @@ const ConceptEditor = ({ concept, isLoading }) => {
                 message='You have unsaved changes. Are you sure you want to leave?'
             /> */}
             <h2>Edit Concept</h2>
-            <form className="form">
+            <form>
                 <label>
                     Title
-                    <input
-                        className="input"
+                    <Input
                         type="text"
                         name="text"
                         value={input.title || ''}
@@ -85,14 +83,13 @@ const ConceptEditor = ({ concept, isLoading }) => {
                             setInput({ ...input, text: draftToHtml(convertToRaw(newState.getCurrentContent()))});
                         }}
                         toolbar={{
-                            options: ['inline', 'blockType', 'fontSize', 'fontFamily', 'list', 'textAlign', 'colorPicker', 'link', 'emoji', 'image', 'remove', 'history']
+                            options: ['inline', 'blockType', 'fontSize', 'list', 'textAlign', 'colorPicker', 'link', 'emoji', 'image', 'remove', 'history']
                         }}
                     />
                 </label>
                 <label>
                     Tags
                     <InputTags
-                        className="input"
                         tags={input.tags}
                         addTag={tag => setInput(prevState => ({ ...prevState, tags: [ ...prevState.tags, tag ] })) }
                         removeTag={tag => setInput(prevState => ({ ...prevState, tags: prevState.tags.filter(t => t !== tag)})) }
@@ -102,7 +99,6 @@ const ConceptEditor = ({ concept, isLoading }) => {
                 <label>
                     Public
                     <input
-                        className="input"
                         type="checkbox"
                         value={input.public}
                         checked={input.public}
@@ -115,10 +111,10 @@ const ConceptEditor = ({ concept, isLoading }) => {
                         content={saveMessage}
                         direction={"right"}
                     >
-                        <input
-                            className="small-button v-margin"
-                            type="button"
-                            value="Save"
+                        <Button
+                            text="Save"
+                            background
+                            stopPropogation={false}
                             onClick={handleSubmit}
                         />
                     </Tooltip>

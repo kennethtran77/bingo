@@ -129,19 +129,21 @@ export const fetchPracticeQuestionChanged = async (req, res) => {
         const practiceSession = await PracticeSessionModel.findById(sessionId);
 
         if (!practiceSession)
-            res.status(200).send(false);
+            return res.status(200).send(false);
 
         // get the newest version of the question with id `questionId`
         const currentQuestion = await QuestionModel.findById(questionId);
 
         // if the question was deleted, then mark it as changed automatically
-        if (!currentQuestion) {
-            res.status(200).send(true);
-        }
+        if (!currentQuestion)
+            return res.status(200).send(true);
 
         // get the practice question from the practice session
         const practiceQuestion = practiceSession.practiceQuestions.filter(q => q.question.toString() === questionId)[0];
 
+        if (!practiceQuestion)
+            return res.status(200).send(true);
+        
         const titleChanged = currentQuestion.title !== practiceQuestion.title;
         const typeChanged = currentQuestion.type !== practiceQuestion.type;
         const textChanged = currentQuestion.text !== practiceQuestion.text;
