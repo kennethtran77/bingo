@@ -19,7 +19,7 @@ const Paginate = ({ items, itemsPerPage = 5, setItemsToDisplay, maxPageButtons =
     }, [])
 
     useEffect(() => {
-        if (items) {
+        if (items && items.length) {
             const newPageCount = Math.ceil(items.length / itemsPerPage);
 
             setPageCount(newPageCount);
@@ -55,6 +55,10 @@ const Paginate = ({ items, itemsPerPage = 5, setItemsToDisplay, maxPageButtons =
 
         const getButton = (page) => <Button key={page} onClick={() => setCurrentPage(page)} background={currentPage === page} text={page} width={width} height={height} align="center" />;
 
+        if (!items.length) {
+            return getButton(1);
+        }
+
         if (mobile) {
             return getButton(currentPage);
         }
@@ -74,7 +78,7 @@ const Paginate = ({ items, itemsPerPage = 5, setItemsToDisplay, maxPageButtons =
             buttons.push(getButton(1));
             buttons.push(<Button key="..." text="..." disabled width={width} height={height} align='center' />);
 
-            for (let i = pageCount - maxPageButtons; i <= pageCount; i++) {
+            for (let i = pageCount - maxPageButtons + 1; i <= pageCount; i++) {
                 buttons.push(getButton(i));
             }
         } else {  // render buttons to first and last pages
