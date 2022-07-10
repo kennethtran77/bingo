@@ -1,14 +1,11 @@
 import decode from 'jwt-decode';
 
-import * as api from '../api/index.js';
-import { setBearerToken } from '../api/index.js';
-
 import { fetchConcepts } from './concepts.js';
 import { fetchCollections } from './collections.js';
 import { fetchPracticeSessions } from './practice.js';
 import { fetchSettings, fetchUsernames } from './user.js';
 
-const setTimedMessage = (message, colour, interval) => (dispatch, getState) => {
+const setTimedMessage = (message, colour, interval) => (dispatch, getState, api) => {
     dispatch({ type: 'auth/setMessage', payload: { content: message, colour }});
 
     let timer = getState().authSlice.messageTimer;
@@ -34,7 +31,7 @@ const fetchData = (userId) => async (dispatch, getState) => {
     dispatch(fetchSettings());
 }
 
-export const generateToken = () => async (dispatch, getState) => {
+export const generateToken = () => async (dispatch, getState, api) => {
     const { currToken } = getState().authSlice;
 
     if (currToken) {
@@ -50,7 +47,7 @@ export const generateToken = () => async (dispatch, getState) => {
             // clear the token in store
             dispatch({ type: 'auth/setToken', payload: null });
             // clear other data
-            setBearerToken(null);
+            api.setBearerToken(null);
             return;
         }
 
@@ -58,7 +55,7 @@ export const generateToken = () => async (dispatch, getState) => {
         dispatch({ type: 'auth/setToken', payload: decoded });
 
         // put the access token into Authorization header 
-        setBearerToken(data.token);
+        api.setBearerToken(data.token);
 
         // load data
         dispatch(fetchData(decoded.id));
@@ -73,7 +70,7 @@ export const generateToken = () => async (dispatch, getState) => {
 }
 
 
-export const login = (loginInput) => async (dispatch) => {
+export const login = (loginInput) => async (dispatch, getState, api) => {
     try {
         // login
         dispatch({ type: 'auth/startLoading' });
@@ -95,7 +92,7 @@ export const login = (loginInput) => async (dispatch) => {
     }
 };
 
-export const signUp = (signUpInput) => async (dispatch) => {
+export const signUp = (signUpInput) => async (dispatch, getState, api) => {
     try {
         // signup
         dispatch({ type: 'auth/startLoading' });
@@ -126,7 +123,7 @@ export const signUp = (signUpInput) => async (dispatch) => {
     }
 }
 
-export const logout = () => async (dispatch) => {
+export const logout = () => async (dispatch, getState, api) => {
     try {
         dispatch({ type: 'auth/startLoading' });
         await api.clearSession();

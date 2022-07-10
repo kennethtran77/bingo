@@ -1,6 +1,4 @@
-import * as api from '../api';
-
-export const fetchCollections = () => async (dispatch) => {
+export const fetchCollections = () => async (dispatch, getState, api) => {
     try {
         dispatch({ type: 'collections/startLoading' });
         const { data } = await api.fetchCollections();
@@ -12,7 +10,7 @@ export const fetchCollections = () => async (dispatch) => {
     }
 };
 
-export const addToCollection = (collection, conceptId) => async (dispatch) => {
+export const addToCollection = (collection, conceptId) => async (dispatch, getState, api) => {
     try {
         dispatch({ type: 'collections/startLoading' });
         await api.addToCollection(collection._id, conceptId);
@@ -27,7 +25,7 @@ export const addToCollection = (collection, conceptId) => async (dispatch) => {
     }
 };
 
-export const removeFromCollection = (collection, conceptId) => async (dispatch) => {
+export const removeFromCollection = (collection, conceptId) => async (dispatch, getState, api) => {
     try {
         dispatch({ type: 'collections/startLoading' });
         await api.removeFromCollection(collection._id, conceptId);
@@ -42,7 +40,7 @@ export const removeFromCollection = (collection, conceptId) => async (dispatch) 
     }
 };
 
-export const createCollection = () => async (dispatch) => {
+export const createCollection = () => async (dispatch, getState, api) => {
     try {
         dispatch({ type: 'collections/startLoading' });
         const { data } = await api.createCollection();
@@ -54,7 +52,7 @@ export const createCollection = () => async (dispatch) => {
     }
 };
 
-export const updateCollection = (collectionId, updatedCollection) => async (dispatch) => {
+export const updateCollection = (collectionId, updatedCollection) => async (dispatch, getState, api) => {
     try {
         dispatch({ type: 'collections/startLoading' });
         const res = await api.updateCollection(collectionId, updatedCollection);
@@ -70,7 +68,7 @@ export const updateCollection = (collectionId, updatedCollection) => async (disp
     }
 }
 
-export const deleteCollection = (collectionId) => async (dispatch) => {
+export const deleteCollection = (collectionId) => async (dispatch, getState, api) => {
     try {
         dispatch({ type: 'collections/startLoading' });
         await api.deleteCollection(collectionId);

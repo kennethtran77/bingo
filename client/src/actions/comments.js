@@ -1,8 +1,6 @@
-import * as api from '../api/index.js';
-
 // Action handlers
 
-const setTimedMessage = (message, colour, interval) => (dispatch, getState) => {
+const setTimedMessage = (message, colour, interval) => (dispatch, getState, api) => {
     dispatch({ type: 'comments/setMessage', payload: { content: message, colour }});
 
     let timer = getState().commentsSlice.messageTimer;
@@ -20,7 +18,7 @@ const setTimedMessage = (message, colour, interval) => (dispatch, getState) => {
     dispatch({ type: 'comments/setMessageTimer', payload: newTimer });
 }
 
-export const fetchComments = (concept) => async (dispatch, getState) => {
+export const fetchComments = (concept) => async (dispatch, getState, api) => {
     try {
         dispatch({ type: 'comments/startLoading' });
         const { data } = await api.fetchComments(concept._id);
@@ -46,7 +44,7 @@ export const fetchComments = (concept) => async (dispatch, getState) => {
     }
 };
 
-export const createComment = (concept, newComment) => async (dispatch) => {
+export const createComment = (concept, newComment) => async (dispatch, getState, api) => {
     try {
         dispatch({ type: 'comments/startLoading' });
         // data is the new concept object with author and id keys
@@ -72,7 +70,7 @@ export const createComment = (concept, newComment) => async (dispatch) => {
     }
 };
 
-export const updateComment = (concept, commentId, updatedComment) => async (dispatch) => {
+export const updateComment = (concept, commentId, updatedComment) => async (dispatch, getState, api) => {
     try {
         dispatch({ type: 'comments/startLoading' });
         const { data } = await api.updateComment(concept._id, commentId, updatedComment);
@@ -88,7 +86,7 @@ export const updateComment = (concept, commentId, updatedComment) => async (disp
     }
 };
 
-export const deleteComment = (concept, commentId) => async (dispatch) => {
+export const deleteComment = (concept, commentId) => async (dispatch, getState, api) => {
     try {
         dispatch({ type: 'comments/startLoading' });
         const { data } = await api.deleteComment(concept._id, commentId);
@@ -121,7 +119,7 @@ export const deleteComment = (concept, commentId) => async (dispatch) => {
     }
 };
 
-export const likeComment = (conceptId, commentId) => async (dispatch) => {
+export const likeComment = (conceptId, commentId) => async (dispatch, getState, api) => {
     try {
         // data is the concept object with the updated likes
         const { data } = await api.likeComment(conceptId, commentId);
@@ -131,7 +129,7 @@ export const likeComment = (conceptId, commentId) => async (dispatch) => {
     }
 }
 
-export const dislikeComment = (conceptId, commentId) => async (dispatch) => {
+export const dislikeComment = (conceptId, commentId) => async (dispatch, getState, api) => {
     try {
         // data is the concept object with the updated dislikes
         const { data } = await api.dislikeComment(conceptId, commentId);
