@@ -4,18 +4,21 @@ import { Navigate, useParams } from 'react-router-dom';
 import WarningIcon from '@mui/icons-material/Warning';
 import InfoIcon from '@mui/icons-material/Info';
 
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import PracticeQuestion from './Practice/PracticeQuestion';
 
 import Button from '../widgets/Button';
 
-import { fetchPracticeQuestionChanged } from '../../api';
+import { fetchPracticeQuestionChanged } from '../../actions/practice';
+
 import LoadingSpinner from '../widgets/LoadingSpinner';
 import { REORDER } from '../../util';
 
 const PracticeResults = ({ userId }) => {
     const { sessionId } = useParams();
+
+    const dispatch = useDispatch();
 
     // load sessions from store
     const { practiceSessions, isLoading } = useSelector(state => state.practiceSlice);
@@ -28,11 +31,11 @@ const PracticeResults = ({ userId }) => {
     // check if any of the questions have changed since this session
     useEffect(() => {
         if (practiceSession) {
-            async function fetchQuestionsChanged() {
+            const fetchQuestionsChanged = async () => {
                 const changed = Array(practiceSession.practiceQuestions.length).fill(false);
 
                 for (let i = 0; i < practiceSession.practiceQuestions.length; i++) {
-                    let response = await fetchPracticeQuestionChanged(practiceSession._id, practiceSession.practiceQuestions[i].question);
+                    let response = await dispatch(fetchPracticeQuestionChanged(practiceSession._id, practiceSession.practiceQuestions[i].question));
                     changed[i] = response.data;
                 }
     

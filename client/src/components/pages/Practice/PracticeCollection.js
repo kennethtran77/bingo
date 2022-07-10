@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, useParams } from 'react-router-dom';
 
-import { generateCollectionQuestions } from '../../../api';
+import { generateCollectionQuestions } from '../../../actions/practice';
 import Button from '../../widgets/Button';
 import LoadingSpinner from '../../widgets/LoadingSpinner';
 
@@ -10,6 +10,8 @@ import Practice from './Practice';
 
 const PracticeCollection = ({ userId }) => {
     const { collectionId } = useParams();
+
+    const dispatch = useDispatch();
 
     const [questions, setQuestions] = useState(null);
 
@@ -23,13 +25,13 @@ const PracticeCollection = ({ userId }) => {
     // Load the collection questions once the collection is fetched
     useEffect(() => {
         if (collection) {
-            // Fetch questions
-            generateCollectionQuestions(collection._id, settings.questionsPerSession)
-                .then(res => {
-                    const questions = res.data;
-                    setQuestions(questions);
-                })
-                .catch(err => console.log(err));
+            // Fetch ques
+            const fetchQuestions = async () => {
+                const questions = await dispatch(generateCollectionQuestions(collection._id, settings.questionsPerSession));
+                setQuestions(questions);
+            }
+
+            fetchQuestions();
         }
     }, [collection, settings.questionsPerSession]);
 
