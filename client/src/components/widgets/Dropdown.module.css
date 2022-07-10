@@ -21,7 +21,6 @@
 
   .dropdown .header:focus {
     outline: black 1px solid;
-    border-radius: 0;
   }
   
   .dropdown .current {

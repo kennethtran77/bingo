@@ -8,11 +8,11 @@
     border: rgb(95, 95, 95) 1px solid;
     cursor: auto;
     background-color: white;
+    border-radius: 2px;
 }
 
 .focus {
     outline: black 1px solid;
-    border-radius: 0;
 }
 
 .toolbar-class {

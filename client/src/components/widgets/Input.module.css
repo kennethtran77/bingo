@@ -20,12 +20,7 @@
 
 .active {
     outline: black 1px solid;
-    border-radius: 0;
 }
-
-/* .input:hover, .hover {
-    outline: rgb(36, 36, 36) 1px solid;
-} */
 
 .icon:hover {
     cursor: pointer;

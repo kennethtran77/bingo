@@ -36,7 +36,6 @@
 
 .input-tags:focus, .focus {
     outline: black 1px solid;
-    border-radius: 0;
 }
 
 .input-tags:hover, .hover {
