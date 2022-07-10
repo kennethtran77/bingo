@@ -9,7 +9,20 @@ dotenv.config();
 const secret = process.env.SECRET;
 
 /**
- * Returns whether the the username password is valid
+ * Returns whether the the email is valid
+ * @param {String} username 
+ * @returns an object with keys: boolean success, string message
+ */
+const validateEmail = email => {
+    if (email.match(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) {
+        return { success: true, message: 'Valid email.' };
+    } else {
+        return { success: false, message: 'Invalid email.' };
+    }
+};
+
+/**
+ * Returns whether the the username is valid
  * @param {String} username 
  * @returns an object with keys: boolean success, string message
  */
@@ -103,6 +116,12 @@ export const signUp = async (req, res) => {
         if (!email || !password || !confirmPassword || !username)
             return res.status(400).json({ message: 'Please fill in all inputs.' });
 
+        // validate email
+        const validEmail = validateEmail(email);
+            
+        if (!validEmail.success)
+            return res.status(400).json({ success: false, message: validEmail.message });
+
         // validate password
         const validPassword = validatePassword(password);
 
@@ -110,7 +129,7 @@ export const signUp = async (req, res) => {
             return res.status(400).json({ success: false, message: validPassword.message });
 
         if (password !== confirmPassword)
-            return res.status(400).json({ success: false, message: 'The two passwords do not match.' });
+            return res.status(400).json({ success: false, message: 'Passwords do not match.' });
 
         // validate username
         const validUsername = validateUsername(username);
