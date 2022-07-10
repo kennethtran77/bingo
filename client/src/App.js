@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Routes, Navigate } from 'react-router';
+import { BrowserRouter } from 'react-router-dom';
 
 import { generateToken } from './actions/auth.js';
 
@@ -35,12 +36,14 @@ const App = () => {
     // limit routes when no jwt token is present
     if (!token) {
         return (
-            <Routes>
-                <Route path='*' element={<Navigate to="/" />}></Route>
-                <Route path='/signup' element={<Signup />}></Route>
-                <Route path='/login' element={<Login />}></Route>
-                <Route path='/' element={<Login />}></Route>
-            </Routes>
+            <BrowserRouter>
+                <Routes>
+                    <Route path='*' element={<Navigate to="/" />}></Route>
+                    <Route path='/signup' element={<Signup />}></Route>
+                    <Route path='/login' element={<Login />}></Route>
+                    <Route path='/' element={<Login />}></Route>
+                </Routes>
+            </BrowserRouter>
         );
     }
 
@@ -56,22 +59,24 @@ const App = () => {
     );
 
     return (
-        <Routes>
-            <Route path='*' element={<Error />}></Route>
-            <Route exact path="/" element={ wrap(Home) }></Route>
-            <Route exact path="/login" element={<Navigate to="/" />}></Route>
-            <Route exact path="/signup" element={<Navigate to="/" />}></Route>
-            <Route path="/create" element={ wrap(EditConcept) }></Route>
-            <Route exact path="/concept/view/:conceptId" element={ wrap(ViewConcept) }></Route>
-            <Route exact path='/concept/edit/:conceptId' element={ wrap(EditConcept) }></Route>
-            <Route exact path='/practice/concept/:conceptId' element={ wrap(PracticeConcept) }></Route>
-            <Route exact path='/collection/edit/:collectionId' element={ wrap(EditCollection) }></Route>
-            <Route exact path='/practice/collection/:collectionId' element={ wrap(PracticeCollection) }></Route>
-            <Route exact path="/settings" element={ wrap(Settings) }></Route>
-            <Route exact path="/browse" element={ wrap(BrowseConcepts) }></Route>
-            <Route exact path="/collections" element={ wrap(Collections) }></Route>
-            <Route exact path="/practice/results/:sessionId" element={ wrap(PracticeResults) }></Route>
-        </Routes>
+        <BrowserRouter>
+            <Routes>
+                <Route path='*' element={<Error />}></Route>
+                <Route exact path="/" element={ wrap(Home) }></Route>
+                <Route exact path="/login" element={<Navigate to="/" />}></Route>
+                <Route exact path="/signup" element={<Navigate to="/" />}></Route>
+                <Route path="/create" element={ wrap(EditConcept) }></Route>
+                <Route exact path="/concept/view/:conceptId" element={ wrap(ViewConcept) }></Route>
+                <Route exact path='/concept/edit/:conceptId' element={ wrap(EditConcept) }></Route>
+                <Route exact path='/practice/concept/:conceptId' element={ wrap(PracticeConcept) }></Route>
+                <Route exact path='/collection/edit/:collectionId' element={ wrap(EditCollection) }></Route>
+                <Route exact path='/practice/collection/:collectionId' element={ wrap(PracticeCollection) }></Route>
+                <Route exact path="/settings" element={ wrap(Settings) }></Route>
+                <Route exact path="/browse" element={ wrap(BrowseConcepts) }></Route>
+                <Route exact path="/collections" element={ wrap(Collections) }></Route>
+                <Route exact path="/practice/results/:sessionId" element={ wrap(PracticeResults) }></Route>
+            </Routes>
+        </BrowserRouter>
     );
 };
 
