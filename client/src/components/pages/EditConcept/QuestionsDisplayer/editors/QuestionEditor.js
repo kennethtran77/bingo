@@ -18,6 +18,7 @@ import Dropdown from '../../../../widgets/Dropdown';
 import MenuButton from '../../../../widgets/MenuButton';
 import LoadingSpinner from '../../../../widgets/LoadingSpinner';
 import Button from '../../../../widgets/Button';
+import Input from '../../../../widgets/Input';
 
 const QuestionEditor = ({ concept, question }) => {
     const [input, setInput] = useState(null);
@@ -100,7 +101,7 @@ const QuestionEditor = ({ concept, question }) => {
     }
 
     return (
-        <div className="editor">
+        <div>
             {/* <Prompt
                 when={madeChanges}
                 message='You have unsaved changes. Are you sure you want to leave?'
@@ -114,8 +115,7 @@ const QuestionEditor = ({ concept, question }) => {
             <form>
                 <label>
                     Title
-                    <input
-                        className="input"
+                    <Input
                         value={input.title}
                         type='text'
                         onChange={e => setInput({ ...input, title: e.target.value })}
@@ -170,7 +170,6 @@ const QuestionEditor = ({ concept, question }) => {
                         </Tooltip>
                     </span>
                     <textarea
-                        className="input"
                         value={input.text}
                         onChange={e => setInput({ ...input, text: e.target.value })}
                         autoComplete="off"

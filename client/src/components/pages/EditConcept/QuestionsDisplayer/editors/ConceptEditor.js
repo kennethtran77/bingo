@@ -10,14 +10,13 @@ import htmlToDraft from 'html-to-draftjs';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import './TextEditor.css';
 
-import './ConceptEditor.css';
-
 import { updateConcept } from '../../../../../actions/concepts';
 
 import InputTags from '../../../../widgets/InputTags';
 import LoadingSpinner from '../../../../widgets/LoadingSpinner';
 import Button from '../../../../widgets/Button';
 import Tooltip from '../../../../widgets/Tooltip';
+import Input from '../../../../widgets/Input';
 
 const ConceptEditor = ({ concept, isLoading }) => {
     const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
@@ -60,10 +59,10 @@ const ConceptEditor = ({ concept, isLoading }) => {
                 message='You have unsaved changes. Are you sure you want to leave?'
             /> */}
             <h2>Edit Concept</h2>
-            <form className="form">
+            <form>
                 <label>
                     Title
-                    <input
+                    <Input
                         type="text"
                         name="text"
                         value={input.title || ''}

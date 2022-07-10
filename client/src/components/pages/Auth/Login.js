@@ -5,9 +5,10 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { login } from '../../../actions/auth.js';
 
-import style from './Auth.module.css';
+import styles from './Auth.module.css';
 import LoadingSpinner from '../../widgets/LoadingSpinner.js';
 import Button from '../../widgets/Button.js';
+import Input from '../../widgets/Input.js';
 
 const Login = () => {
     const [input, setInput] = useState({ email: '', password: '' })
@@ -34,12 +35,13 @@ const Login = () => {
 
     return (
         <>
-            <h1 id={style.title}>bingo</h1>
-            <div id={style.auth}>
+            <h1 id={styles.title}>bingo</h1>
+            <div id={styles.auth}>
                 <form className="container" onSubmit={handleSubmit}>
                     <label>
                         Email
-                        <input
+                        <Input
+                            className={styles.input}
                             required
                             type="email"
                             name="email"
@@ -50,7 +52,8 @@ const Login = () => {
                     </label>
                     <label>
                         Password
-                        <input
+                        <Input
+                            className={styles.input}
                             required
                             type="password"
                             name="password"

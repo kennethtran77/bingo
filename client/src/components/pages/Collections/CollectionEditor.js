@@ -8,6 +8,7 @@ import Tooltip from '../../widgets/Tooltip';
 import InputTags from '../../widgets/InputTags';
 import LoadingSpinner from '../../widgets/LoadingSpinner';
 import Button from '../../widgets/Button';
+import Input from '../../widgets/Input';
 
 const CollectionEditor = ({ collection, isLoading }) => {
     const [input, setInput] = useState({ title: '', tags: [] });
@@ -37,8 +38,7 @@ const CollectionEditor = ({ collection, isLoading }) => {
             <form className="form">
                 <label>
                     Title
-                    <input
-                        className="input"
+                    <Input
                         type="text"
                         name="text"
                         autoComplete="off"

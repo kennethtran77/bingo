@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import ControlledTooltip from './ControlledTooltip';
+import Input from './Input';
 
 const WarningInput = (props) => {
     const [warningMessage, setWarningMessage] = useState('');
@@ -43,9 +44,7 @@ const WarningInput = (props) => {
                 onBlur={() => setShowWarningMessage(false)}
                 direction='right'
             >
-                <input
-                    { ...inputProps }
-                />
+                <Input { ...inputProps} />
             </ControlledTooltip>
         </label>
     );

@@ -1,0 +1,32 @@
+.input {
+    display: flex;
+    border: rgb(95, 95, 95) 1px solid;
+    border-radius: 2px;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    width: 100%;
+    background-color: white;
+    box-sizing: border-box;
+}
+
+.input > input {
+    flex-grow: 1 !important;
+    width: 1px !important;
+    outline: none !important;
+    border: none !important;
+    margin: 0 !important;
+    background-color: white;
+}
+
+.active {
+    outline: black 1px solid;
+    border-radius: 0;
+}
+
+/* .input:hover, .hover {
+    outline: rgb(36, 36, 36) 1px solid;
+} */
+
+.icon:hover {
+    cursor: pointer;
+}

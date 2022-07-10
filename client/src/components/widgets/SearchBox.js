@@ -7,6 +7,7 @@ import ClearAllIcon from '@mui/icons-material/ClearAll';
 import InputTags from './InputTags';
 
 import styles from './SearchBox.module.css';
+import Input from './Input';
 
 // searchables needs a title and tags field
 const SearchBox = ({ searchables, setResults, reset, tags, addTag, removeTag }) => {
@@ -44,7 +45,7 @@ const SearchBox = ({ searchables, setResults, reset, tags, addTag, removeTag }) 
             <form>
                 <label>
                     Title
-                    <input
+                    <Input
                         id={styles["search-title"]}
                         type="text"
                         name="query"

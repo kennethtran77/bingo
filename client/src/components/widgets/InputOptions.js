@@ -6,6 +6,7 @@ import ControlledTooltip from './ControlledTooltip';
 
 import NewButton from './NewButton';
 import DeleteButton from './DeleteButton';
+import Input from './Input';
 
 const InputOptions = ({ options, addOption, editOption, removeOption, placeholder, tabIndex = 0 }) => {
     const [inputs, setInputs] = useState(options);
@@ -105,7 +106,7 @@ const InputOptions = ({ options, addOption, editOption, removeOption, placeholde
                 { options && options.map((option, index) => {
                     return (
                         <li key={option} className="padding center-flex">
-                            <input
+                            <Input
                                 tabIndex={tabIndex}
                                 type="text"
                                 value={inputs[index]}
@@ -118,23 +119,25 @@ const InputOptions = ({ options, addOption, editOption, removeOption, placeholde
                                 onKeyDown={(e) => handleKeyDown(e, index)}
                                 onBlur={() => setOpen(index, false)}
                             />
-                            <ControlledTooltip
-                                active={open[index]}
-                                setActive={active => setOpen(index, active)}
-                                content={messages[index]}
-                                direction={"right"}
-                            >
-                                <SaveButton
-                                    className="h-margin"
-                                    tabIndex={tabIndex}
-                                    aria-label="Save Option"
-                                    tooltip="Save Option"
-                                    onClick={e => {
-                                        e.preventDefault();
-                                        saveOption(index, inputs[index]);
-                                    }}
-                                />
-                            </ControlledTooltip>
+                            <div> { /* Need a div wrapper here since tooltip uses 100% of parent */ }
+                                <ControlledTooltip
+                                    active={open[index]}
+                                    setActive={active => setOpen(index, active)}
+                                    content={messages[index]}
+                                    direction={"right"}
+                                >
+                                    <SaveButton
+                                        className="h-margin"
+                                        tabIndex={tabIndex}
+                                        aria-label="Save Option"
+                                        tooltip="Save Option"
+                                        onClick={e => {
+                                            e.preventDefault();
+                                            saveOption(index, inputs[index]);
+                                        }}
+                                    />
+                                </ControlledTooltip>
+                            </div>
                             <DeleteButton
                                 onClick={() => handleRemoveOption(index)}
                                 tabIndex={tabIndex}
