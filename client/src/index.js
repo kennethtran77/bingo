@@ -10,7 +10,7 @@ import App from './App';
 import reducers from './reducers';
 import getApi from './api';
 
-let api = getApi();
+let api = getApi('http://localhost:5000');
 
 const store = createStore(reducers, compose(applyMiddleware(thunk.withExtraArgument(api))));
 const root = ReactDOM.createRoot(document.getElementById('root'));

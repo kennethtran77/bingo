@@ -6,8 +6,8 @@ axios.defaults.withCredentials = true;
  * Returns an object with functions to API calls
  * @returns an object with functions to API calls
  */
-const getApi = () => {
-    const api = axios.create({ baseURL: 'http://localhost:5000' });
+const getApi = (baseURL) => {
+    const api = axios.create({ baseURL });
     let token = '';
     
     api.interceptors.request.use(req => {
