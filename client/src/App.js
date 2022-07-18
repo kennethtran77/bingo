@@ -22,26 +22,31 @@ import ViewConcept from './components/pages/ViewConcept/ViewConcept';
 import Collections from './components/pages/Collections/Collections';
 import EditCollection from './components/pages/Collections/EditCollection';
 import PracticeCollection from './components/pages/Practice/PracticeCollection.js';
+import LoadingSpinner from './components/widgets/LoadingSpinner.js';
 
 const App = () => {
     const dispatch = useDispatch();
 
     // try and generate an access token with cookie refresh token upon App component mount
     useEffect(() => {
+        console.log(window.location.href)
         dispatch(generateToken());
     }, []);
 
-    const { token } = useSelector(state => state.authSlice);
+    const { token, isLoading } = useSelector(state => state.authSlice);
+
+    if (isLoading)
+        return <LoadingSpinner />;
 
     // limit routes when no jwt token is present
-    if (!token) {
+    if (!isLoading && !token) {
         return (
             <Router basename="/">
                 <Routes>
-                    <Route path='*' element={<Navigate to="/" />}></Route>
                     <Route path='/signup' element={<Signup />}></Route>
                     <Route path='/login' element={<Login />}></Route>
                     <Route path='/' element={<Login />}></Route>
+                    <Route path='*' element={<Navigate to="/" />}></Route>
                 </Routes>
             </Router>
         );
@@ -61,7 +66,6 @@ const App = () => {
     return (
         <Router basename="/">
             <Routes>
-                <Route path='*' element={<Error />}></Route>
                 <Route exact path="/" element={ wrap(Home) }></Route>
                 <Route exact path="/login" element={<Navigate to="/" />}></Route>
                 <Route exact path="/signup" element={<Navigate to="/" />}></Route>
@@ -75,6 +79,7 @@ const App = () => {
                 <Route exact path="/browse" element={ wrap(BrowseConcepts) }></Route>
                 <Route exact path="/collections" element={ wrap(Collections) }></Route>
                 <Route exact path="/practice/results/:sessionId" element={ wrap(PracticeResults) }></Route>
+                <Route path='*' element={<Error />}></Route>
             </Routes>
         </Router>
     );

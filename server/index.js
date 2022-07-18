@@ -57,7 +57,7 @@ app.get(baseUrl + '/signupkeyenabled', (req, res) => {
 if (prod) {
     // app.use(express.static('../client/build'));
     app.use(express.static('build'));
-    app.get('*', function(req, res) {
+    app.get('*', (req, res) => {
         res.sendFile('index.html', {root: 'build' });
     });
 }

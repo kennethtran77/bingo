@@ -41,6 +41,7 @@ export const generateToken = () => async (dispatch, getState, api) => {
     }
 
     async function refreshToken() {
+        dispatch({ type: 'auth/startLoading' });
         const { data } = await api.generateToken();
 
         if (!data.success) {
@@ -48,6 +49,7 @@ export const generateToken = () => async (dispatch, getState, api) => {
             dispatch({ type: 'auth/setToken', payload: null });
             // clear other data
             api.setBearerToken(null);
+            dispatch({ type: 'auth/stopLoading' });
             return;
         }
 
@@ -59,6 +61,7 @@ export const generateToken = () => async (dispatch, getState, api) => {
 
         // load data
         dispatch(fetchData(decoded.id));
+        dispatch({ type: 'auth/stopLoading' });
 
         // generate a new access token immediately before expiration
         setTimeout(() => {
