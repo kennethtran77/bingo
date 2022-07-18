@@ -116,6 +116,7 @@ const ConceptEditor = ({ concept, isLoading }) => {
                             background
                             stopPropogation={false}
                             onClick={handleSubmit}
+                            vMargin
                         />
                     </Tooltip>
                 </div>

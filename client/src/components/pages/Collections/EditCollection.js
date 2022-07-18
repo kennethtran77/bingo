@@ -10,31 +10,46 @@ import SearchBox from '../../widgets/SearchBox';
 
 const EditCollection = ({ userId }) => {
     const { collectionId } = useParams();
-    const { collections, isLoading } = useSelector(state => state.collectionsSlice);
+    const { collections, isLoading: isCollectionsLoading } = useSelector(state => state.collectionsSlice);
 
     const collection = collections.find(c => c._id === collectionId);
 
     // Load concepts
-    const conceptsSlice = useSelector(state => state.conceptsSlice);
+    const { concepts, isLoading: isConceptsLoading } = useSelector(state => state.conceptsSlice);
 
-    const selectedConcepts = useMemo(() => conceptsSlice.concepts.filter(concept => collection.concepts.includes(concept._id)), [collection.concepts]);
-    const allConcepts = useMemo(() => conceptsSlice.concepts.filter(concept => !collection.concepts.includes(concept._id)), [collection.concepts]);
-
+    const [selectedConcepts, setSelectedConcepts] = useState([]);
+    const [availableConcepts, setAvailableConcepts] = useState([]);
     const [conceptsToDisplay, setConceptsToDisplay] = useState([]);
 
+    // load derived state once `concepts` is fetched from store
     useEffect(() => {
-        if (allConcepts) {
-            setConceptsToDisplay(allConcepts);
+        if (concepts, collection) {
+            let selected = [];
+            let available = [];
+
+            concepts.forEach(concept => collection.concepts.includes(concept._id) ? selected.push(concept) : available.push(concept));
+
+            setSelectedConcepts(selected);
+            setAvailableConcepts(available);
         }
-    }, [allConcepts]);
+    }, [concepts, collection]);
+
+    // when available concepts updates, set them as the concepts to display
+    useEffect(() => {
+        if (availableConcepts) {
+            setConceptsToDisplay(availableConcepts);
+        }
+    }, [availableConcepts]);
 
     const [tags, addTag, removeTag, toggleTag] = useTags();
 
-    if (isLoading && !collection)
+    const [searched, setSearched] = useState(false);
+
+    if (isCollectionsLoading && !collection)
         return <LoadingSpinner />;
 
     // If we finished loading but couldn't find the collection, return to homepage
-    if ((!collection && !isLoading) || collection.creator.toString() !== userId)
+    if ((!collection && !isCollectionsLoading) || collection.creator.toString() !== userId)
         return <Navigate to="/"/>;
 
     return (
@@ -42,25 +57,25 @@ const EditCollection = ({ userId }) => {
             <div className="container">
                 <CollectionEditor
                     collection={collection}
-                    isLoading={isLoading}
+                    isLoading={isCollectionsLoading}
                 />
             </div>
             <h2>Selected Concepts</h2>
             <ConceptsDisplayer
                 concepts={selectedConcepts}
-                isLoading={conceptsSlice.isLoading}
+                isLoading={isConceptsLoading}
                 userId={userId}
                 showCreator={true}
                 collection={collection}
                 enableCreating={false}
                 handleTagClick={toggleTag}
             />
-            <h2>All Concepts</h2>
+            <h2>All Concepts { searched && '(Searched Applied)'}</h2>
             <div className="row">
                 <div className="maj">
                     <ConceptsDisplayer
                         concepts={conceptsToDisplay}
-                        isLoading={conceptsSlice.isLoading}
+                        isLoading={isConceptsLoading}
                         userId={userId}
                         showCreator={true}
                         collection={collection}
@@ -70,9 +85,15 @@ const EditCollection = ({ userId }) => {
                 </div>
                 <div className="min">
                     <SearchBox
-                        searchables={allConcepts}
-                        setResults={results => setConceptsToDisplay(results)}
-                        reset={() => setConceptsToDisplay(allConcepts)}
+                        searchables={availableConcepts}
+                        setResults={results => {
+                            setConceptsToDisplay(results);
+                            setSearched(true);
+                        }}
+                        reset={() => {
+                            setConceptsToDisplay(availableConcepts);
+                            setSearched(false);
+                        }}
                         tags={tags}
                         addTag={addTag}
                         removeTag={removeTag}
