@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Routes, Navigate } from 'react-router';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, HashRouter } from 'react-router-dom';
 
 import { generateToken } from './actions/auth.js';
 
@@ -36,7 +36,7 @@ const App = () => {
     // limit routes when no jwt token is present
     if (!token) {
         return (
-            <BrowserRouter>
+            <BrowserRouter basename="/">
                 <Routes>
                     <Route path='*' element={<Navigate to="/" />}></Route>
                     <Route path='/signup' element={<Signup />}></Route>
@@ -59,7 +59,7 @@ const App = () => {
     );
 
     return (
-        <BrowserRouter>
+        <BrowserRouter basename="/">
             <Routes>
                 <Route path='*' element={<Error />}></Route>
                 <Route exact path="/" element={ wrap(Home) }></Route>
