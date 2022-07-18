@@ -14,9 +14,7 @@ const CommentBox = ({ concept }) => {
         setValue(e.target.value);
     }
 
-    const handleSubmit = e => {
-        e.preventDefault();
-
+    const handleSubmit = () => {
         const newComment = {
             concept: concept._id,
             text: value,
@@ -39,7 +37,9 @@ const CommentBox = ({ concept }) => {
                 disabled={isValueEmpty}
                 tooltip={isValueEmpty ? "Please enter some text before submitting." : ""}
                 onClick={handleSubmit}
+                background
                 text="Submit"
+                vMargin
             />
         </>
     );

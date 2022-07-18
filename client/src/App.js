@@ -23,6 +23,7 @@ import Collections from './components/pages/Collections/Collections';
 import EditCollection from './components/pages/Collections/EditCollection';
 import PracticeCollection from './components/pages/Practice/PracticeCollection.js';
 import LoadingSpinner from './components/widgets/LoadingSpinner.js';
+import LoadingScreen from './components/widgets/LoadingScreen.js';
 
 const App = () => {
     const dispatch = useDispatch();
@@ -35,7 +36,7 @@ const App = () => {
     const { token, isLoading } = useSelector(state => state.authSlice);
 
     if (isLoading)
-        return <LoadingSpinner />;
+        return <LoadingScreen />;
 
     // limit routes when no jwt token is present
     if (!isLoading && !token) {
