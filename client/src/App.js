@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Routes, Navigate } from 'react-router';
-import { Router as HashRouter } from 'react-router-dom';
+import { HashRouter as Router } from 'react-router-dom';
 
 import { generateToken } from './actions/auth.js';
 
