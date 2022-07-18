@@ -2,6 +2,8 @@
 
 Create, practice and share concepts and questions and practice.
 
+[Live deployment (sign-up requires key)](https://kennethtran-bingo.herokuapp.com/)
+
 ## Features
 
 * Create concepts and corresponding practice questions
