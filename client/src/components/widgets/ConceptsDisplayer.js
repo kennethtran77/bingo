@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import Paginate from './Paginate';
@@ -16,6 +16,10 @@ import NewButton from './NewButton';
 const ConceptsDisplayer = ({ concepts, isLoading, userId, showCreator, collection, handleTagClick, enableCreating = true}) => {
     const [conceptsToDisplay, setConceptsToDisplay] = useState(concepts);
     
+    useEffect(() => {
+        setConceptsToDisplay(concepts);
+    }, [concepts]);
+
     const dispatch = useDispatch();
 
     const handleCreateConcept = e => {
@@ -49,8 +53,7 @@ const ConceptsDisplayer = ({ concepts, isLoading, userId, showCreator, collectio
     return !userId ? (<h2>Please log in to view concepts.</h2>) : (
         <>
             { isLoading && <LoadingSpinner/> }
-            { !isLoading && !conceptsToDisplay.length && <div className="container">There are no concepts to display.</div> }
-            { Boolean(conceptsToDisplay.length) && getListOfConcepts() }
+            { (!isLoading && !conceptsToDisplay.length) ? <div className="container">There are no concepts to display.</div> : getListOfConcepts() }
             <div className="container">
                 <div className="left-flex">
                     { enableCreating &&

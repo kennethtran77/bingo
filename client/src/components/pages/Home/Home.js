@@ -12,6 +12,7 @@ const Home = ({ userId }) => {
 
     const [tags, addTag, removeTag, toggleTag] = useTags();
     const [conceptsToDisplay, setConceptsToDisplay] = useState([]);
+    const [searched, setSearched] = useState(false);
 
     useEffect(() => {
         if (concepts) {
@@ -22,7 +23,7 @@ const Home = ({ userId }) => {
     return (
         <>
             <div>
-                <h2>My Concepts</h2>
+                <h2>My Concepts { searched && '(Search Applied)'} </h2>
                 <div className="row">
                     <div className="maj">
                         <ConceptsDisplayer
@@ -36,8 +37,14 @@ const Home = ({ userId }) => {
                     <div className="min">
                         <SearchBox
                             searchables={concepts}
-                            setResults={results => setConceptsToDisplay(results)}
-                            reset={() => setConceptsToDisplay(concepts)}
+                            setResults={results => {
+                                setSearched(true);
+                                setConceptsToDisplay(results);
+                            }}
+                            reset={() => {
+                                setSearched(false);
+                                setConceptsToDisplay(concepts);
+                            }}
                             tags={tags}
                             addTag={addTag}
                             removeTag={removeTag}
