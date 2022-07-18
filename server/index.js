@@ -21,6 +21,7 @@ const PORT = process.env.PORT || 5000;
 const CONNECTION_URL = process.env.CONNECTION_URL;
 const FRONTEND_URL = process.env.FRONTEND_URL;
 const signupKeyEnabled = process.env.SIGNUP_KEY_ENABLED;
+const prod = process.env.ENV === 'prod';
 
 // use services
 app.use(express.json({ extended: true }));
@@ -31,26 +32,35 @@ app.use(cors({
     origin: FRONTEND_URL
 }));
 
-console.log(CONNECTION_URL);
+const baseUrl = prod ? '/api' : '';
 
 // Setup child routers
 conceptsRouter.use('/:conceptId/questions', questionsRouter);
 conceptsRouter.use('/:conceptId/comments', commentsRouter);
 
 // Setup routers
-app.use('/concepts', conceptsRouter);
-app.use('/practice', practiceRouter);
-app.use('/users', userRouter);
-app.use('/collections', collectionsRouter);
+app.use(baseUrl + '/concepts', conceptsRouter);
+app.use(baseUrl + '/practice', practiceRouter);
+app.use(baseUrl + '/users', userRouter);
+app.use(baseUrl + '/collections', collectionsRouter);
 
 // Landing page
-app.get('/', (req, res) => {
+app.get(baseUrl + '/', (req, res) => {
     res.send("Connected to API");
 });
 
-app.get('/signupkeyenabled', (req, res) => {
+app.get(baseUrl + '/signupkeyenabled', (req, res) => {
     res.send(signupKeyEnabled === 'true');
 })
+
+// serve static react SPA during production
+if (prod) {
+    // app.use(express.static('../client/build'));
+    app.use(express.static('build'));
+    app.get('*', (req, res) => {
+        res.sendFile('index.html', {root: 'build' });
+    });
+}
 
 // Connect to database
 mongoose.connect(CONNECTION_URL, { useNewUrlParser: true, useUnifiedTopology: true })

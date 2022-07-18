@@ -69,8 +69,8 @@ export const generateToken = async (req, res) => {
 
 // Remove the refresh token cookie
 export const clearSession = async (req, res) => {
-    res.clearCookie('refreshToken');
-    res.status(200).json({ success: true, message: "Logged out"} );
+    res.clearCookie('refreshToken', { path: '/' });
+    res.send('Logged out.');
 }
 
 export const login = async (req, res) => {
@@ -99,8 +99,9 @@ export const login = async (req, res) => {
 
         res.cookie('refreshToken', token, {
             expires: new Date(Date.now() + (hours * 60 * 60 * 1000)),
-            secure: false,
-            httpOnly: true
+            secure: true,
+            sameSite: 'strict',
+            httpOnly: true,
         });
         res.status(200).send({ success: true, token });
     } catch (error) {
@@ -169,7 +170,8 @@ export const signUp = async (req, res) => {
 
         res.cookie('refreshToken', token, {
             expires: new Date(Date.now() + (hours * 60 * 60 * 1000)),
-            secure: false,
+            secure: true,
+            sameSite: 'strict',
             httpOnly: true
         });
         res.status(200).send({ success: true, token });

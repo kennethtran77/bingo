@@ -1,4 +1,4 @@
-const authReducer = (state = { isLoading: false, token: null, signupKeyEnabled: false, message: { content: '', colour: 'black' }, messageTimer: null }, action) => {
+const authReducer = (state = { isLoading: true, token: null, signupKeyEnabled: false, message: { content: '', colour: 'black' }, messageTimer: null }, action) => {
     switch (action.type) {
         case 'auth/startLoading':
             return { ...state, isLoading: true };

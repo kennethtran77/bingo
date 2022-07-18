@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Routes, Navigate } from 'react-router';
-import { BrowserRouter } from 'react-router-dom';
+import { HashRouter as Router } from 'react-router-dom';
 
 import { generateToken } from './actions/auth.js';
 
@@ -22,28 +22,33 @@ import ViewConcept from './components/pages/ViewConcept/ViewConcept';
 import Collections from './components/pages/Collections/Collections';
 import EditCollection from './components/pages/Collections/EditCollection';
 import PracticeCollection from './components/pages/Practice/PracticeCollection.js';
+import LoadingSpinner from './components/widgets/LoadingSpinner.js';
 
 const App = () => {
     const dispatch = useDispatch();
 
     // try and generate an access token with cookie refresh token upon App component mount
     useEffect(() => {
+        console.log(window.location.href)
         dispatch(generateToken());
     }, []);
 
-    const { token } = useSelector(state => state.authSlice);
+    const { token, isLoading } = useSelector(state => state.authSlice);
+
+    if (isLoading)
+        return <LoadingSpinner />;
 
     // limit routes when no jwt token is present
-    if (!token) {
+    if (!isLoading && !token) {
         return (
-            <BrowserRouter>
+            <Router basename="/">
                 <Routes>
-                    <Route path='*' element={<Navigate to="/" />}></Route>
                     <Route path='/signup' element={<Signup />}></Route>
                     <Route path='/login' element={<Login />}></Route>
                     <Route path='/' element={<Login />}></Route>
+                    <Route path='*' element={<Navigate to="/" />}></Route>
                 </Routes>
-            </BrowserRouter>
+            </Router>
         );
     }
 
@@ -59,9 +64,8 @@ const App = () => {
     );
 
     return (
-        <BrowserRouter>
+        <Router basename="/">
             <Routes>
-                <Route path='*' element={<Error />}></Route>
                 <Route exact path="/" element={ wrap(Home) }></Route>
                 <Route exact path="/login" element={<Navigate to="/" />}></Route>
                 <Route exact path="/signup" element={<Navigate to="/" />}></Route>
@@ -75,8 +79,9 @@ const App = () => {
                 <Route exact path="/browse" element={ wrap(BrowseConcepts) }></Route>
                 <Route exact path="/collections" element={ wrap(Collections) }></Route>
                 <Route exact path="/practice/results/:sessionId" element={ wrap(PracticeResults) }></Route>
+                <Route path='*' element={<Error />}></Route>
             </Routes>
-        </BrowserRouter>
+        </Router>
     );
 };
 
