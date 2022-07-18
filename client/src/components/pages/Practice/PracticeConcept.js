@@ -40,7 +40,7 @@ const PracticeConcept = ({ userId }) => {
         return <LoadingSpinner />;
 
     // If the concept doesn't exist, or is private and does not belong to the current user, return to home
-    if ((!concept && isLoading) || (concept && !concept.public && concept.creator !== userId))
+    if ((!concept && !isLoading) || (concept && !concept.public && concept.creator !== userId))
         return <Navigate to="/"/>
 
     // If the questions loaded and are empty, display error message

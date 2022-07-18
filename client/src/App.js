@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Routes, Navigate } from 'react-router';
-import { HashRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 
 import { generateToken } from './actions/auth.js';
 
@@ -29,7 +29,6 @@ const App = () => {
 
     // try and generate an access token with cookie refresh token upon App component mount
     useEffect(() => {
-        console.log(window.location.href)
         dispatch(generateToken());
     }, []);
 
@@ -69,7 +68,7 @@ const App = () => {
                 <Route exact path="/" element={ wrap(Home) }></Route>
                 <Route exact path="/login" element={<Navigate to="/" />}></Route>
                 <Route exact path="/signup" element={<Navigate to="/" />}></Route>
-                <Route path="/create" element={ wrap(EditConcept) }></Route>
+                <Route exact path="/create" element={ wrap(EditConcept) }></Route>
                 <Route exact path="/concept/view/:conceptId" element={ wrap(ViewConcept) }></Route>
                 <Route exact path='/concept/edit/:conceptId' element={ wrap(EditConcept) }></Route>
                 <Route exact path='/practice/concept/:conceptId' element={ wrap(PracticeConcept) }></Route>

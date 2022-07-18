@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -15,23 +15,31 @@ import Button from '../../widgets/Button';
 
 const ViewConcept = ({ userId }) => {
     const { conceptId } = useParams();
+
     const [alertOpen, setAlertOpen] = useState(false);
 
     const dispatch = useDispatch();
 
-    // fetch concept object from store
-    const { concepts, isLoading } = useSelector(state => state.conceptsSlice);
+    // fetch from store
+    const { concepts, isLoading: isConceptLoading } = useSelector(state => state.conceptsSlice);
+    const { users, isLoading: isUserLoading } = useSelector(state => state.usersSlice);
+
     const concept = concepts.find(c => c._id === conceptId);
 
-    // fetch user object from store
-    const { users } = useSelector(state => state.usersSlice);
-    const user = users.find(u => u._id === concept.creator);
-
-    if (!user || (isLoading && !concept))
+    // check if concept exists
+    if (isConceptLoading && !concept)
         return <LoadingSpinner />;
 
-    // If we finished loading but couldn't find the concept or user, return to homepage
-    if ((!concept || !user) && !isLoading)
+    if (!isConceptLoading && !concept)
+        return <Navigate to="/"/>;
+
+    const user = users.find(u => u._id === concept.creator);
+
+    // check if user exists
+    if (isUserLoading && !user)
+        return <LoadingSpinner />;
+
+    if (!isUserLoading && !user)
         return <Navigate to="/"/>;
 
     return (
