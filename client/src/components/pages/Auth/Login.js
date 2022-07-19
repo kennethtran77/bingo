@@ -17,10 +17,10 @@ const Login = () => {
 
     const dispatch = useDispatch();
 
-    useEffect(() => {
+    const clearMessage = () => {
         dispatch({ type: 'auth/setMessage', payload: '' });
         dispatch({ type: 'auth/setMessageTimer', payload: null });
-    }, []);
+    };
 
     const handleChange = useCallback(e => setInput({ ...input, [e.target.name]: e.target.value }), [input]);
 
@@ -63,7 +63,7 @@ const Login = () => {
                         />
                     </label>
                     <Button onClick={handleSubmit} text="Log In" background />
-                    <p>Don't have an account? <Link to="/signup" className="coloured-link">Sign Up</Link></p>
+                    <p>Don't have an account? <Link to="/signup" className="coloured-link" onClick={() => clearMessage()}>Sign Up</Link></p>
                     { isLoading && <LoadingSpinner /> }
                     { message.content && <p style={{color: message.colour}} id="message">{message.content}</p> }
                 </form>

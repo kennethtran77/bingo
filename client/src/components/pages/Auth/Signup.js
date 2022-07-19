@@ -19,10 +19,10 @@ const Signup = () => {
     const { isLoading, message, signupKeyEnabled } = useSelector(state => state.authSlice);
     const dispatch = useDispatch();
 
-    useEffect(() => {
+    const clearMessage = () => {
         dispatch({ type: 'auth/setMessage', payload: '' });
         dispatch({ type: 'auth/setMessageTimer', payload: null });
-    }, []);
+    };
 
     useEffect(() => {
         if (!signupKeyEnabled) {
@@ -108,7 +108,7 @@ const Signup = () => {
                         </label>
                     }
                     <Button text="Sign Up" onClick={handleSubmit} background />
-                    <p>Already have an account? <Link to="/login" className="coloured-link">Log In</Link></p>
+                    <p>Already have an account? <Link to="/login" className="coloured-link" onClick={() => clearMessage()}>Log In</Link></p>
                     { isLoading && <LoadingSpinner /> }
                     { message.content && <span style={{color: message.colour}} id="message">{message.content}</span> }
                 </form>
