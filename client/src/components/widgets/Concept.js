@@ -12,6 +12,7 @@ import ConfirmDelete from './ConfirmDelete';
 import { dislikeConcept, likeConcept } from '../../actions/concepts';
 import Tag from './Tag';
 import Button from './Button';
+import LoadingSpinner from './LoadingSpinner';
 
 import ConceptOptions from './ConceptOptions';
 
