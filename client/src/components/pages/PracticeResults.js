@@ -10,10 +10,10 @@ import PracticeQuestion from './Practice/PracticeQuestion';
 
 import Button from '../widgets/Button';
 
-import { fetchPracticeQuestionChanged } from '../../actions/practice';
+import { fetchPracticeQuestionsChanged } from '../../actions/practice';
 
-import LoadingSpinner from '../widgets/LoadingSpinner';
 import { REORDER } from '../../util';
+import LoadingScreen from '../widgets/LoadingScreen';
 
 const PracticeResults = ({ userId }) => {
     const { sessionId } = useParams();
@@ -32,13 +32,7 @@ const PracticeResults = ({ userId }) => {
     useEffect(() => {
         if (practiceSession) {
             const fetchQuestionsChanged = async () => {
-                const changed = Array(practiceSession.practiceQuestions.length).fill(false);
-
-                for (let i = 0; i < practiceSession.practiceQuestions.length; i++) {
-                    let response = await dispatch(fetchPracticeQuestionChanged(practiceSession._id, practiceSession.practiceQuestions[i].question));
-                    changed[i] = response.data;
-                }
-    
+                const changed = await dispatch(fetchPracticeQuestionsChanged(practiceSession._id));
                 setQuestionsChanged(changed);
             }
 
@@ -48,7 +42,7 @@ const PracticeResults = ({ userId }) => {
 
     // If the practice session hasn't loaded yet, display loading spinner
     if ((!practiceSession && isLoading) || (practiceSession && !questionsChanged))
-        return <LoadingSpinner />;
+        return <LoadingScreen />;
     
     // If we finished loading and couldn't find the practice session, redirect to home
     if (!practiceSession && !isLoading)

@@ -122,35 +122,45 @@ export const processSession = async (req, res) => {
     }
 };
 
+/**
+ * Returns an array of booleans indicating whether the questions in a practice session have changed since the session was completed.
+ * @param {String} sessionId 
+ * @returns an array of booleans with length of the practice session's number of questions 
+ */
 export const fetchPracticeQuestionChanged = async (req, res) => {
     try {
-        const { sessionId, questionId } = req.query;
+        const { sessionId } = req.query;
 
         const practiceSession = await PracticeSessionModel.findById(sessionId);
 
         if (!practiceSession)
-            return res.status(200).send(false);
+            return res.status(200).send(null);
 
-        // get the newest version of the question with id `questionId`
-        const currentQuestion = await QuestionModel.findById(questionId);
+        const changed = [];
 
-        // if the question was deleted, then mark it as changed automatically
-        if (!currentQuestion)
-            return res.status(200).send(true);
+        for (let i = 0; i < practiceSession.practiceQuestions.length; i++) {
+            // get the practice question from the practice session
+            const practiceQuestion = practiceSession.practiceQuestions[i];
+            
+            // get the newest version of the question with id `questionId`
+            const currentQuestion = await QuestionModel.findById(practiceQuestion.question._id);
 
-        // get the practice question from the practice session
-        const practiceQuestion = practiceSession.practiceQuestions.filter(q => q.question.toString() === questionId)[0];
+            // if the question was deleted, then mark it as changed automatically
+            if (!currentQuestion) {
+                changed.push(true);
+                continue;
+            }
 
-        if (!practiceQuestion)
-            return res.status(200).send(true);
-        
-        const titleChanged = currentQuestion.title !== practiceQuestion.title;
-        const typeChanged = currentQuestion.type !== practiceQuestion.type;
-        const textChanged = currentQuestion.text !== practiceQuestion.text;
-        const optionsChanged = JSON.stringify([...currentQuestion.options].sort()) !== JSON.stringify([...practiceQuestion.options].sort());
-        const answerChanged = currentQuestion.type === practiceQuestion.type && JSON.stringify(currentQuestion.answer) !== JSON.stringify(practiceQuestion.answer);
+            const titleChanged = currentQuestion.title !== practiceQuestion.title;
+            const typeChanged = currentQuestion.type !== practiceQuestion.type;
+            const textChanged = currentQuestion.text !== practiceQuestion.text;
+            const optionsChanged = JSON.stringify([...currentQuestion.options].sort()) !== JSON.stringify([...practiceQuestion.options].sort());
+            const answerChanged = currentQuestion.type === practiceQuestion.type && JSON.stringify(currentQuestion.answer) !== JSON.stringify(practiceQuestion.answer);
 
-        res.status(200).send(titleChanged || typeChanged || textChanged || optionsChanged || answerChanged);
+            changed.push(titleChanged || typeChanged || textChanged || optionsChanged || answerChanged);
+        }
+
+        res.status(200).send(changed);
     } catch (error) {
         console.log(error);
     }

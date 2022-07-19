@@ -21,9 +21,9 @@ export const processSession = (title, inputs, navigate) => async (dispatch, getS
     }
 }
 
-export const fetchPracticeQuestionChanged = (sessionId, questionId) => async (dispatch, getState, api) => {
+export const fetchPracticeQuestionsChanged = (sessionId) => async (dispatch, getState, api) => {
     try {
-        const { data } = await api.fetchPracticeQuestionChanged(sessionId, questionId);
+        const { data } = await api.fetchPracticeQuestionsChanged(sessionId);
         return data;
     } catch (error) {
         console.log(error.message);

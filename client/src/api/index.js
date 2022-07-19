@@ -62,7 +62,7 @@ const getApi = (baseURL) => {
         generateCollectionQuestions: (collectionId, questionsPerSession) => api.get(`/practice/generateCollection/${collectionId}?questionsPerSession=${questionsPerSession}`),
         processSession: (title, inputs) => api.post(`/practice/process`, { title, inputs }),
         fetchPracticeSessions: () => api.get(`/practice/sessions`),
-        fetchPracticeQuestionChanged: (sessionId, questionId) => api.get(`/practice/checkChanged?sessionId=${sessionId}&questionId=${questionId}`),
+        fetchPracticeQuestionsChanged: (sessionId, questionId) => api.get(`/practice/checkChanged?sessionId=${sessionId}&questionId=${questionId}`),
 
         // auth
         generateToken: () => api.get(`/users/token`),
