@@ -4,7 +4,7 @@ import { Navigate, useParams } from 'react-router-dom';
 
 import { generateCollectionQuestions } from '../../../actions/practice';
 import Button from '../../widgets/Button';
-import LoadingSpinner from '../../widgets/LoadingSpinner';
+import LoadingScreen from '../../widgets/LoadingScreen';
 
 import Practice from './Practice';
 
@@ -37,7 +37,7 @@ const PracticeCollection = ({ userId }) => {
 
     // If the collection or its questions hasn't loaded yet, display loading spinner
     if ((!collection && isLoading) || !questions)
-        return <LoadingSpinner />;
+        return <LoadingScreen />;
 
     // If the collection doesn't exist, or does not belong to the current user, return to home
     if ((!collection && isLoading) || (collection && collection.creator !== userId))

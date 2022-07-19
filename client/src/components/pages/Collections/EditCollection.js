@@ -2,11 +2,11 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { Navigate, useParams } from 'react-router-dom';
 import ConceptsDisplayer from '../../widgets/ConceptsDisplayer';
-import LoadingSpinner from '../../widgets/LoadingSpinner';
 import useTags from '../../widgets/TagsHook';
 
 import CollectionEditor from './CollectionEditor';
 import SearchBox from '../../widgets/SearchBox';
+import LoadingScreen from '../../widgets/LoadingScreen';
 
 const EditCollection = ({ userId }) => {
     const { collectionId } = useParams();
@@ -46,7 +46,7 @@ const EditCollection = ({ userId }) => {
     const [searched, setSearched] = useState(false);
 
     if (isCollectionsLoading && !collection)
-        return <LoadingSpinner />;
+        return <LoadingScreen />;
 
     // If we finished loading but couldn't find the collection, return to homepage
     if ((!collection && !isCollectionsLoading) || collection.creator.toString() !== userId)

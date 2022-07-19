@@ -3,10 +3,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Navigate, useParams } from 'react-router-dom';
 
 import { generateConceptQuestions } from '../../../actions/practice';
-import LoadingSpinner from '../../widgets/LoadingSpinner';
 
 import Button from '../../widgets/Button';
 import Practice from './Practice';
+import LoadingScreen from '../../widgets/LoadingScreen';
 
 const PracticeConcept = ({ userId }) => {
     const { conceptId } = useParams();
@@ -37,7 +37,7 @@ const PracticeConcept = ({ userId }) => {
 
     // If the concept or its questions hasn't loaded yet, display loading spinner
     if ((!concept && isLoading) || !questions)
-        return <LoadingSpinner />;
+        return <LoadingScreen />;
 
     // If the concept doesn't exist, or is private and does not belong to the current user, return to home
     if ((!concept && !isLoading) || (concept && !concept.public && concept.creator !== userId))

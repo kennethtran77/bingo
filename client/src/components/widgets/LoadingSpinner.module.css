@@ -1,11 +1,21 @@
 .loading-spinner {
     z-index: 100;
+    border-radius: 50%;
+    animation: spin 2s linear infinite;
+}
+
+.small {
     width: 15px;
     height: 15px;
     border: 5px solid darkgray;
-    border-radius: 50%;
     border-top: 5px solid dodgerblue;
-    animation: spin 2s linear infinite;
+}
+
+.big {
+    width: 45px;
+    height: 45px;
+    border: 10px solid darkgray;
+    border-top: 10px solid dodgerblue;
 }
 
 @keyframes spin {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Navigate, useParams } from 'react-router-dom';
-import LoadingSpinner from '../../widgets/LoadingSpinner';
+import LoadingScreen from '../../widgets/LoadingScreen';
 
 import ConceptEditor from './QuestionsDisplayer/editors/ConceptEditor'
 import QuestionsDisplayer from './QuestionsDisplayer/QuestionsDisplayer';
@@ -14,7 +14,7 @@ const EditConcept = ({ userId }) => {
     const concept = concepts.find(c => c._id === conceptId);
 
     if (isLoading && !concept)
-        return <LoadingSpinner />;
+        return <LoadingScreen />;
 
     // If we finished loading but couldn't find the concept, return to homepage
     if ((!concept && !isLoading) || concept.creator !== userId)

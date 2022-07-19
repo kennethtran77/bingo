@@ -2,15 +2,13 @@ import React from 'react';
 import LoadingSpinner from './LoadingSpinner';
 
 const style = {
-    height: '100vh',
-    width: '100vw',
-    transform: 'scale(2.0)'
+    height: 'calc(100vh - 120px)'
 };
 
 const LoadingScreen = () => {
     return (
         <div className="center-flex" style={style}>
-            <LoadingSpinner/>
+            <LoadingSpinner size="big" />
         </div>
     );
 };

@@ -2,9 +2,9 @@ import React from 'react';
 
 import styles from './LoadingSpinner.module.css';
 
-const LoadingSpinner = () => {
+const LoadingSpinner = ({ size = 'small' }) => {
     return (
-        <div className={styles["loading-spinner"]} aria-label="Loading" title="Loading" />
+        <div className={`${styles["loading-spinner"]} ${styles[size]}`} aria-label="Loading" title="Loading" />
     );
 };
 

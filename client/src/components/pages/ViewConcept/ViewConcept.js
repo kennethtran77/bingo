@@ -6,7 +6,7 @@ import 'katex/dist/katex.min.css';
 import Latex from 'react-latex-next';
 import LikeDislike from '../../widgets/LikeDislike';
 import Comments from './Comments';
-import LoadingSpinner from '../../widgets/LoadingSpinner';
+import LoadingScreen from '../../widgets/LoadingScreen';
 
 import { likeConcept, dislikeConcept, deleteConcept } from '../../../actions/concepts';
 import Modal from '../../widgets/Modal';
@@ -28,7 +28,7 @@ const ViewConcept = ({ userId }) => {
 
     // check if concept exists
     if (isConceptLoading && !concept)
-        return <LoadingSpinner />;
+        return <LoadingScreen />;
 
     if (!isConceptLoading && !concept)
         return <Navigate to="/"/>;
@@ -37,7 +37,7 @@ const ViewConcept = ({ userId }) => {
 
     // check if user exists
     if (isUserLoading && !user)
-        return <LoadingSpinner />;
+        return <LoadingScreen />;
 
     if (!isUserLoading && !user)
         return <Navigate to="/"/>;
