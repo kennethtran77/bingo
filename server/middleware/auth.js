@@ -5,6 +5,10 @@ dotenv.config();
 
 // use jwt for auth middleware
 
+const refreshTokenSecret = process.env.REFRESH_SECRET;
+const accessTokenSecret = process.env.ACCESS_SECRET;
+
+// middleware for access token
 export const authHeader = async (req, res, next) => {
     try {
         const authHeader = req.headers.authorization;
@@ -15,7 +19,7 @@ export const authHeader = async (req, res, next) => {
 
         const token = authHeader.split(" ")[1];
 
-        jwt.verify(token, process.env.SECRET, (err, user) => {
+        jwt.verify(token, accessTokenSecret, (err, user) => {
             if (err) {
                 return res.status(403).json({ success: false, message: "This token is invalid." });
             }
@@ -28,6 +32,7 @@ export const authHeader = async (req, res, next) => {
     }
 }
 
+// middleware for refresh token
 export const authCookie = async (req, res, next) => {
     try {
         const refreshToken = req.cookies.refreshToken;
@@ -36,7 +41,7 @@ export const authCookie = async (req, res, next) => {
             return res.status(200).send({ success: false, message: "You do not have a refresh token." });
         }
 
-        jwt.verify(refreshToken, process.env.SECRET, (err, user) => {
+        jwt.verify(refreshToken, refreshTokenSecret, (err, user) => {
             if (err) {
                 return res.status(200).send({ success: false, message: "This token is invalid." });
             }
