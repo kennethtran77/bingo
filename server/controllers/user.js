@@ -6,7 +6,8 @@ import UserModel from '../models/user.js';
 
 dotenv.config();
 
-const secret = process.env.SECRET;
+const refreshTokenSecret = process.env.REFRESH_SECRET;
+const accessTokenSecret = process.env.ACCESS_SECRET;
 const signupKeyEnabled = process.env.SIGNUP_KEY_ENABLED;
 const signupKey = process.env.SIGNUP_KEY;
 
@@ -63,7 +64,7 @@ const validateEmail = email => {
 
 // Generates a new jwt token using refresh token in httpOnly cookie 
 export const generateToken = async (req, res) => {
-    const token = jwt.sign({ id: req.user.id }, secret, { expiresIn: '0.25h' });
+    const token = jwt.sign({ id: req.user.id }, accessTokenSecret, { expiresIn: '0.25h' });
     return res.status(200).json({ token, success: true });
 }
 
@@ -95,7 +96,7 @@ export const login = async (req, res) => {
 
         // sign a token and send it through cookies
         const hours = 6;
-        const token = jwt.sign({ id: user._id }, secret, { expiresIn: `${hours}h` });
+        const token = jwt.sign({ id: user._id }, refreshTokenSecret, { expiresIn: `${hours}h` });
 
         res.cookie('refreshToken', token, {
             expires: new Date(Date.now() + (hours * 60 * 60 * 1000)),
@@ -166,7 +167,7 @@ export const signUp = async (req, res) => {
         });
 
         const hours = 6;
-        const token = jwt.sign({ id: newUser._id }, secret, { expiresIn: `${hours}h` });
+        const token = jwt.sign({ id: newUser._id }, refreshTokenSecret, { expiresIn: `${hours}h` });
 
         res.cookie('refreshToken', token, {
             expires: new Date(Date.now() + (hours * 60 * 60 * 1000)),

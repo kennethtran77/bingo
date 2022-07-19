@@ -32,6 +32,9 @@ const Concept = ({ concept, remove, userId, showCreator, collection, handleTagCl
         return showAllTags ? concept.tags : concept.tags.slice(0, 10);
     }
 
+    if (!creator)
+        return <LoadingSpinner />;
+
     return toDelete ? <ConfirmDelete title={concept.title} undo={() => setToDelete(false)} confirm={remove} /> : (
         <div
             className="container"
